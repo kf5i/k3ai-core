@@ -1,0 +1,3 @@
+plugin-name: Argo
+files:
+  - "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
