@@ -57,6 +57,14 @@ func GetPluginList() (*GithubContents, error) {
 	return GetPluginsFiltered("", DirType)
 }
 
-func GetPluginYamlS(pluginName string) (*GithubContents, error) {
-	return GetPluginsFiltered(pluginName, FileType)
+func GetPluginYamls(pluginName string) (*PluginSpecs, error) {
+	var yList PluginSpecs
+
+    githubContents, _ := GetPluginsFiltered(pluginName, FileType)
+	for _, githubContent := range *githubContents {
+		var pluginSpec PluginSpec
+		pluginSpec.Encode(githubContent.Path)
+		yList = append(yList, pluginSpec)
+	}
+	return &yList, nil
 }

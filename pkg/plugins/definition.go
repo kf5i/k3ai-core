@@ -16,6 +16,8 @@ type PluginSpec struct {
 	PreInstall string   `yaml:"pre-install"`
 }
 
+type PluginSpecs = []PluginSpec
+
 func (ps *PluginSpec) Encode(uri string) (*PluginSpec, error) {
 
 	resp, err := http.Get(GithubRaws + uri)
