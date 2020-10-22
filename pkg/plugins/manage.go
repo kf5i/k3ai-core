@@ -11,24 +11,10 @@ const PluginUrl = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
 const DirType = "dir"
 const FileType = "file"
 
-//func GetPlugins() {
-//	client := github.NewClient(nil)
-//	repo, _, _ := client.Repositories.Get(context.Background(), "kf5i", "k3ai-plugins")
-//	fmt.Printf("%s\n", *repo.ContentsURL)
-//}
-
 type GithubContent struct {
 	Name string `json:"name"`
 	Path string `json:"path"`
 	Type string `json:"type"`
-}
-
-type Plugin struct {
-	Name string `json:"name"`
-}
-
-type Plugins struct {
-	List []Plugin
 }
 
 type GithubContents = []GithubContent
@@ -52,14 +38,14 @@ func GetPluginsRaw(uri string) (GithubContents, error) {
 	return cgs, nil
 }
 
-func GetPluginsFiltered(uri string, filterType string) (*Plugins, error) {
+func GetPluginsFiltered(uri string, filterType string) (*GithubContents, error) {
 	githubContents, err := GetPluginsRaw(uri)
-	var pList Plugins
+	var pList GithubContents
 	for _, githubContent := range githubContents {
-		var p Plugin
+		var p GithubContent
 		p.Name = githubContent.Name
 		if githubContent.Type == filterType {
-			pList.List = append(pList.List, p)
+			pList = append(pList, p)
 		}
 	}
 	if err != nil {
@@ -69,10 +55,10 @@ func GetPluginsFiltered(uri string, filterType string) (*Plugins, error) {
 	return &pList, nil
 }
 
-func GetPluginList() (*Plugins, error) {
+func GetPluginList() (*GithubContents, error) {
 	return GetPluginsFiltered("", DirType)
 }
 
-func GetPluginYamls(pluginName string) (*Plugins, error) {
+func GetPluginYamlS(pluginName string) (*GithubContents, error) {
 	return GetPluginsFiltered(pluginName, FileType)
 }

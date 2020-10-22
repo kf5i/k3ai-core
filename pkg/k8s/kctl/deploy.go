@@ -2,7 +2,7 @@ package kctl
 
 import (
 	"bytes"
-	"fmt"
+	"github.com/kf5i/k3ai-core/pkg/plugins"
 	"log"
 	"os/exec"
 )
@@ -12,27 +12,39 @@ const Kublectl = "kubectl"
 const Apply = "apply"
 const Delete = "delete"
 
-// const K3S_APPLY_KUSTOMIZE = "k3 kubectl apply -k "
+type (
+	Wait interface {
+		Process(labels []string)
+	}
+)
 
-func ApplyFiles(filenames []string) error {
-	return handleFiles(Apply, filenames)
+func ApplyFiles(plugin plugins.PluginSpec, evt Wait) error {
+	err := handleFiles(Apply, plugin)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	if evt != nil {
+		evt.Process(plugin.Files)
+	}
+	return nil
 }
 
-func DeleteFiles(filenames []string) error {
-	return handleFiles(Delete, filenames)
+func DeleteFiles(plugin plugins.PluginSpec) error {
+	return handleFiles(Delete, plugin)
 }
 
-func handleFiles(command string, filenames []string) error {
-	for _, fileYaml := range filenames {
-		fmt.Println(fileYaml)
+func handleFiles(command string, plugin plugins.PluginSpec) error {
+	for _, fileYaml := range plugin.Files {
 		cmd := exec.Command(K3sExec, Kublectl, command, "-f", fileYaml)
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		err := cmd.Run()
 		if err != nil {
 			log.Fatal(err)
+			return err
 		}
-		fmt.Printf(" %q\n", out.String())
+		log.Printf(" %q\n", out.String())
 	}
 	return nil
 }
