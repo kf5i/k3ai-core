@@ -7,3 +7,18 @@ endif
 
 build-client:
 	go build -o bin/k3ai-client
+
+.PHONY: lint
+lint: check-format
+	go vet ./...
+	# Add addiotional linters here
+
+.PHONY: check-format
+check-format:
+	@echo "Running gofmt..."
+	$(eval unformatted=$(shell find . -name '*.go' | grep -v ./.git | grep -v vendor | xargs gofmt -l))
+	$(if $(strip $(unformatted)),\
+		$(error $(\n) Some files are ill formatted! Run: \
+			$(foreach file,$(unformatted),$(\n)    gofmt -w $(file))$(\n)),\
+		@echo All files are well formatted.\
+	)

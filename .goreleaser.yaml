@@ -1,0 +1,29 @@
+builds:
+  - id: k3ai-client
+    binary: k3ai-client
+    main: ./
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+archives:
+  - format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+snapshot:
+  name_template: "{{.Version}}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "README.md"
+      - ".gitignore"
+      - "^site:"
+      - "^examples:"
+      - Merge pull request
+      - Merge branch
