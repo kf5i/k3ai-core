@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const GithubRaws = "https://raw.githubusercontent.com/kf5i/k3ai-plugins/main/"
+
 type PluginSpec struct {
 	Files      []string `yaml:",flow"`
 	Labels     []string `yaml:",flow"`
@@ -14,9 +16,9 @@ type PluginSpec struct {
 	PreInstall string   `yaml:"pre-install"`
 }
 
-func (ps *PluginSpec) Encode(url string) (*PluginSpec, error) {
+func (ps *PluginSpec) Encode(uri string) (*PluginSpec, error) {
 
-	resp, err := http.Get(url)
+	resp, err := http.Get(GithubRaws + uri)
 	if err != nil {
 		return nil, err
 	}

@@ -6,26 +6,18 @@ import (
 	"github.com/kf5i/k3ai-core/pkg/plugins"
 )
 
-type TestType struct {
-	testField int
-}
-
 func main() {
-	var encode plugins.PluginSpec
-	encode.Encode()
-	fmt.Printf("%s\n", encode.Files)
+	pluginList, _ := plugins.GetPluginList()
+	fmt.Printf("Plugin list: %s\n", pluginList)
 
-	s := []string{"aaa"}
+	githubContents, _ := plugins.GetPluginYamlS("argo")
+	for _, githubContent := range *githubContents {
+		fmt.Printf("Files: %s, Path %s \n", githubContent.Name, githubContent.Path)
+		var pluginSpec plugins.PluginSpec
+		pluginSpec.Encode(githubContent.Path)
+		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Files, pluginSpec.PluginName)
+		fmt.Println("Going to Apply the Apply")
+		kctl.ApplyFiles(pluginSpec, nil)
+	}
 
-	kctl.ApplyFiles(s, nil)
-
-	p, _ := plugins.GetPluginList()
-
-	fmt.Printf("List %s\n", p)
-
-	pf, _ := plugins.GetPluginYamlS("argo")
-
-	fmt.Printf("List %s\n", pf)
-
-	//kctl.ApplyFiles(encode.Files)
 }

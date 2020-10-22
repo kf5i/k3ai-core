@@ -42,10 +42,8 @@ func GetPluginsFiltered(uri string, filterType string) (*GithubContents, error) 
 	githubContents, err := GetPluginsRaw(uri)
 	var pList GithubContents
 	for _, githubContent := range githubContents {
-		var p GithubContent
-		p.Name = githubContent.Name
 		if githubContent.Type == filterType {
-			pList = append(pList, p)
+			pList = append(pList, githubContent)
 		}
 	}
 	if err != nil {
