@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/kf5i/k3ai-core/pkg/plugins"
 )
 
@@ -13,11 +14,11 @@ func main() {
 	p, _ := plugins.GetPluginList()
 
 	fmt.Printf("List %s\n", p)
+	for _, i := range p.List {
+		pf, _ := plugins.GetPluginYamls(i.Name, i.Url)
 
-	pf, _ := plugins.GetPluginYamls("argo")
-
-	fmt.Printf("List %s\n", pf)
-
+		fmt.Printf("List %s\n", pf)
+	}
 
 	//kctl.ApplyFiles(encode.Files)
 }
