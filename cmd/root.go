@@ -13,7 +13,7 @@ const k3aiBinaryName = "k3ai-client"
 
 var rootCmd = &cobra.Command{
 	Use:   k3aiBinaryName,
-	Short: fmt.Sprintf(`%s install AI tools`, k3aiBinaryName),
+	Short: fmt.Sprintf(`%s installs AI tools`, k3aiBinaryName),
 	Long: fmt.Sprintf(` %s is a lightweight infrastructure-in-a-box solution specifically built to
 	install and configure AI tools and platforms in production environments on Edge
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
@@ -30,6 +30,10 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
+}
+
+func init() {
+	rootCmd.AddCommand(versionCmd)
 }
 
 //Execute is the entrypoint of the commands
