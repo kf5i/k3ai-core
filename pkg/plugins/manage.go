@@ -2,9 +2,10 @@ package plugins
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 const PluginUrl = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
@@ -20,19 +21,14 @@ type GithubContent struct {
 type GithubContents = []GithubContent
 
 func GetPluginsRaw(uri string) (GithubContents, error) {
-	resp, err := http.Get(PluginUrl + uri)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	remoteContent, err := fetchRemoteContent(PluginUrl + uri)
 	if err != nil {
 	}
 	var cgs GithubContents
 
-	err = json.Unmarshal(body, &cgs)
+	err = json.Unmarshal(remoteContent, &cgs)
 	if err != nil {
-		errors.Wrap(err, "Can't load plugins")
+		errors.Wrap(err, "cannot load plugins")
 		return nil, err
 	}
 	return cgs, nil
@@ -47,7 +43,7 @@ func GetPluginsFiltered(uri string, filterType string) (*GithubContents, error) 
 		}
 	}
 	if err != nil {
-		errors.Wrap(err, "Can't load plugins")
+		errors.Wrap(err, "cannot load plugins")
 		return nil, err
 	}
 	return &pList, nil
@@ -59,12 +55,22 @@ func GetPluginList() (*GithubContents, error) {
 
 func GetPluginYamls(pluginName string) (*PluginSpecs, error) {
 	var yList PluginSpecs
-
 	githubContents, _ := GetPluginsFiltered(pluginName, FileType)
 	for _, githubContent := range *githubContents {
-		var pluginSpec PluginSpec
-		pluginSpec.Encode(githubContent.Path)
-		yList = append(yList, pluginSpec)
+		p, err := Encode(githubContent.Path)
+		if err != nil {
+			return nil, err
+		}
+		yList = append(yList, *p)
 	}
 	return &yList, nil
+}
+
+func fetchRemoteContent(uri string) ([]byte, error) {
+	resp, err := http.Get(uri)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	return ioutil.ReadAll(resp.Body)
 }

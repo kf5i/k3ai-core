@@ -9,7 +9,7 @@ import (
 )
 
 const K3sExec = "k3s"
-const Kublectl = "kubectl"
+const Kubectl = "kubectl"
 const Apply = "apply"
 const Delete = "delete"
 
@@ -37,7 +37,7 @@ func DeleteFiles(plugin plugins.PluginSpec) error {
 
 func handleFiles(command string, plugin plugins.PluginSpec) error {
 	for _, fileYaml := range plugin.Files {
-		cmd := exec.Command(K3sExec, Kublectl, command, "-f", fileYaml)
+		cmd := exec.Command(K3sExec, Kubectl, command, "-f", fileYaml)
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		err := cmd.Run()
