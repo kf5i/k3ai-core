@@ -26,10 +26,8 @@ var rootCmd = &cobra.Command{
 
 		pluginSpecList, _ := plugins.GetPluginYamls("argo")
 		for _, pluginSpec := range *pluginSpecList {
-			//fmt.Printf("Files: %s, Path %s \n", githubContent.Name, githubContent.Path)
-			fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Files, pluginSpec.PluginName)
-			fmt.Println("Going to Apply the Apply")
-			kctl.ApplyFiles(pluginSpec, nil)
+			fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
+			kctl.Apply(pluginSpec, nil)
 		}
 		return nil
 	},

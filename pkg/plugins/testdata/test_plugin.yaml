@@ -1,5 +1,4 @@
 plugin-name: Argo
-pre-install: ""
 yaml:
   - "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
 bash:
