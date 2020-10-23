@@ -1,7 +1,9 @@
 package main
 
-import "github.com/kf5i/k3ai-core/cmd"
+import "github.com/kf5i/k3ai-core/cmd/tools/cli"
 
 func main() {
-	cmd.Execute()
+
+	cli.Execute()
+
 }

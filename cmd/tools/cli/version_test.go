@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 func ExampleVersion() {
 	printVersion()

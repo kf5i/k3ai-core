@@ -1,4 +1,4 @@
-package cmd
+package cli
 
 import (
 	"fmt"
@@ -18,7 +18,10 @@ var rootCmd = &cobra.Command{
 	install and configure AI tools and platforms in production environments on Edge
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		pluginList, _ := plugins.GetPluginList()
+		pluginList, err := plugins.GetPluginList()
+		if err != nil {
+			return err
+		}
 		fmt.Printf("Plugin list: %s\n", pluginList)
 
 		pluginSpecList, _ := plugins.GetPluginYamls("argo")
