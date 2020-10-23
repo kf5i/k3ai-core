@@ -60,7 +60,7 @@ func GetPluginList() (*GithubContents, error) {
 func GetPluginYamls(pluginName string) (*PluginSpecs, error) {
 	var yList PluginSpecs
 
-    githubContents, _ := GetPluginsFiltered(pluginName, FileType)
+	githubContents, _ := GetPluginsFiltered(pluginName, FileType)
 	for _, githubContent := range *githubContents {
 		var pluginSpec PluginSpec
 		pluginSpec.Encode(githubContent.Path)
