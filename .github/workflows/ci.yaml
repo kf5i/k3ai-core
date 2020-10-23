@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Prepare env
-        run: echo "GO_VERSION=(go version | awk '{ print $3}' | sed 's/^go//')" >> $GITHUB_ENV
+        run: echo "GO_VERSION=$(go version | awk '{ print $3}' | sed 's/^go//')" >> $GITHUB_ENV
 
       - name: Lint
         run: |
