@@ -24,7 +24,7 @@ type (
 func Apply(plugin plugins.PluginSpec, evt Wait) error {
 	err := handleYaml(apply, plugin)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		return err
 	}
 	if evt != nil {
