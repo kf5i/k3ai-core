@@ -16,11 +16,15 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: fmt.Sprintf("Print CLI version"),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s version: %s\ngo version: %s\ncommit: %s\n",
-			k3aiBinaryName,
-			version,
-			goVersion,
-			commit,
-		)
+		printVersion()
 	},
+}
+
+func printVersion() {
+	fmt.Printf("%s version: %s\ngo version: %s\ncommit: %s\n",
+		k3aiBinaryName,
+		version,
+		goVersion,
+		commit,
+	)
 }
