@@ -22,3 +22,6 @@ check-format:
 			$(foreach file,$(unformatted),$(\n)    gofmt -w $(file))$(\n)),\
 		@echo All files are well formatted.\
 	)
+.PHONY: test
+test:
+	go test -coverprofile=coverage.txt -covermode=atomic -race ./...
