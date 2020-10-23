@@ -21,8 +21,11 @@ jobs:
       - name: Lint
         run: make lint
 
+      - name: Test
+        run: make test
+
       - name: Build
-        run: make build-client
+        run: make build-cli
 
       - name: Release(test)
         uses: goreleaser/goreleaser-action@v2

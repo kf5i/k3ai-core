@@ -5,8 +5,8 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
-build-client:
-	go build -o bin/k3ai-client
+build-cli:
+	go build -o bin/k3ai-cli
 
 .PHONY: lint
 lint: check-format
@@ -22,3 +22,6 @@ check-format:
 			$(foreach file,$(unformatted),$(\n)    gofmt -w $(file))$(\n)),\
 		@echo All files are well formatted.\
 	)
+.PHONY: test
+test:
+	go test -coverprofile=coverage.txt -covermode=atomic -race ./...

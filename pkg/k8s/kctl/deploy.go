@@ -2,9 +2,10 @@ package kctl
 
 import (
 	"bytes"
-	"github.com/kf5i/k3ai-core/pkg/plugins"
 	"log"
 	"os/exec"
+
+	"github.com/kf5i/k3ai-core/pkg/plugins"
 )
 
 const K3sExec = "k3s"
@@ -41,7 +42,7 @@ func handleFiles(command string, plugin plugins.PluginSpec) error {
 		cmd.Stdout = &out
 		err := cmd.Run()
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			return err
 		}
 		log.Printf(" %q\n", out.String())
