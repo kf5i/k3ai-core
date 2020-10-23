@@ -1,8 +1,4 @@
 plugin-name: Argo
-<<<<<<< HEAD:internal/plugins/testdata/test_plugin.yaml
-=======
-pre-install: ""
->>>>>>> Add bash, yaml and helm fields:pkg/plugins/testdata/test_plugin.yaml
 yaml:
   - "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
 bash:

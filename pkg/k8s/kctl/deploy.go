@@ -8,10 +8,12 @@ import (
 	"github.com/kf5i/k3ai-core/pkg/plugins"
 )
 
-const K3sExec = "k3s"
-const Kubectl = "kubectl"
-const Apply = "apply"
-const Delete = "delete"
+const (
+	k3sExec = "k3s"
+	kubectl = "kubectl"
+	apply   = "apply"
+	delete  = "delete"
+)
 
 type (
 	Wait interface {
@@ -19,25 +21,25 @@ type (
 	}
 )
 
-func ApplyFiles(plugin plugins.PluginSpec, evt Wait) error {
-	err := handleFiles(Apply, plugin)
+func Apply(plugin plugins.PluginSpec, evt Wait) error {
+	err := handleYaml(apply, plugin)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 	if evt != nil {
-		evt.Process(plugin.Files)
+		evt.Process(plugin.Yaml)
 	}
 	return nil
 }
 
-func DeleteFiles(plugin plugins.PluginSpec) error {
-	return handleFiles(Delete, plugin)
+func Delete(plugin plugins.PluginSpec) error {
+	return handleYaml(delete, plugin)
 }
 
-func handleFiles(command string, plugin plugins.PluginSpec) error {
-	for _, fileYaml := range plugin.Files {
-		cmd := exec.Command(K3sExec, Kubectl, command, "-f", fileYaml)
+func handleYaml(command string, plugin plugins.PluginSpec) error {
+	for _, fileYaml := range plugin.Yaml {
+		cmd := exec.Command(k3sExec, kubectl, command, "-f", fileYaml)
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		err := cmd.Run()
