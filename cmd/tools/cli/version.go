@@ -7,6 +7,7 @@ import (
 )
 
 // These values are overridden at build time.
+// Please update ldflags aptly when renaming these vars or moving packages
 var (
 	version   = "dev"
 	commit    = "dev"
