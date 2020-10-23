@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const k3aiBinaryName = "k3ai-client"
+const k3aiBinaryName = "k3ai-cli"
 
 var rootCmd = &cobra.Command{
 	Use:   k3aiBinaryName,

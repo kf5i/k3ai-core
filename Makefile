@@ -5,8 +5,8 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
-build-client:
-	go build -o bin/k3ai-client
+build-cli:
+	go build -o bin/k3ai-cli
 
 .PHONY: lint
 lint: check-format

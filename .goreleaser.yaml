@@ -1,6 +1,6 @@
 builds:
-  - id: k3ai-client
-    binary: k3ai-client
+  - id: k3ai-cli
+    binary: k3ai-cli
     main: ./
     env:
       - CGO_ENABLED=0
