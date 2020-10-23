@@ -5,7 +5,7 @@ import (
 	"log"
 	"os/exec"
 
-	"github.com/kf5i/k3ai-core/pkg/plugins"
+	"github.com/kf5i/k3ai-core/internal/plugins"
 )
 
 const (

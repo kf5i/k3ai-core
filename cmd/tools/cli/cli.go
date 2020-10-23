@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kf5i/k3ai-core/pkg/k8s/kctl"
-	"github.com/kf5i/k3ai-core/pkg/plugins"
+	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
+	"github.com/kf5i/k3ai-core/internal/plugins"
 	"github.com/spf13/cobra"
 )
 
