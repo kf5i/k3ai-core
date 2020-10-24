@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
@@ -17,24 +19,16 @@ var rootCmd = &cobra.Command{
 	Long: fmt.Sprintf(` %s is a lightweight infrastructure-in-a-box solution specifically built to
 	install and configure AI tools and platforms in production environments on Edge
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		pluginList, err := plugins.GetPluginList()
-		if err != nil {
-			return err
-		}
-		fmt.Printf("Plugin list: %s\n", pluginList)
-
-		pluginSpecList, _ := plugins.GetPluginYamls("argo")
-		for _, pluginSpec := range *pluginSpecList {
-			fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
-			kctl.Apply(pluginSpec, nil)
-		}
-		return nil
-	},
 }
 
+var pluginRepoUri string
+
 func init() {
+	rootCmd.PersistentFlags().StringVarP(&pluginRepoUri, "plugin-repo", "", plugins.DefaultPluginUri, "URI for the plugins repository. Must begin with https:// or file://")
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(applyCmd)
+	rootCmd.AddCommand(deleteCmd)
+	rootCmd.AddCommand(listCmd)
 }
 
 //Execute is the entrypoint of the commands
@@ -43,4 +37,28 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+type config struct {
+	context.Context
+	stdin  io.Reader // standard input
+	stdout io.Writer // standard output
+	stderr io.Writer // standard error
+}
+
+func newConfig() kctl.Config {
+	return &config{
+		context.Background(),
+		os.Stdin, os.Stdout, os.Stderr,
+	}
+}
+
+func (c *config) Stdin() io.Reader {
+	return c.stdin
+}
+func (c *config) Stdout() io.Writer {
+	return c.stdout
+}
+func (c *config) Stderr() io.Writer {
+	return c.stderr
 }

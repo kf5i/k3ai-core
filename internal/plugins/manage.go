@@ -2,68 +2,82 @@ package plugins
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/pkg/errors"
 )
 
-const PluginUrl = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
-const DirType = "dir"
-const FileType = "file"
+const (
+	// DefaultPluginUri is the location of the plugins repository if not other location is specified
+	DefaultPluginUri = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
+	dirType          = "dir"
+	fileType         = "file"
+)
 
 type GithubContent struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
-	Type string `json:"type"`
+	Name        string `json:"name"`
+	DownloadUrl string `json:"download_url"`
+	Type        string `json:"type"`
 }
 
-type GithubContents = []GithubContent
+type GithubContents []GithubContent
 
-func GetPluginsRaw(uri string) (GithubContents, error) {
-	remoteContent, err := fetchRemoteContent(PluginUrl + uri)
+func (content GithubContents) filter(filterType string) GithubContents {
+	var pList GithubContents
+	for _, c := range content {
+		if c.Type == filterType {
+			pList = append(pList, c)
+		}
+	}
+	return pList
+}
+
+func getPluginRepoContent(uri string) (GithubContents, error) {
+	const wrapMessage = "cannot load plugins"
+	if uri == "" {
+		uri = DefaultPluginUri
+	}
+	remoteContent, err := fetchRemoteContent(uri)
 	if err != nil {
+		return nil, errors.Wrap(err, wrapMessage)
 	}
 	var cgs GithubContents
-
 	err = json.Unmarshal(remoteContent, &cgs)
 	if err != nil {
-		errors.Wrap(err, "cannot load plugins")
-		return nil, err
+		return nil, errors.Wrap(err, wrapMessage)
 	}
 	return cgs, nil
 }
 
-func GetPluginsFiltered(uri string, filterType string) (*GithubContents, error) {
-	githubContents, err := GetPluginsRaw(uri)
-	var pList GithubContents
-	for _, githubContent := range githubContents {
-		if githubContent.Type == filterType {
-			pList = append(pList, githubContent)
-		}
-	}
+func GetPluginList(uri string) (GithubContents, error) {
+	githubContents, err := getPluginRepoContent(uri)
 	if err != nil {
-		errors.Wrap(err, "cannot load plugins")
 		return nil, err
 	}
-	return &pList, nil
+	return githubContents.filter(dirType), nil
 }
 
-func GetPluginList() (*GithubContents, error) {
-	return GetPluginsFiltered("", DirType)
-}
-
-func GetPluginYamls(pluginName string) (*PluginSpecs, error) {
-	var yList PluginSpecs
-	githubContents, _ := GetPluginsFiltered(pluginName, FileType)
-	for _, githubContent := range *githubContents {
-		p, err := Encode(githubContent.Path)
-		if err != nil {
-			return nil, err
-		}
-		yList = append(yList, *p)
+func GetPluginYamls(uri, pluginName string) (PluginSpecs, error) {
+	githubContents, err := getPluginRepoContent(uri + pluginName)
+	if err != nil {
+		return nil, err
 	}
-	return &yList, nil
+	githubContents = githubContents.filter(fileType)
+	var pluginSpecs PluginSpecs
+	for _, githubContent := range githubContents {
+		// Only look at the spec yaml files
+		if strings.HasSuffix(githubContent.Name, ".yaml") {
+			p, err := Encode(githubContent.DownloadUrl)
+			if err != nil {
+				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
+			}
+			pluginSpecs = append(pluginSpecs, *p)
+		}
+	}
+	return pluginSpecs, nil
 }
 
 func fetchRemoteContent(uri string) ([]byte, error) {
@@ -71,6 +85,7 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// TODO: Check http status code for better error messages
 	defer resp.Body.Close()
 	return ioutil.ReadAll(resp.Body)
 }

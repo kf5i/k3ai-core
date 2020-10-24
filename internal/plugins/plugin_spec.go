@@ -1,12 +1,9 @@
 package plugins
 
 import (
-	"log"
-
+	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
-
-const GithubRaws = "https://raw.githubusercontent.com/kf5i/k3ai-plugins/main/"
 
 type PluginSpec struct {
 	Labels     []string `yaml:",flow"`
@@ -18,11 +15,11 @@ type PluginSpec struct {
 
 type PluginSpecs = []PluginSpec
 
-func Encode(pluginPath string) (*PluginSpec, error) {
-	remoteContent, err := fetchRemoteContent(GithubRaws + pluginPath)
+// Encode fetches the PluginSpec
+func Encode(pluginUri string) (*PluginSpec, error) {
+	remoteContent, err := fetchRemoteContent(pluginUri)
 	if err != nil {
-		log.Printf("error fetching plugin spec  #%v ", err)
-		return nil, err
+		return nil, errors.Wrap(err, "error fetching plugin spec")
 	}
 	return unmarshal(remoteContent)
 }
@@ -36,7 +33,6 @@ func unmarshal(in []byte) (*PluginSpec, error) {
 	var ps PluginSpec
 	err := yaml.Unmarshal(in, &ps)
 	if err != nil {
-		log.Printf("unmarshal: %v", err)
 		return nil, err
 	}
 	return &ps, nil
