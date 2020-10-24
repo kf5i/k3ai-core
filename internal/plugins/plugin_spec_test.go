@@ -7,10 +7,7 @@ import (
 )
 
 func TestValidate(t *testing.T) {
-	var file, err = ioutil.ReadFile("testdata/test_plugin.yaml")
-	if err != nil {
-		t.Fatal("failed to setup the test")
-	}
+	file := getTestSpecFile(t)
 	testPluginSpec, err := unmarshal(file)
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
@@ -27,5 +24,12 @@ func TestValidate(t *testing.T) {
 			}
 		})
 	}
+}
 
+func getTestSpecFile(t *testing.T) []byte {
+	var file, err = ioutil.ReadFile("testdata/test_plugin.yaml")
+	if err != nil {
+		t.Fatal("failed to setup the test")
+	}
+	return file
 }
