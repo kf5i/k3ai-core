@@ -15,7 +15,7 @@ var applyCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
 		pluginName := args[0]
-		pluginSpecList, err := plugins.GetPluginYamls(pluginUri, pluginName)
+		pluginSpecList, err := plugins.GetPluginYamls(pluginRepoUri, pluginName)
 		if err != nil {
 			return err
 		}
