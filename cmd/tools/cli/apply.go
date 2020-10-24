@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
@@ -12,10 +11,9 @@ import (
 var applyCmd = &cobra.Command{
 	Use:   "apply <plugin_name>",
 	Short: "Apply the plugin",
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 1 {
-			return errors.New("missing plugin name")
-		}
+		config := newConfig()
 		pluginName := args[0]
 		pluginList, err := plugins.GetPluginList()
 		if err != nil {
@@ -26,7 +24,7 @@ var applyCmd = &cobra.Command{
 		pluginSpecList, _ := plugins.GetPluginYamls(pluginName)
 		for _, pluginSpec := range *pluginSpecList {
 			fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
-			kctl.Apply(pluginSpec, nil)
+			kctl.Apply(config, pluginSpec, nil)
 		}
 		return nil
 	},

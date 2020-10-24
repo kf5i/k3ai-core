@@ -1,8 +1,6 @@
 package kctl
 
 import (
-	"bytes"
-	"log"
 	"os/exec"
 
 	"github.com/kf5i/k3ai-core/internal/plugins"
@@ -15,16 +13,13 @@ const (
 	delete  = "delete"
 )
 
-type (
-	Wait interface {
-		Process(labels []string)
-	}
-)
+type Wait interface {
+	Process(labels []string)
+}
 
-func Apply(plugin plugins.PluginSpec, evt Wait) error {
-	err := handleYaml(apply, plugin)
+func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
+	err := handleYaml(config, apply, plugin)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	if evt != nil {
@@ -33,21 +28,23 @@ func Apply(plugin plugins.PluginSpec, evt Wait) error {
 	return nil
 }
 
-func Delete(plugin plugins.PluginSpec) error {
-	return handleYaml(delete, plugin)
+func Delete(config Config, plugin plugins.PluginSpec) error {
+	return handleYaml(config, delete, plugin)
 }
 
-func handleYaml(command string, plugin plugins.PluginSpec) error {
+func handleYaml(config Config, command string, plugin plugins.PluginSpec) error {
 	for _, fileYaml := range plugin.Yaml {
-		cmd := exec.Command(k3sExec, kubectl, command, "-f", fileYaml)
-		var out bytes.Buffer
-		cmd.Stdout = &out
-		err := cmd.Run()
+		err := execute(config, k3sExec, kubectl, command, "-f", fileYaml)
 		if err != nil {
-			log.Print(err)
 			return err
 		}
-		log.Printf(" %q\n", out.String())
 	}
 	return nil
+}
+
+func execute(config Config, command string, args ...string) error {
+	cmd := exec.Command(command, args...)
+	cmd.Stdout = config.Stdout()
+	cmd.Stderr = config.Stderr()
+	return cmd.Run()
 }

@@ -1,9 +1,12 @@
 package cli
 
 import (
+	"context"
 	"fmt"
+	"io"
 	"os"
 
+	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
 	"github.com/spf13/cobra"
 )
 
@@ -18,8 +21,10 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
+	rootCmd.AddCommand(listCmd)
 }
 
 //Execute is the entrypoint of the commands
@@ -28,4 +33,28 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+type config struct {
+	context.Context
+	stdin  io.Reader // standard input
+	stdout io.Writer // standard output
+	stderr io.Writer // standard error
+}
+
+func newConfig() kctl.Config {
+	return &config{
+		context.Background(),
+		os.Stdin, os.Stdout, os.Stderr,
+	}
+}
+
+func (c *config) Stdin() io.Reader {
+	return c.stdin
+}
+func (c *config) Stdout() io.Writer {
+	return c.stdout
+}
+func (c *config) Stderr() io.Writer {
+	return c.stderr
 }
