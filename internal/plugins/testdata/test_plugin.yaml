@@ -1,3 +1,9 @@
 plugin-name: Argo
-files:
+yaml:
   - "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
+bash:
+  - bashfile1
+  - bashfile2
+helm:
+  - helmfile1
+  - helmfile2

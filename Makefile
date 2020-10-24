@@ -11,7 +11,6 @@ build-cli:
 .PHONY: lint
 lint: check-format
 	go vet ./...
-	# Add addiotional linters here
 
 .PHONY: check-format
 check-format:
