@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -17,9 +18,9 @@ const (
 )
 
 type GithubContent struct {
-	Name string `json:"name"`
-	Path string `json:"path"`
-	Type string `json:"type"`
+	Name        string `json:"name"`
+	DownloadUrl string `json:"download_url"`
+	Type        string `json:"type"`
 }
 
 type GithubContents []GithubContent
@@ -67,11 +68,14 @@ func GetPluginYamls(uri, pluginName string) (PluginSpecs, error) {
 	githubContents = githubContents.filter(fileType)
 	var pluginSpecs PluginSpecs
 	for _, githubContent := range githubContents {
-		p, err := Encode(githubContent.Path)
-		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
+		// Only look at the spec yaml files
+		if strings.HasSuffix(githubContent.Name, ".yaml") {
+			p, err := Encode(githubContent.DownloadUrl)
+			if err != nil {
+				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
+			}
+			pluginSpecs = append(pluginSpecs, *p)
 		}
-		pluginSpecs = append(pluginSpecs, *p)
 	}
 	return pluginSpecs, nil
 }
