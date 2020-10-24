@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
+	"github.com/kf5i/k3ai-core/internal/plugins"
 	"github.com/spf13/cobra"
 )
 
@@ -20,10 +21,13 @@ var rootCmd = &cobra.Command{
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
 }
 
-func init() {
+var pluginUri string
 
+func init() {
+	rootCmd.PersistentFlags().StringVarP(&pluginUri, "plugin-uri", "", plugins.DefaultPluginUri, "URI for the plugins repository. Must begin with https:// or file://")
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
+	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(listCmd)
 }
 

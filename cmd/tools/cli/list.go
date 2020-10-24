@@ -13,11 +13,11 @@ var listCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		pluginList, err := plugins.GetPluginList()
+		pluginList, err := plugins.GetPluginList(pluginUri)
 		if err != nil {
 			return err
 		}
-		for _, p := range *pluginList {
+		for _, p := range pluginList {
 			fmt.Fprintln(config.Stdout(), p.Name)
 		}
 		return nil
