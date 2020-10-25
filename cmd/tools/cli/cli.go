@@ -23,10 +23,14 @@ var rootCmd = &cobra.Command{
 	SilenceErrors: true,
 }
 
-var pluginRepoURI string
+var (
+	pluginRepoURI string
+	useK3s        bool
+)
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", plugins.DefaultPluginURI, "URI for the plugins repository. Must begin with https:// or file://")
+	rootCmd.PersistentFlags().BoolVarP(&useK3s, "k3s", "", true, "Use k3s for deployment. Uses kubectl when set to false")
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
 	rootCmd.AddCommand(deleteCmd)
@@ -46,12 +50,14 @@ type config struct {
 	stdin  io.Reader // standard input
 	stdout io.Writer // standard output
 	stderr io.Writer // standard error
+	useK3s bool
 }
 
 func newConfig() kctl.Config {
 	return &config{
 		context.Background(),
 		os.Stdin, os.Stdout, os.Stderr,
+		useK3s,
 	}
 }
 
@@ -63,4 +69,8 @@ func (c *config) Stdout() io.Writer {
 }
 func (c *config) Stderr() io.Writer {
 	return c.stderr
+}
+
+func (c *config) UseK3s() bool {
+	return c.useK3s
 }
