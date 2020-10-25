@@ -6,8 +6,9 @@ import (
 )
 
 const (
-	CommandFile      = "file"
-	CommandKustomize = "kustomize"
+	CommandFile           = "file"
+	CommandKustomize      = "kustomize"
+	DefaultPluginFileName = "plugin.yaml"
 )
 
 type YamlSpec struct {

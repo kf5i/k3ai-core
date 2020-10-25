@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 
@@ -69,7 +70,8 @@ func GetPluginYamls(uri, pluginName string) (PluginSpecs, error) {
 	var pluginSpecs PluginSpecs
 	for _, githubContent := range githubContents {
 		// Only look at the spec yaml files
-		if strings.HasSuffix(githubContent.Name, ".yaml") {
+		log.Printf("githubContent.Name %s", githubContent.Name )
+		if strings.EqualFold(githubContent.Name, DefaultPluginFileName) {
 			p, err := Encode(githubContent.DownloadUrl)
 			if err != nil {
 				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
