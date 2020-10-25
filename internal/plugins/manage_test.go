@@ -9,7 +9,7 @@ import (
 )
 
 func mockServer(t *testing.T) *httptest.Server {
-	file := getTestSpecFile(t,"test_plugin.yaml")
+	file := getTestSpecFile(t, "test_plugin.yaml")
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if strings.HasSuffix(r.URL.Path, "/argo") {

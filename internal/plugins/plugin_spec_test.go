@@ -46,7 +46,6 @@ func TestValidateDefaultValues(t *testing.T) {
 	}
 }
 
-
 func getTestSpecFile(t *testing.T, filename string) []byte {
 	var file, err = ioutil.ReadFile("testdata/" + filename)
 	if err != nil {
