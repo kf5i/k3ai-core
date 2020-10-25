@@ -11,6 +11,7 @@ const (
 	kubectl = "kubectl"
 	apply   = "apply"
 	delete  = "delete"
+	create  = "create"
 )
 
 type Wait interface {
@@ -23,7 +24,7 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 		return err
 	}
 	if evt != nil {
-		evt.Process(plugin.Yaml)
+		evt.Process(plugin.Labels)
 	}
 	return nil
 }
@@ -32,12 +33,27 @@ func Delete(config Config, plugin plugins.PluginSpec) error {
 	return handleYaml(config, delete, plugin)
 }
 
+func decodeType(commandType string) string {
+	if commandType == plugins.CommandKustomize {
+		return "-k"
+	}
+	return "-f"
+}
+
 func handleYaml(config Config, command string, plugin plugins.PluginSpec) error {
-	for _, fileYaml := range plugin.Yaml {
-		err := execute(config, k3sExec, kubectl, command, "-f", fileYaml)
+	for _, yamlSpec := range plugin.Yaml {
+		if command == apply {
+			_ = createNameSpace(config, yamlSpec.NameSpace)
+		}
+		err := execute(config, k3sExec, kubectl, command,
+			decodeType(yamlSpec.Type), yamlSpec.Url, "-n", yamlSpec.NameSpace)
 		if err != nil {
 			return err
 		}
+		if command == delete {
+			_ = deleteNameSpace(config, yamlSpec.NameSpace)
+		}
+
 	}
 	return nil
 }
@@ -48,3 +64,5 @@ func execute(config Config, command string, args ...string) error {
 	cmd.Stderr = config.Stderr()
 	return cmd.Run()
 }
+
+////// Name Spaces
