@@ -76,8 +76,7 @@ func nameSpaceExists(config Config, nameSpace string) bool {
 }
 
 func createNameSpace(config Config, nameSpace string) error {
-	exist := nameSpaceExists(config, nameSpace)
-	if exist == false {
+	if !nameSpaceExists(config, nameSpace) {
 		return execute(config, k3sExec, kubectl, create, "namespace", nameSpace)
 	}
 	return nil
