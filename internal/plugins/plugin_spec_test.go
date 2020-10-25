@@ -7,7 +7,7 @@ import (
 )
 
 func TestValidate(t *testing.T) {
-	file := getTestSpecFile(t)
+	file := getTestSpecFile(t, "test_plugin.yaml")
 	testPluginSpec, err := unmarshal(file)
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
@@ -27,7 +27,7 @@ func TestValidate(t *testing.T) {
 }
 
 func TestValidateDefaultValues(t *testing.T) {
-	file := getTestSpecFileWithoutDefaults(t)
+	file := getTestSpecFile(t, "test_plugin_empty_defaults.yaml")
 	testPluginSpec, err := unmarshal(file)
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
@@ -46,16 +46,9 @@ func TestValidateDefaultValues(t *testing.T) {
 	}
 }
 
-func getTestSpecFileWithoutDefaults(t *testing.T) []byte {
-	var file, err = ioutil.ReadFile("testdata/test_plugin_empty_defaults.yaml")
-	if err != nil {
-		t.Fatal("failed to setup the test")
-	}
-	return file
-}
 
-func getTestSpecFile(t *testing.T) []byte {
-	var file, err = ioutil.ReadFile("testdata/test_plugin.yaml")
+func getTestSpecFile(t *testing.T, filename string) []byte {
+	var file, err = ioutil.ReadFile("testdata/" + filename)
 	if err != nil {
 		t.Fatal("failed to setup the test")
 	}

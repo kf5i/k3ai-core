@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -41,10 +40,10 @@ func Encode(pluginUri string) (*PluginSpec, error) {
 func (ps *PluginSpec) validate() error {
 	for _, spec := range ps.Yaml {
 		if spec.Type != CommandKustomize && spec.Type != CommandFile {
-			return fmt.Errorf("type must be file or kustomize")
+			return errors.New("type must be file or kustomize")
 		}
 		if spec.NameSpace == "" {
-			return fmt.Errorf("namespace value must be 'default' or another value")
+			return errors.New("namespace value must be 'default' or another value")
 		}
 	}
 	return nil
