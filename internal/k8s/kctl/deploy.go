@@ -1,7 +1,7 @@
 package kctl
 
 import (
-	"github.com/google/martian/log"
+	"log"
 	"os/exec"
 	"time"
 
@@ -21,17 +21,21 @@ type Wait interface {
 	Process(labels []string)
 }
 
+func pause() {
+	time.Sleep(2 * time.Second)
+}
+
 // Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 	_ = createNameSpace(config, plugin.NameSpace)
-	time.Sleep(3 * time.Second)
+	pause()
 	for _, yamlSpec := range plugin.Yaml {
 		err := execute(config, k3sExec, kubectl, apply,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
 		if err != nil {
-			log.Errorf("Error during create: %s", err.Error())
+			log.Fatalf("Error during create: %s", err.Error())
 		}
-		time.Sleep(3 * time.Second)
+		pause()
 	}
 
 	if evt != nil {
@@ -47,9 +51,9 @@ func Delete(config Config, plugin plugins.PluginSpec) error {
 		err := execute(config, k3sExec, kubectl, delete,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
 		if err != nil {
-			log.Errorf("Error during delete: %s", err.Error())
+			log.Fatalf("Error during delete: %s", err.Error())
 		}
-		time.Sleep(3 * time.Second)
+		pause()
 	}
 	_ = deleteNameSpace(config, plugin.NameSpace)
 
