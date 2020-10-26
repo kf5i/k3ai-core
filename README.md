@@ -3,7 +3,7 @@
 K3ai-core is the core library for the k3ai installer.
 The Go installer will replace the current bash installer.
 
-[![codecov](https://codecov.io/gh/kf5i/k3ai-core/branch/main/graph/badge.svg)
+[![codecov](https://codecov.io/gh/kf5i/k3ai-core/branch/main/graph/badge.svg)](https://codecov.io/gh/kf5i/k3ai-core)
 
 # Building from source
 
