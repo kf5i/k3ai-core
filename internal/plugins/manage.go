@@ -3,11 +3,9 @@ package plugins
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
-	"strings"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -70,12 +68,11 @@ func PluginYamls(uri, pluginName string) (PluginSpecs, error) {
 	}
 	gHubContents = gHubContents.filter(fileType)
 	var pluginSpecs PluginSpecs
-	for _, gHubContent := range gHubContents {
-		// Only look at the spec yaml files
-		if strings.HasSuffix(gHubContent.Name, ".yaml") {
-			p, err := Encode(gHubContent.DownloadURL)
+	for _, githubContent := range gHubContents {
+		if githubContent.Name == DefaultPluginFileName {
+			p, err := Encode(githubContent.DownloadURL)
 			if err != nil {
-				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", gHubContent.Name))
+				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
 			}
 			pluginSpecs = append(pluginSpecs, *p)
 		}

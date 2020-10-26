@@ -9,6 +9,9 @@ const (
 	commandFile = "file"
 	// CommandKustomize is the kustomize command
 	CommandKustomize = "kustomize"
+	// DefaultPluginFileName is the default plugin name
+	// each plugin must contain this file else it will be ignored
+	DefaultPluginFileName = "plugin.yaml"
 )
 
 // YamlSpec is the specification for Yaml segment of the PluginSpec
