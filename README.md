@@ -7,7 +7,7 @@ The Go installer will replace the current bash installer.
 [![Go Report Card](https://goreportcard.com/badge/github.com/kf5i/k3ai-core)](https://goreportcard.com/report/github.com/kf5i/k3ai-core)
 [![codecov](https://codecov.io/gh/kf5i/k3ai-core/branch/main/graph/badge.svg)](https://codecov.io/gh/kf5i/k3ai-core)
 
-# Building from source
+## Building from source
 
 Setup the environment using Golang v1.15.3+. A Linux, Mac OS or a WSL2 environment is recommended.
 
