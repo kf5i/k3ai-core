@@ -8,7 +8,9 @@ import (
 const (
 	commandFile = "file"
 	// CommandKustomize is the kustomize command
-	CommandKustomize      = "kustomize"
+	CommandKustomize = "kustomize"
+	// DefaultPluginFileName is the default plugin name
+	// each plugin must contain this file else it will be ignored
 	DefaultPluginFileName = "plugin.yaml"
 )
 
