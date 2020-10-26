@@ -14,10 +14,12 @@ const (
 	create  = "create"
 )
 
+// Wait is the abstraction to wait for commands to finish
 type Wait interface {
 	Process(labels []string)
 }
 
+// Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 	err := handleYaml(config, apply, plugin)
 	if err != nil {
@@ -29,6 +31,7 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 	return nil
 }
 
+// Delete removes the plugin from the cluster
 func Delete(config Config, plugin plugins.PluginSpec) error {
 	return handleYaml(config, delete, plugin)
 }
@@ -46,7 +49,7 @@ func handleYaml(config Config, command string, plugin plugins.PluginSpec) error 
 			_ = createNameSpace(config, yamlSpec.NameSpace)
 		}
 		err := execute(config, k3sExec, kubectl, command,
-			decodeType(yamlSpec.Type), yamlSpec.Url, "-n", yamlSpec.NameSpace)
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", yamlSpec.NameSpace)
 		if err != nil {
 			return err
 		}

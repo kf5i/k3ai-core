@@ -21,10 +21,10 @@ var rootCmd = &cobra.Command{
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
 }
 
-var pluginRepoUri string
+var pluginRepoURI string
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&pluginRepoUri, "plugin-repo", "", plugins.DefaultPluginUri, "URI for the plugins repository. Must begin with https:// or file://")
+	rootCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", plugins.DefaultPluginURI, "URI for the plugins repository. Must begin with https:// or file://")
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
 	rootCmd.AddCommand(deleteCmd)

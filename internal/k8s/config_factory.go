@@ -1,8 +1,9 @@
 package k8s
 
 import (
-	"k8s.io/kubectl/pkg/util/openapi"
 	"sync"
+
+	"k8s.io/kubectl/pkg/util/openapi"
 )
 
 type factory struct {
@@ -12,6 +13,7 @@ type factory struct {
 	openAPIGetter         openapi.Getter
 }
 
+// GetKubeConfig returns the kubeconfig path
 func GetKubeConfig() string {
 	return "/etc/rancher/k3s/k3s.yaml"
 }
