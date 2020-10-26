@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -46,17 +45,13 @@ func Encode(pluginURI string) (*PluginSpec, error) {
 
 // validate checks for any errors in the PluginSpec
 func (ps *PluginSpec) validate() error {
-	fmt.Println("vvvvvvvvvvvvvvv:" + ps.NameSpace)
-
 	if ps.NameSpace == "" {
 		return errors.New("namespace value must be 'default' or another value")
 	}
-
 	for _, spec := range ps.Yaml {
 		if spec.Type != CommandKustomize && spec.Type != commandFile {
 			return errors.New("type must be file or kustomize")
 		}
-
 	}
 	return nil
 }
@@ -64,14 +59,7 @@ func (ps *PluginSpec) validate() error {
 func unmarshal(in []byte) (*PluginSpec, error) {
 	var ps PluginSpec
 	err := yaml.Unmarshal(in, &ps)
-	fmt.Println("before" + ps.NameSpace)
-
-	mergeWithDefault(ps)
-	if ps.NameSpace == "" {
-		ps.NameSpace = "default"
-	}
-
-	fmt.Println("after:" + ps.NameSpace)
+	mergeWithDefault(&ps)
 
 	if err != nil {
 		return nil, err
@@ -79,8 +67,10 @@ func unmarshal(in []byte) (*PluginSpec, error) {
 	return &ps, nil
 }
 
-func mergeWithDefault(ps PluginSpec) {
-
+func mergeWithDefault(ps *PluginSpec) {
+	if ps.NameSpace == "" {
+		ps.NameSpace = "default"
+	}
 	for i, spec := range ps.Yaml {
 		yamlType := spec.Type
 		if spec.Type == "" {

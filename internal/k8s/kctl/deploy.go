@@ -1,7 +1,9 @@
 package kctl
 
 import (
+	"github.com/google/martian/log"
 	"os/exec"
+	"time"
 
 	"github.com/kf5i/k3ai-core/internal/plugins"
 )
@@ -22,10 +24,16 @@ type Wait interface {
 // Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 	_ = createNameSpace(config, plugin.NameSpace)
-	err := handleYaml(config, apply, plugin)
-	if err != nil {
-		return err
+	time.Sleep(3 * time.Second)
+	for _, yamlSpec := range plugin.Yaml {
+		err := execute(config, k3sExec, kubectl, apply,
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
+		if err != nil {
+			log.Errorf("Error during create: %s", err.Error())
+		}
+		time.Sleep(3 * time.Second)
 	}
+
 	if evt != nil {
 		evt.Process(plugin.Labels)
 	}
@@ -34,11 +42,17 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 
 // Delete removes the plugin from the cluster
 func Delete(config Config, plugin plugins.PluginSpec) error {
-	err := handleYaml(config, delete, plugin)
-	_ = deleteNameSpace(config, plugin.NameSpace)
-	if err != nil {
-		return err
+	for i := len(plugin.Yaml) - 1; i >= 0; i-- {
+		yamlSpec := plugin.Yaml[i]
+		err := execute(config, k3sExec, kubectl, delete,
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
+		if err != nil {
+			log.Errorf("Error during delete: %s", err.Error())
+		}
+		time.Sleep(3 * time.Second)
 	}
+	_ = deleteNameSpace(config, plugin.NameSpace)
+
 	return nil
 }
 
