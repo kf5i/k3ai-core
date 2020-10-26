@@ -23,10 +23,10 @@ func mockServer(t *testing.T) *httptest.Server {
 	return ts
 }
 
-func TestGetPluginList(t *testing.T) {
+func TestPluginList(t *testing.T) {
 	var server = mockServer(t)
 	defer server.Close()
-	p, err := GetPluginList(server.URL)
+	p, err := PluginList(server.URL)
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
@@ -35,10 +35,10 @@ func TestGetPluginList(t *testing.T) {
 	}
 }
 
-func TestGetPluginYamls(t *testing.T) {
+func TestPluginYamls(t *testing.T) {
 	var server = mockServer(t)
 	defer server.Close()
-	p, err := GetPluginYamls(server.URL+"/", "argo")
+	p, err := PluginYamls(server.URL+"/", "argo")
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
@@ -65,7 +65,7 @@ const pluginList = `[
 			}
 		]`
 
-func mockArgoFolder(serverUrl string) string {
+func mockArgoFolder(serverURL string) string {
 	return fmt.Sprintf(`[
   {
 		"name": "argo.yaml",
@@ -77,5 +77,5 @@ func mockArgoFolder(serverUrl string) string {
 				"download_url": "http://%s/v2/argo/README.md",
 				"type": "file"
 	}
-]`, serverUrl, serverUrl)
+]`, serverURL, serverURL)
 }

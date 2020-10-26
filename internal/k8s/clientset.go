@@ -1,10 +1,11 @@
 package k8s
 
 import (
+	"path/filepath"
+
 	"github.com/pkg/errors"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"path/filepath"
 
 	// auth providers
 	_ "k8s.io/client-go/plugin/pkg/client/auth/azure"
@@ -45,6 +46,7 @@ func NewClientSet(clientConfig clientcmd.ClientConfig) (*kubernetes.Clientset, e
 	return clientset, nil
 }
 
+// GetClientSet returns the kubernetes Clientset
 func GetClientSet() (*kubernetes.Clientset, error) {
 	clientConfig := NewClientConfig(GetKubeConfig(), "default")
 	return NewClientSet(clientConfig)

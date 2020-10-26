@@ -11,19 +11,20 @@ import (
 )
 
 const (
-	// DefaultPluginUri is the location of the plugins repository if not other location is specified
-	DefaultPluginUri = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
+	// DefaultPluginURI is the location of the plugins repository if not other location is specified
+	DefaultPluginURI = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
 	dirType          = "dir"
 	fileType         = "file"
 )
 
-type GithubContent struct {
+type githubContent struct {
 	Name        string `json:"name"`
-	DownloadUrl string `json:"download_url"`
+	DownloadURL string `json:"download_url"`
 	Type        string `json:"type"`
 }
 
-type GithubContents []GithubContent
+// GithubContents represents a collection of api responses from Github
+type GithubContents []githubContent
 
 func (content GithubContents) filter(filterType string) GithubContents {
 	var pList GithubContents
@@ -38,7 +39,7 @@ func (content GithubContents) filter(filterType string) GithubContents {
 func getPluginRepoContent(uri string) (GithubContents, error) {
 	const wrapMessage = "cannot load plugins"
 	if uri == "" {
-		uri = DefaultPluginUri
+		uri = DefaultPluginURI
 	}
 	remoteContent, err := fetchRemoteContent(uri)
 	if err != nil {
@@ -52,27 +53,29 @@ func getPluginRepoContent(uri string) (GithubContents, error) {
 	return cgs, nil
 }
 
-func GetPluginList(uri string) (GithubContents, error) {
-	githubContents, err := getPluginRepoContent(uri)
+// PluginList returns the collection of plugins in the repository
+func PluginList(uri string) (GithubContents, error) {
+	gHubContents, err := getPluginRepoContent(uri)
 	if err != nil {
 		return nil, err
 	}
-	return githubContents.filter(dirType), nil
+	return gHubContents.filter(dirType), nil
 }
 
-func GetPluginYamls(uri, pluginName string) (PluginSpecs, error) {
-	githubContents, err := getPluginRepoContent(uri + pluginName)
+// PluginYamls inflates the PluginSpecs for a plugin
+func PluginYamls(uri, pluginName string) (PluginSpecs, error) {
+	gHubContents, err := getPluginRepoContent(uri + pluginName)
 	if err != nil {
 		return nil, err
 	}
-	githubContents = githubContents.filter(fileType)
+	gHubContents = gHubContents.filter(fileType)
 	var pluginSpecs PluginSpecs
-	for _, githubContent := range githubContents {
+	for _, gHubContent := range gHubContents {
 		// Only look at the spec yaml files
-		if strings.HasSuffix(githubContent.Name, ".yaml") {
-			p, err := Encode(githubContent.DownloadUrl)
+		if strings.HasSuffix(gHubContent.Name, ".yaml") {
+			p, err := Encode(gHubContent.DownloadURL)
 			if err != nil {
-				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
+				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", gHubContent.Name))
 			}
 			pluginSpecs = append(pluginSpecs, *p)
 		}

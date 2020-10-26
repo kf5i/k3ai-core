@@ -10,7 +10,9 @@ build-cli:
 
 .PHONY: lint
 lint: check-format
+	go get golang.org/x/lint/golint
 	go vet ./...
+	golint -set_exit_status=1 ./...
 
 .PHONY: check-format
 check-format:
