@@ -9,7 +9,7 @@ import (
 )
 
 func mockServer(t *testing.T) *httptest.Server {
-	file := getTestSpecFile(t, "test_plugin.yaml")
+	file := getTestSpecFile(t, "defaults/plugin.yaml")
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if strings.HasSuffix(r.URL.Path, "/argo") {
@@ -68,9 +68,9 @@ const pluginList = `[
 func mockArgoFolder(serverURL string) string {
 	return fmt.Sprintf(`[
   {
-		"name": "argo.yaml",
+		"name": "plugin.yaml",
 		"type": "file",
-    "download_url": "http://%s/argo/argo.yaml"
+    "download_url": "http://%s/argo/plugin.yaml"
 	},
 	{
 				"name": "README.md",

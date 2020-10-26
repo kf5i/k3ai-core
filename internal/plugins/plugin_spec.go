@@ -8,7 +8,8 @@ import (
 const (
 	commandFile = "file"
 	// CommandKustomize is the kustomize command
-	CommandKustomize = "kustomize"
+	CommandKustomize      = "kustomize"
+	DefaultPluginFileName = "plugin.yaml"
 )
 
 // YamlSpec is the specification for Yaml segment of the PluginSpec
