@@ -21,6 +21,7 @@ type Wait interface {
 
 // Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
+	_ = createNameSpace(config, plugin.NameSpace)
 	err := handleYaml(config, apply, plugin)
 	if err != nil {
 		return err
@@ -33,7 +34,12 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 
 // Delete removes the plugin from the cluster
 func Delete(config Config, plugin plugins.PluginSpec) error {
-	return handleYaml(config, delete, plugin)
+	err := handleYaml(config, delete, plugin)
+	_ = deleteNameSpace(config, plugin.NameSpace)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func decodeType(commandType string) string {
@@ -45,16 +51,10 @@ func decodeType(commandType string) string {
 
 func handleYaml(config Config, command string, plugin plugins.PluginSpec) error {
 	for _, yamlSpec := range plugin.Yaml {
-		if command == apply {
-			_ = createNameSpace(config, yamlSpec.NameSpace)
-		}
 		err := execute(config, k3sExec, kubectl, command,
-			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", yamlSpec.NameSpace)
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
 		if err != nil {
 			return err
-		}
-		if command == delete {
-			_ = deleteNameSpace(config, yamlSpec.NameSpace)
 		}
 
 	}

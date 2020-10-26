@@ -9,14 +9,17 @@ import (
 func TestValidate(t *testing.T) {
 	file := getTestSpecFile(t, "defaults/plugin.yaml")
 	testPluginSpec, err := unmarshal(file)
+
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []PluginSpec{
-		PluginSpec{},
+		PluginSpec{NameSpace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
+		fmt.Println("plug test:" + fmt.Sprint(test))
+
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {
 			err = test.validate()
 			if err != nil {
