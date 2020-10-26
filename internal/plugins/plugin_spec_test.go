@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-func (receiver YamlSpec) name() {
-
-}
-
 func TestValidate(t *testing.T) {
 	file := getTestSpecFile(t, "defaults/plugin.yaml")
 	testPluginSpec, err := unmarshal(file)
