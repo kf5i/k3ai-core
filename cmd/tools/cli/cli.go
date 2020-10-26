@@ -19,6 +19,8 @@ var rootCmd = &cobra.Command{
 	Long: fmt.Sprintf(` %s is a lightweight infrastructure-in-a-box solution specifically built to
 	install and configure AI tools and platforms in production environments on Edge
 	and IoT devices as easily as local test environments.`, k3aiBinaryName),
+	SilenceUsage:  true,
+	SilenceErrors: true,
 }
 
 var pluginRepoURI string

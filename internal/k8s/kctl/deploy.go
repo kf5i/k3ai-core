@@ -67,5 +67,3 @@ func execute(config Config, command string, args ...string) error {
 	cmd.Stderr = config.Stderr()
 	return cmd.Run()
 }
-
-////// Name Spaces
