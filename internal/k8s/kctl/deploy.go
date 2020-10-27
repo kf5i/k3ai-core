@@ -33,7 +33,7 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 		err := execute(config, k3sExec, kubectl, apply,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 		if err != nil {
-			log.Fatalf("Error during create: %s", err.Error())
+			log.Printf("Error during create: %s\n", err.Error())
 		}
 		pause()
 	}
@@ -51,7 +51,7 @@ func Delete(config Config, plugin plugins.PluginSpec) error {
 		err := execute(config, k3sExec, kubectl, delete,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 		if err != nil {
-			log.Fatalf("Error during delete: %s", err.Error())
+			log.Printf("Error during delete: %s\n", err.Error())
 
 		}
 		pause()
@@ -65,18 +65,6 @@ func decodeType(commandType string) string {
 		return "-k"
 	}
 	return "-f"
-}
-
-func handleYaml(config Config, command string, plugin plugins.PluginSpec) error {
-	for _, yamlSpec := range plugin.Yaml {
-		err := execute(config, k3sExec, kubectl, command,
-			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
-		if err != nil {
-			return err
-		}
-
-	}
-	return nil
 }
 
 func execute(config Config, command string, args ...string) error {
