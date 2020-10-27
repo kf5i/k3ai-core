@@ -71,7 +71,7 @@ func execute(config Config, command string, args ...string) error {
 
 func prepareCommand(config Config, args ...string) (string, []string) {
 	command := kubectl
-	if config.UseK3s() {
+	if config.UseKubectl() {
 		command = k3sExec
 		args = append([]string{kubectl}, args...)
 	}
