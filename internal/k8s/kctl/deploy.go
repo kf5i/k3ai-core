@@ -73,3 +73,12 @@ func execute(config Config, command string, args ...string) error {
 	cmd.Stderr = config.Stderr()
 	return cmd.Run()
 }
+
+func prepareCommand(config Config, args ...string) (string, []string) {
+	command := kubectl
+	if !config.UseKubectl() {
+		command = k3sExec
+		args = append([]string{kubectl}, args...)
+	}
+	return command, args
+}
