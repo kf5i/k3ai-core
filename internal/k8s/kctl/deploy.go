@@ -48,8 +48,9 @@ func handleYaml(config Config, command string, plugin plugins.PluginSpec) error 
 		if command == apply {
 			_ = createNameSpace(config, yamlSpec.NameSpace)
 		}
-		err := execute(config, k3sExec, kubectl, command,
+		command, args := prepareCommand(config, command,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", yamlSpec.NameSpace)
+		err := execute(config, command, args...)
 		if err != nil {
 			return err
 		}
@@ -66,4 +67,13 @@ func execute(config Config, command string, args ...string) error {
 	cmd.Stdout = config.Stdout()
 	cmd.Stderr = config.Stderr()
 	return cmd.Run()
+}
+
+func prepareCommand(config Config, args ...string) (string, []string) {
+	command := kubectl
+	if !config.UseKubectl() {
+		command = k3sExec
+		args = append([]string{kubectl}, args...)
+	}
+	return command, args
 }
