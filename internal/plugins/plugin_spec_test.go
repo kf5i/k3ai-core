@@ -9,11 +9,12 @@ import (
 func TestValidate(t *testing.T) {
 	file := getTestSpecFile(t, "defaults/plugin.yaml")
 	testPluginSpec, err := unmarshal(file)
+
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []PluginSpec{
-		PluginSpec{},
+		PluginSpec{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
@@ -33,7 +34,7 @@ func TestValidateDefaultValues(t *testing.T) {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []PluginSpec{
-		PluginSpec{},
+		PluginSpec{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {

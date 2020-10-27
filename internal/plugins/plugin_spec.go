@@ -16,18 +16,18 @@ const (
 
 // YamlSpec is the specification for Yaml segment of the PluginSpec
 type YamlSpec struct {
-	URL       string `yaml:"url"`
-	NameSpace string `yaml:"namespace,omitempty"`
-	Type      string `yaml:"type,omitempty"`
+	URL  string `yaml:"url"`
+	Type string `yaml:"type,omitempty"`
 }
 
 //PluginSpec is the specification of each k3ai plugin
 type PluginSpec struct {
+	Namespace  string     `yaml:"namespace,omitempty"`
 	Labels     []string   `yaml:",flow"`
 	PluginName string     `yaml:"plugin-name"`
-	Yaml       []YamlSpec `yaml:"yaml"`
-	Bash       []string   `yaml:"bash"`
-	Helm       []string   `yaml:"helm"`
+	Yaml       []YamlSpec `yaml:"yaml,flow"`
+	Bash       []string   `yaml:"bash,flow"`
+	Helm       []string   `yaml:"helm,flow"`
 }
 
 // PluginSpecs is a PluginSpec collection
@@ -45,12 +45,12 @@ func Encode(pluginURI string) (*PluginSpec, error) {
 
 // validate checks for any errors in the PluginSpec
 func (ps *PluginSpec) validate() error {
+	if ps.Namespace == "" {
+		return errors.New("namespace value must be 'default' or another value")
+	}
 	for _, spec := range ps.Yaml {
 		if spec.Type != CommandKustomize && spec.Type != commandFile {
 			return errors.New("type must be file or kustomize")
-		}
-		if spec.NameSpace == "" {
-			return errors.New("namespace value must be 'default' or another value")
 		}
 	}
 	return nil
@@ -59,23 +59,23 @@ func (ps *PluginSpec) validate() error {
 func unmarshal(in []byte) (*PluginSpec, error) {
 	var ps PluginSpec
 	err := yaml.Unmarshal(in, &ps)
-	mergeWithDefault(ps)
+	mergeWithDefault(&ps)
+
 	if err != nil {
 		return nil, err
 	}
 	return &ps, nil
 }
 
-func mergeWithDefault(ps PluginSpec) {
+func mergeWithDefault(ps *PluginSpec) {
+	if ps.Namespace == "" {
+		ps.Namespace = "default"
+	}
 	for i, spec := range ps.Yaml {
-		nameSpace := spec.NameSpace
 		yamlType := spec.Type
-		if spec.NameSpace == "" {
-			nameSpace = "default"
-		}
 		if spec.Type == "" {
 			yamlType = "file"
 		}
-		ps.Yaml[i] = YamlSpec{Type: yamlType, NameSpace: nameSpace, URL: spec.URL}
+		ps.Yaml[i] = YamlSpec{Type: yamlType, URL: spec.URL}
 	}
 }
