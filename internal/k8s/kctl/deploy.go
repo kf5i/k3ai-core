@@ -27,11 +27,11 @@ func pause() {
 
 // Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
-	_ = createNameSpace(config, plugin.NameSpace)
+	_ = createNameSpace(config, plugin.Namespace)
 	pause()
 	for _, yamlSpec := range plugin.Yaml {
 		err := execute(config, k3sExec, kubectl, apply,
-			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 		if err != nil {
 			log.Fatalf("Error during create: %s", err.Error())
 		}
@@ -49,13 +49,13 @@ func Delete(config Config, plugin plugins.PluginSpec) error {
 	for i := len(plugin.Yaml) - 1; i >= 0; i-- {
 		yamlSpec := plugin.Yaml[i]
 		err := execute(config, k3sExec, kubectl, delete,
-			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 		if err != nil {
 			log.Fatalf("Error during delete: %s", err.Error())
+
 		}
 		pause()
 	}
-	_ = deleteNameSpace(config, plugin.NameSpace)
 
 	return nil
 }
@@ -70,7 +70,7 @@ func decodeType(commandType string) string {
 func handleYaml(config Config, command string, plugin plugins.PluginSpec) error {
 	for _, yamlSpec := range plugin.Yaml {
 		err := execute(config, k3sExec, kubectl, command,
-			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.NameSpace)
+			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 		if err != nil {
 			return err
 		}

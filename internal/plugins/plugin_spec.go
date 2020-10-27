@@ -22,7 +22,7 @@ type YamlSpec struct {
 
 //PluginSpec is the specification of each k3ai plugin
 type PluginSpec struct {
-	NameSpace  string     `yaml:"namespace,omitempty"`
+	Namespace  string     `yaml:"namespace,omitempty"`
 	Labels     []string   `yaml:",flow"`
 	PluginName string     `yaml:"plugin-name"`
 	Yaml       []YamlSpec `yaml:"yaml,flow"`
@@ -45,7 +45,7 @@ func Encode(pluginURI string) (*PluginSpec, error) {
 
 // validate checks for any errors in the PluginSpec
 func (ps *PluginSpec) validate() error {
-	if ps.NameSpace == "" {
+	if ps.Namespace == "" {
 		return errors.New("namespace value must be 'default' or another value")
 	}
 	for _, spec := range ps.Yaml {
@@ -68,8 +68,8 @@ func unmarshal(in []byte) (*PluginSpec, error) {
 }
 
 func mergeWithDefault(ps *PluginSpec) {
-	if ps.NameSpace == "" {
-		ps.NameSpace = "default"
+	if ps.Namespace == "" {
+		ps.Namespace = "default"
 	}
 	for i, spec := range ps.Yaml {
 		yamlType := spec.Type
