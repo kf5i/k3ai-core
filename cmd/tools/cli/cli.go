@@ -25,14 +25,19 @@ var rootCmd = &cobra.Command{
 
 var (
 	pluginRepoURI string
+	pluginsGroupRepoURI string
 	useKubectl    bool
 )
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", plugins.DefaultPluginURI, "URI for the plugins repository. Must begin with https:// or file://")
+	rootCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", plugins.DefaultPluginsGroupURI, "URI for the plugins repository. Must begin with https:// or file://")
 	rootCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
+	applyCmd.Flags().StringP("plugin", "p", "", "Specify plugin type")
+	applyCmd.Flags().StringP("group", "g", "", "Specify group type")
+
 	rootCmd.AddCommand(deleteCmd)
 	rootCmd.AddCommand(listCmd)
 }

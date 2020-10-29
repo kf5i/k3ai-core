@@ -1,0 +1,7 @@
+plugin-type: group
+group-n ame: test_two_plugins
+plugins:
+  - name: test
+    enabled: true
+  - name: argo
+    enabled: true

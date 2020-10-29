@@ -11,6 +11,8 @@ import (
 const (
 	// DefaultPluginURI is the location of the plugins repository if not other location is specified
 	DefaultPluginURI = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/"
+	DefaultPluginsGroupURI = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/v2/groups"
+
 	dirType          = "dir"
 	fileType         = "file"
 )
