@@ -30,8 +30,9 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 	_ = createNameSpace(config, plugin.Namespace)
 	pause()
 	for _, yamlSpec := range plugin.Yaml {
-		err := execute(config, k3sExec, kubectl, apply,
+		command, args := prepareCommand(config, apply,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
+		err := execute(config, command, args...)
 		if err != nil {
 			log.Printf("Error during create: %s\n", err.Error())
 		}
@@ -48,8 +49,9 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 func Delete(config Config, plugin plugins.PluginSpec) error {
 	for i := len(plugin.Yaml) - 1; i >= 0; i-- {
 		yamlSpec := plugin.Yaml[i]
-		err := execute(config, k3sExec, kubectl, delete,
+		command, args := prepareCommand(config, delete,
 			decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
+		err := execute(config, command, args...)
 		if err != nil {
 			log.Printf("Error during delete: %s\n", err.Error())
 
