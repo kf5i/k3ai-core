@@ -33,18 +33,18 @@ type PluginSpec struct {
 // PluginSpecs is a PluginSpec collection
 type PluginSpecs = []PluginSpec
 
-// Encode fetches the PluginSpec
-func Encode(pluginURI string) (*PluginSpec, error) {
+// EncodePluginSpec fetches the PluginSpec
+func EncodePluginSpec(pluginURI string) (*PluginSpec, error) {
 	remoteContent, err := fetchRemoteContent(pluginURI)
 	if err != nil {
 		return nil, errors.Wrap(err, "error fetching plugin spec")
 	}
 
-	return unmarshal(remoteContent)
+	return unmarshalPluginSpec(remoteContent)
 }
 
-// validate checks for any errors in the PluginSpec
-func (ps *PluginSpec) validate() error {
+// validatePluginSpec checks for any errors in the PluginSpec
+func (ps *PluginSpec) validatePluginSpec() error {
 	if ps.Namespace == "" {
 		return errors.New("namespace value must be 'default' or another value")
 	}
@@ -56,7 +56,7 @@ func (ps *PluginSpec) validate() error {
 	return nil
 }
 
-func unmarshal(in []byte) (*PluginSpec, error) {
+func unmarshalPluginSpec(in []byte) (*PluginSpec, error) {
 	var ps PluginSpec
 	err := yaml.Unmarshal(in, &ps)
 	mergeWithDefault(&ps)

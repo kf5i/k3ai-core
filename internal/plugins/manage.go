@@ -70,7 +70,7 @@ func PluginYamls(uri, pluginName string) (PluginSpecs, error) {
 	var pluginSpecs PluginSpecs
 	for _, githubContent := range gHubContents {
 		if githubContent.Name == DefaultPluginFileName {
-			p, err := Encode(githubContent.DownloadURL)
+			p, err := EncodePluginSpec(githubContent.DownloadURL)
 			if err != nil {
 				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
 			}
