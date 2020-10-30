@@ -35,11 +35,11 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(applyCmd)
-	applyCmd.Flags().BoolP(plugins.GroupType, "g", false, "Specify the group")
+	applyCmd.Flags().BoolP(plugins.GroupType, "g", false, "Apply a plugin group")
 
 	rootCmd.AddCommand(deleteCmd)
-	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Specify the group")
-	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "Specify the group")
+	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Delete a plugin group")
+	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "List the plugin groups")
 
 	rootCmd.AddCommand(listCmd)
 }

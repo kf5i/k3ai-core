@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
 	"github.com/kf5i/k3ai-core/internal/plugins"
 	"github.com/spf13/cobra"
@@ -9,7 +10,7 @@ import (
 
 var deleteCmd = &cobra.Command{
 	Use:   "delete <plugin_name>",
-	Short: "Delete the plugin",
+	Short: "Delete a plugin or a plugin group",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
