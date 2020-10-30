@@ -38,12 +38,10 @@ func setupCli(baseCmd *cobra.Command) {
 	baseCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", plugins.DefaultPluginsGroupURI, "URI for the plugins repository. Must begin with https:// or file://")
 	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
 	baseCmd.AddCommand(versionCmd)
-	baseCmd.AddCommand(applyCmd)
-	applyCmd.Flags().BoolP(plugins.GroupType, "g", false, "Apply a plugin group")
-	baseCmd.AddCommand(deleteCmd)
-	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Delete a plugin group")
-	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "List the plugin groups")
-	baseCmd.AddCommand(listCmd)
+	baseCmd.AddCommand(newApplyCommand())
+
+	baseCmd.AddCommand(newDeleteCommand())
+	baseCmd.AddCommand(newListCommand())
 }
 
 //Execute is the entrypoint of the commands
@@ -62,10 +60,10 @@ type config struct {
 	useKubectl bool
 }
 
-func newConfig() kctl.Config {
+func newConfig(cmd *cobra.Command) kctl.Config {
 	return &config{
 		context.Background(),
-		os.Stdin, os.Stdout, os.Stderr,
+		cmd.InOrStdin(), cmd.OutOrStdout(), cmd.ErrOrStderr(),
 		useKubectl,
 	}
 }
