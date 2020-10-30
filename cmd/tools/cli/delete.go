@@ -10,12 +10,13 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:   "delete <plugin_name>",
 	Short: "Delete the plugin",
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
 
-		group, _ := cmd.Flags().GetString(plugins.GroupType)
-		if group != "" {
-			return deleteGroup(config, group)
+		group, _ := cmd.Flags().GetBool(plugins.GroupType)
+		if group {
+			return deleteGroup(config, args[0])
 
 		}
 		return deletePlugin(config, args[0])
