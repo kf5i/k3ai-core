@@ -37,7 +37,7 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	}
 
 	if evt != nil {
-		evt.Process(config, plugin.Namespace, plugin.Labels)
+		return evt.Process(config, plugin.Namespace, plugin.Labels)
 	}
 	return nil
 }
