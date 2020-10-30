@@ -6,18 +6,19 @@ import (
 )
 
 func TestValidatePluginsGroupSpec(t *testing.T) {
-	testPluginsGroupsSpec, err := LoadPluginsGroupSpecFormFile("testdata/plugins_group/standard_two_plugins/plugins_group.yaml")
+	var group Group
+	testPluginsGroupsSpec, err := group.Encode("testdata/plugins_group/standard_two_plugins/group.yaml")
 
 	if err != nil {
 		t.Fatalf("failed to unmarshal test file: %s", err)
 	}
-	var tests = []PluginsGroupSpec{
-		PluginsGroupSpec{},
+	var tests = []Group{
+		Group{},
 		*testPluginsGroupsSpec,
 	}
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {
-			err = test.validatePluginsGroupSpec()
+			err = test.validate()
 			if err != nil {
 				t.Fatalf("expected nil but got %v", err)
 			}

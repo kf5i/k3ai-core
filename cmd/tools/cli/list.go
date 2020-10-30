@@ -10,16 +10,34 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all plugins",
-	Args:  cobra.ExactArgs(0),
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		pluginList, err := plugins.PluginList(pluginRepoURI)
-		if err != nil {
-			return err
+		switch args[0] {
+		case "plugins":
+			{
+				plugins, err := plugins.ContentList(pluginRepoURI)
+				if err != nil {
+					return err
+				}
+				for _, p := range plugins {
+					fmt.Fprintln(config.Stdout(), p.Name)
+				}
+
+			}
+		case "groups":
+			{
+				groups, err := plugins.ContentList(pluginsGroupRepoURI)
+				if err != nil {
+					return err
+				}
+				for _, g := range groups {
+					fmt.Fprintln(config.Stdout(), g.Name)
+				}
+			}
+
 		}
-		for _, p := range pluginList {
-			fmt.Fprintln(config.Stdout(), p.Name)
-		}
+
 		return nil
 	},
 }

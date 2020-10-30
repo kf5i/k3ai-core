@@ -17,11 +17,11 @@ var applyCmd = &cobra.Command{
 		config := newConfig()
 		plugin, _ := cmd.Flags().GetString("plugin")
 		if plugin != "" {
-			return singlePlugin(config, plugin)
+			return applyPlugin(config, plugin)
 		}
 		group, _ := cmd.Flags().GetString("group")
 		if group != "" {
-			return pluginsGroup(config, group)
+			return applyGroup(config, group)
 
 		}
 
@@ -29,15 +29,16 @@ var applyCmd = &cobra.Command{
 	},
 }
 
-func pluginsGroup(config kctl.Config, destination string) error {
-	pluginsGroupSpec, err := plugins.LoadPluginsGroupSpecFormFile(pluginsGroupRepoURI + "/plugins_group.yaml")
+func applyGroup(config kctl.Config, groupName string) error {
+	var group plugins.Group
+	pluginsGroupSpec, err := group.Encode(plugins.NormalizePath(pluginsGroupRepoURI, groupName, plugins.DefaultGroupFileName))
 	if err != nil {
 		return err
 	}
 
 	for _, pluginGroupSpec := range pluginsGroupSpec.Plugins {
 		if pluginGroupSpec.Enabled == true {
-			err := singlePlugin(config, pluginGroupSpec.Name)
+			err := applyPlugin(config, pluginGroupSpec.Name)
 			if err != nil {
 				return err
 			}
@@ -48,12 +49,13 @@ func pluginsGroup(config kctl.Config, destination string) error {
 
 }
 
-func singlePlugin(config kctl.Config, destination string) error {
-	pluginSpecList, err := plugins.PluginYamls(pluginRepoURI, destination)
+func applyPlugin(config kctl.Config, pluginName string) error {
+	var plugins plugins.Plugins
+	pluginSpecList, err := plugins.Encode(pluginRepoURI, pluginName)
 	if err != nil {
 		return err
 	}
-	for _, pluginSpec := range pluginSpecList {
+	for _, pluginSpec := range pluginSpecList.Plugins {
 		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
 		err = kctl.Apply(config, pluginSpec, nil)
 		if err != nil {

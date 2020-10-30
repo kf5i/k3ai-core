@@ -26,7 +26,7 @@ func mockServer(t *testing.T) *httptest.Server {
 func TestPluginList(t *testing.T) {
 	var server = mockServer(t)
 	defer server.Close()
-	p, err := PluginList(server.URL)
+	p, err := ContentList(server.URL)
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
@@ -38,12 +38,13 @@ func TestPluginList(t *testing.T) {
 func TestPluginYamls(t *testing.T) {
 	var server = mockServer(t)
 	defer server.Close()
-	p, err := PluginYamls(server.URL+"/", "argo")
+	var pluginList Plugins
+	p, err := pluginList.Encode(server.URL+"/", "argo")
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
-	if 1 != len(p) {
-		t.Fatalf("expected %d but got %v", 1, len(p))
+	if 1 != len(p.Plugins) {
+		t.Fatalf("expected %d but got %v", 1, len(p.Plugins))
 	}
 }
 
