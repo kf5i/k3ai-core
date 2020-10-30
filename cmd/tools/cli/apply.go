@@ -11,7 +11,6 @@ import (
 var applyCmd = &cobra.Command{
 	Use:   "apply <plugin_name>",
 	Short: "Apply the plugin",
-	Args:  cobra.ExactArgs(1),
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()

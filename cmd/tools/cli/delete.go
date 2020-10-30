@@ -10,7 +10,6 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:   "delete <plugin_name>",
 	Short: "Delete the plugin",
-	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
 
