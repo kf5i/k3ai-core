@@ -30,18 +30,20 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", plugins.DefaultPluginURI, "URI for the plugins repository. Must begin with https:// or file://")
-	rootCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", plugins.DefaultPluginsGroupURI, "URI for the plugins repository. Must begin with https:// or file://")
-	rootCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
-	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(applyCmd)
-	applyCmd.Flags().BoolP(plugins.GroupType, "g", false, "Apply a plugin group")
+	setupCli(rootCmd)
+}
 
-	rootCmd.AddCommand(deleteCmd)
+func setupCli(baseCmd *cobra.Command) {
+	baseCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", plugins.DefaultPluginURI, "URI for the plugins repository. Must begin with https:// or file://")
+	baseCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", plugins.DefaultPluginsGroupURI, "URI for the plugins repository. Must begin with https:// or file://")
+	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
+	baseCmd.AddCommand(versionCmd)
+	baseCmd.AddCommand(applyCmd)
+	applyCmd.Flags().BoolP(plugins.GroupType, "g", false, "Apply a plugin group")
+	baseCmd.AddCommand(deleteCmd)
 	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Delete a plugin group")
 	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "List the plugin groups")
-
-	rootCmd.AddCommand(listCmd)
+	baseCmd.AddCommand(listCmd)
 }
 
 //Execute is the entrypoint of the commands

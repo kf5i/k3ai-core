@@ -24,20 +24,17 @@ jobs:
       - name: Lint
         run: make lint
 
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.0.0
+
       - name: Test
-        run: make test
+        run: make test TEST_FLAGS="-tags integration"
 
       - name: Test coverage
         uses: codecov/codecov-action@v1
 
       - name: Build
         run: make build-cli
-      - name: Create k8s Kind Cluster
-        uses: helm/kind-action@v1.0.0
-      - name: Test CLI
-        run: |
-          ./bin/k3ai-cli apply argo --kubectl
-          kubectl get po
 
       - name: Release(test)
         uses: goreleaser/goreleaser-action@v2
