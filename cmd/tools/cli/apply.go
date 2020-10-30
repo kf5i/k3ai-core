@@ -14,18 +14,49 @@ var applyCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		pluginName := args[0]
-		pluginSpecList, err := plugins.PluginYamls(pluginRepoURI, pluginName)
+		group, _ := cmd.Flags().GetBool(plugins.GroupType)
+		if group {
+			return applyGroup(config, args[0])
+		}
+
+		return applyPlugin(config, args[0])
+	},
+}
+
+func applyGroup(config kctl.Config, groupName string) error {
+	var groups plugins.Groups
+	pluginsGroupSpec, err := groups.Encode(pluginsGroupRepoURI, groupName)
+	if err != nil {
+		return err
+	}
+
+	for _, group := range pluginsGroupSpec.Groups {
+		for _, plugin := range group.Plugins {
+			if plugin.Enabled == true {
+				err := applyPlugin(config, plugin.Name)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+
+}
+
+func applyPlugin(config kctl.Config, pluginName string) error {
+	var plugins plugins.Plugins
+	pluginSpecList, err := plugins.Encode(pluginRepoURI, pluginName)
+	if err != nil {
+		return err
+	}
+	for _, pluginSpec := range pluginSpecList.Plugins {
+		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
+		err = kctl.Apply(config, pluginSpec, nil)
 		if err != nil {
 			return err
 		}
-		for _, pluginSpec := range pluginSpecList {
-			fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
-			err = kctl.Apply(config, pluginSpec, nil)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
-	},
+	}
+	return nil
 }

@@ -2,19 +2,18 @@ package plugins
 
 import (
 	"fmt"
-	"io/ioutil"
 	"testing"
 )
 
 func TestValidate(t *testing.T) {
-	file := getTestSpecFile(t, "defaults/plugin.yaml")
-	testPluginSpec, err := unmarshal(file)
+	var p Plugin
+	testPluginSpec, err := p.Encode("testdata/defaults/plugin.yaml")
 
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
-	var tests = []PluginSpec{
-		PluginSpec{Namespace: "default"},
+	var tests = []Plugin{
+		Plugin{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
@@ -28,13 +27,13 @@ func TestValidate(t *testing.T) {
 }
 
 func TestValidateDefaultValues(t *testing.T) {
-	file := getTestSpecFile(t, "empty_defaults/plugin.yaml")
-	testPluginSpec, err := unmarshal(file)
+	var p Plugin
+	testPluginSpec, err := p.Encode("testdata/empty_defaults/plugin.yaml")
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
-	var tests = []PluginSpec{
-		PluginSpec{Namespace: "default"},
+	var tests = []Plugin{
+		Plugin{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
@@ -45,12 +44,4 @@ func TestValidateDefaultValues(t *testing.T) {
 			}
 		})
 	}
-}
-
-func getTestSpecFile(t *testing.T, filePath string) []byte {
-	var file, err = ioutil.ReadFile("testdata/" + filePath)
-	if err != nil {
-		t.Fatal("failed to setup the test")
-	}
-	return file
 }

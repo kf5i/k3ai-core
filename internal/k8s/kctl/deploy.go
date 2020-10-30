@@ -26,7 +26,7 @@ func pause() {
 }
 
 // Apply adds/updates the plugin in a k3s/k8s cluster
-func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
+func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	_ = createNameSpace(config, plugin.Namespace)
 	pause()
 	for _, yamlSpec := range plugin.Yaml {
@@ -46,7 +46,7 @@ func Apply(config Config, plugin plugins.PluginSpec, evt Wait) error {
 }
 
 // Delete removes the plugin from the cluster
-func Delete(config Config, plugin plugins.PluginSpec) error {
+func Delete(config Config, plugin plugins.Plugin) error {
 	for i := len(plugin.Yaml) - 1; i >= 0; i-- {
 		yamlSpec := plugin.Yaml[i]
 		command, args := prepareCommand(config, delete,
