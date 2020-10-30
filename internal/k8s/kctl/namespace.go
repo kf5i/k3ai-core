@@ -1,7 +1,8 @@
 package kctl
 
 func nameSpaceExists(config Config, nameSpace string) bool {
-	err := execute(config, k3sExec, kubectl, "get", "namespace", nameSpace, "--no-headers")
+	cmd, args := prepareCommand(config, "get", "namespace", nameSpace, "--no-headers")
+	err := execute(config, cmd, args...)
 	if err != nil {
 		return false
 	}
@@ -10,14 +11,16 @@ func nameSpaceExists(config Config, nameSpace string) bool {
 
 func createNameSpace(config Config, nameSpace string) error {
 	if !nameSpaceExists(config, nameSpace) {
-		return execute(config, k3sExec, kubectl, create, "namespace", nameSpace)
+		cmd, args := prepareCommand(config, create, "namespace", nameSpace)
+		return execute(config, cmd, args...)
 	}
 	return nil
 }
 
 func deleteNameSpace(config Config, nameSpace string) error {
 	if nameSpaceExists(config, nameSpace) {
-		return execute(config, k3sExec, kubectl, delete, "namespace", nameSpace)
+		cmd, args := prepareCommand(config, delete, "namespace", nameSpace)
+		return execute(config, cmd, args...)
 	}
 	return nil
 }
