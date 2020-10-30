@@ -30,7 +30,7 @@ jobs:
           cluster_name: k3ai-test
 
       - name: Test
-        run: make test TEST_FLAGS="-tags integration"
+        run: make integration
 
       - name: Test coverage
         uses: codecov/codecov-action@v1
