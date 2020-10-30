@@ -11,20 +11,14 @@ import (
 var applyCmd = &cobra.Command{
 	Use:   "apply <plugin_name>",
 	Short: "Apply the plugin",
-
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		plugin, _ := cmd.Flags().GetString(plugins.PluginType)
-		if plugin != "" {
-			return applyPlugin(config, plugin)
-		}
 		group, _ := cmd.Flags().GetString(plugins.GroupType)
 		if group != "" {
 			return applyGroup(config, group)
-
 		}
 
-		return nil
+		return applyPlugin(config, args[0])
 	},
 }
 
