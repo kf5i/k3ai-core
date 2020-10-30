@@ -30,7 +30,7 @@ jobs:
           cluster_name: k3ai-test
 
       - name: Test
-        run: make integration
+        run: make integration-test
 
       - name: Test coverage
         uses: codecov/codecov-action@v1

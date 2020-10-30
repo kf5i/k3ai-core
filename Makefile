@@ -6,7 +6,6 @@ GOBIN=$(shell go env GOBIN)
 endif
 
 TEST_FLAGS ?=
-INTEGRATION_TEST_FLAGS=-tags integration
 
 build-cli:
 	go build -o bin/k3ai-cli
@@ -31,5 +30,5 @@ check-format:
 test:
 	go test $(TEST_FLAGS) -coverprofile=coverage.txt -covermode=atomic -race ./...
 
-integration:
-	go test $(INTEGRATION_TEST_FLAGS) -coverprofile=coverage.txt -covermode=atomic -race ./...
+integration-test:
+	go test -tags integration -coverprofile=coverage.txt -covermode=atomic -race ./...
