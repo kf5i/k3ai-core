@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/kf5i/k3ai-core/internal/plugins"
@@ -35,6 +36,8 @@ var listCmd = &cobra.Command{
 					fmt.Fprintln(config.Stdout(), g.Name)
 				}
 			}
+		default:
+			return errors.New("you need to specify 'plugins' or 'groups'")
 
 		}
 
