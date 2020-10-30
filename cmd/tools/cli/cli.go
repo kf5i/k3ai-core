@@ -39,6 +39,7 @@ func init() {
 
 	rootCmd.AddCommand(deleteCmd)
 	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Specify the group")
+	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "Specify the group")
 
 	rootCmd.AddCommand(listCmd)
 }
