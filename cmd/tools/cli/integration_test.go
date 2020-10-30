@@ -24,7 +24,7 @@ func setUp() (*cobra.Command, *bytes.Buffer) {
 }
 func TestApply(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"apply", "--kubectl", "argo"})
+	cmd.SetArgs([]string{"apply", "--kubectl", "ci-tests"})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
