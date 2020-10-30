@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/kf5i/k3ai-core/internal/plugins"
@@ -10,35 +9,27 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List all plugins",
-	Args:  cobra.ExactArgs(1),
+	Short: "List all plugins or plugin groups",
+	Args:  cobra.ExactArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		switch args[0] {
-		case "plugins":
-			{
-				plugins, err := plugins.ContentList(pluginRepoURI)
-				if err != nil {
-					return err
-				}
-				for _, p := range plugins {
-					fmt.Fprintln(config.Stdout(), p.Name)
-				}
-
+		group, _ := cmd.Flags().GetBool(plugins.GroupType)
+		if group {
+			groups, err := plugins.ContentList(pluginsGroupRepoURI)
+			if err != nil {
+				return err
 			}
-		case "groups":
-			{
-				groups, err := plugins.ContentList(pluginsGroupRepoURI)
-				if err != nil {
-					return err
-				}
-				for _, g := range groups {
-					fmt.Fprintln(config.Stdout(), g.Name)
-				}
+			for _, g := range groups {
+				fmt.Fprintln(config.Stdout(), g.Name)
 			}
-		default:
-			return errors.New("you need to specify 'plugins' or 'groups'")
-
+			return nil
+		}
+		plugins, err := plugins.ContentList(pluginRepoURI)
+		if err != nil {
+			return err
+		}
+		for _, p := range plugins {
+			fmt.Fprintln(config.Stdout(), p.Name)
 		}
 
 		return nil
