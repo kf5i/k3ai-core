@@ -15,11 +15,11 @@ var applyCmd = &cobra.Command{
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
-		plugin, _ := cmd.Flags().GetString("plugin")
+		plugin, _ := cmd.Flags().GetString(plugins.PluginType)
 		if plugin != "" {
 			return applyPlugin(config, plugin)
 		}
-		group, _ := cmd.Flags().GetString("group")
+		group, _ := cmd.Flags().GetString(plugins.GroupType)
 		if group != "" {
 			return applyGroup(config, group)
 

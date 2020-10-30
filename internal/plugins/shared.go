@@ -6,12 +6,19 @@ import (
 	"strings"
 )
 
+const (
+	// GroupType  Group Type
+	GroupType = "group"
+	// PluginType Plugin Type
+	PluginType = "plugin"
+)
+
 // FetchFromSourceURI downloads the content from http or file
 func FetchFromSourceURI(uri string) ([]byte, error) {
 	if isHTTP(uri) {
 		return _fetchRemoteContent(uri)
 	}
-	return fetchFromFile(uri)
+	return FetchFromFile(uri)
 
 }
 
@@ -19,7 +26,8 @@ func isHTTP(uri string) bool {
 	return strings.HasPrefix(uri, "http://") || strings.HasPrefix(uri, "https://")
 }
 
-func fetchFromFile(uri string) ([]byte, error) {
+// FetchFromFile load the yaml from file
+func FetchFromFile(uri string) ([]byte, error) {
 	fileContent, err := ioutil.ReadFile(uri)
 	if err != nil {
 		return nil, err

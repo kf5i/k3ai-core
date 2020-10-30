@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"fmt"
-	"io/ioutil"
 	"testing"
 )
 
@@ -45,12 +44,4 @@ func TestValidateDefaultValues(t *testing.T) {
 			}
 		})
 	}
-}
-
-func getTestSpecFile(t *testing.T, filePath string) []byte {
-	var file, err = ioutil.ReadFile("testdata/" + filePath)
-	if err != nil {
-		t.Fatal("failed to setup the test")
-	}
-	return file
 }

@@ -5,5 +5,3 @@ plugins:
     enabled: true
   - name: argo
     enabled: true
-
-

@@ -7,13 +7,12 @@ import (
 
 func TestValidatePluginsGroupSpec(t *testing.T) {
 	var group Group
-	testPluginsGroupsSpec, err := group.Encode("testdata/plugins_group/standard_two_plugins/group.yaml")
+	testPluginsGroupsSpec, err := group.Encode("testdata/groups/two_plugins/group.yaml")
 
 	if err != nil {
 		t.Fatalf("failed to unmarshal test file: %s", err)
 	}
 	var tests = []Group{
-		Group{},
 		*testPluginsGroupsSpec,
 	}
 	for i, test := range tests {

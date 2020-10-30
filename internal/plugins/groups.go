@@ -38,12 +38,15 @@ func (gs Group) Encode(groupURI string) (*Group, error) {
 }
 
 func (gs *Group) validate() error {
+	if len(gs.Plugins) <= 0 {
+		return errors.New("empty plugins, at least on one plugin is needed")
+	}
+
 	return nil
 }
 
 // Encode fetches the Plugins
-func (Groups) Encode(groupURI string, groupName string) (*Groups, error) {
-	var groups Groups
+func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) {
 	if !isHTTP(groupURI) {
 		var p Group
 		r, err := p.Encode(NormalizePath(groupURI, groupName, DefaultGroupFileName))
@@ -61,6 +64,7 @@ func (Groups) Encode(groupURI string, groupName string) (*Groups, error) {
 	}
 	gHubContents = gHubContents.filter(fileType)
 	for _, githubContent := range gHubContents {
+		fmt.Printf("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv%s\n", githubContent.Name)
 		if githubContent.Name == DefaultGroupFileName {
 			var p Group
 			r, err := p.Encode(githubContent.DownloadURL)
