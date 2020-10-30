@@ -40,7 +40,7 @@ func TestDelete(t *testing.T) {
 	cmd, out := setUp()
 	cmd.SetOut(out)
 	cmd.SetErr(out)
-	cmd.SetArgs([]string{"delete", "--kubectl", "argo"})
+	cmd.SetArgs([]string{"delete", "--kubectl", "ci-tests"})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
