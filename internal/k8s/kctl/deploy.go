@@ -16,8 +16,6 @@ const (
 	create  = "create"
 )
 
-// Wait is the abstraction to wait for commands to finish
-
 func pause() {
 	time.Sleep(2 * time.Second)
 }
