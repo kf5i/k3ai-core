@@ -9,7 +9,7 @@ import (
 )
 
 func mockPluginsServer(t *testing.T, filePath string, contentType string) *httptest.Server {
-	file, err := FetchFromFile(filePath)
+	file, err := fetchFromFile(filePath)
 	if err != nil {
 		t.Fatalf("Error: %s", err)
 	}
@@ -65,11 +65,6 @@ func TestGroupsYamls(t *testing.T) {
 
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
-	}
-	fmt.Printf("aaaaaaaaaaaaaaaaaa %d\n", len(r.Groups))
-
-	for _, i2 := range r.Groups {
-		fmt.Printf("aaaaaaaaaaaaaaaaaa %d\n", len(i2.Plugins))
 	}
 
 	if 1 != len(r.Groups) {

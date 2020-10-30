@@ -11,7 +11,7 @@ import (
 var applyCmd = &cobra.Command{
 	Use:   "apply <plugin_name>",
 	Short: "Apply the plugin",
-	//	Args:  cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(1),
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
@@ -30,17 +30,19 @@ var applyCmd = &cobra.Command{
 }
 
 func applyGroup(config kctl.Config, groupName string) error {
-	var group plugins.Group
-	pluginsGroupSpec, err := group.Encode(plugins.NormalizePath(pluginsGroupRepoURI, groupName, plugins.DefaultGroupFileName))
+	var groups plugins.Groups
+	pluginsGroupSpec, err := groups.Encode(pluginsGroupRepoURI, groupName)
 	if err != nil {
 		return err
 	}
 
-	for _, pluginGroupSpec := range pluginsGroupSpec.Plugins {
-		if pluginGroupSpec.Enabled == true {
-			err := applyPlugin(config, pluginGroupSpec.Name)
-			if err != nil {
-				return err
+	for _, group := range pluginsGroupSpec.Groups {
+		for _, plugin := range group.Plugins {
+			if plugin.Enabled == true {
+				err := applyPlugin(config, plugin.Name)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

@@ -16,9 +16,9 @@ const (
 // FetchFromSourceURI downloads the content from http or file
 func FetchFromSourceURI(uri string) ([]byte, error) {
 	if isHTTP(uri) {
-		return _fetchRemoteContent(uri)
+		return fetchRemoteContent(uri)
 	}
-	return FetchFromFile(uri)
+	return fetchFromFile(uri)
 
 }
 
@@ -26,8 +26,8 @@ func isHTTP(uri string) bool {
 	return strings.HasPrefix(uri, "http://") || strings.HasPrefix(uri, "https://")
 }
 
-// FetchFromFile load the yaml from file
-func FetchFromFile(uri string) ([]byte, error) {
+// fetchFromFile load the yaml from file
+func fetchFromFile(uri string) ([]byte, error) {
 	fileContent, err := ioutil.ReadFile(uri)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func FetchFromFile(uri string) ([]byte, error) {
 
 }
 
-func _fetchRemoteContent(uri string) ([]byte, error) {
+func fetchRemoteContent(uri string) ([]byte, error) {
 	resp, err := http.Get(uri)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func _fetchRemoteContent(uri string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 
-func setDefaultIfEmpty(value string, defaultValue string) string {
+func getDefaultIfEmpty(value string, defaultValue string) string {
 	if value == "" {
 		return defaultValue
 	}
@@ -57,15 +57,14 @@ func includeSlash(path string) string {
 	if strings.HasSuffix(path, "/") {
 		return path
 	}
-
 	return path + "/"
 }
 
 // NormalizePath applies the "/" in the right position
-func NormalizePath(args ...string) string {
+func NormalizePath(file string, args ...string) string {
 	result := ""
 	for _, subPath := range args {
 		result += includeSlash(subPath)
 	}
-	return strings.TrimRight(result, "/")
+	return result + file
 }

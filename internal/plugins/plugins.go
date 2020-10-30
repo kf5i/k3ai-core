@@ -59,7 +59,7 @@ func (Plugins) Encode(pluginURI string, pluginName string) (*Plugins, error) {
 	var plugins Plugins
 	if !isHTTP(pluginURI) {
 		var p Plugin
-		r, err := p.Encode(NormalizePath(pluginURI, pluginName, DefaultPluginFileName))
+		r, err := p.Encode(NormalizePath(DefaultPluginFileName, pluginURI, pluginName))
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", pluginURI))
 		}
@@ -68,7 +68,7 @@ func (Plugins) Encode(pluginURI string, pluginName string) (*Plugins, error) {
 		return &plugins, nil
 	}
 
-	gHubContents, err := getRepoContent(setDefaultIfEmpty(pluginURI, DefaultPluginURI) + pluginName)
+	gHubContents, err := getRepoContent(getDefaultIfEmpty(pluginURI, DefaultPluginURI) + pluginName)
 	if err != nil {
 		return nil, err
 	}
@@ -101,9 +101,9 @@ func (ps *Plugin) validate() error {
 }
 
 func mergeWithDefault(ps *Plugin) {
-	ps.Namespace = setDefaultIfEmpty(ps.Namespace, "default")
+	ps.Namespace = getDefaultIfEmpty(ps.Namespace, "default")
 	for i, yamlTypeItem := range ps.Yaml {
-		yamlType := setDefaultIfEmpty(yamlTypeItem.Type, "file")
+		yamlType := getDefaultIfEmpty(yamlTypeItem.Type, "file")
 		ps.Yaml[i] = YamlType{Type: yamlType, URL: yamlTypeItem.URL}
 	}
 }

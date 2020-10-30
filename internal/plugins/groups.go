@@ -49,7 +49,7 @@ func (gs *Group) validate() error {
 func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) {
 	if !isHTTP(groupURI) {
 		var p Group
-		r, err := p.Encode(NormalizePath(groupURI, groupName, DefaultGroupFileName))
+		r, err := p.Encode(NormalizePath(DefaultGroupFileName, groupURI, groupName))
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", groupURI))
 		}
@@ -58,13 +58,12 @@ func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) 
 		return &groups, nil
 	}
 
-	gHubContents, err := getRepoContent(setDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
+	gHubContents, err := getRepoContent(getDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
 	if err != nil {
 		return nil, err
 	}
 	gHubContents = gHubContents.filter(fileType)
 	for _, githubContent := range gHubContents {
-		fmt.Printf("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv%s\n", githubContent.Name)
 		if githubContent.Name == DefaultGroupFileName {
 			var p Group
 			r, err := p.Encode(githubContent.DownloadURL)

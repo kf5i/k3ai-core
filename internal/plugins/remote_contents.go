@@ -37,7 +37,7 @@ func (content GithubContents) filter(filterType string) GithubContents {
 func getRepoContent(uri string) (GithubContents, error) {
 	const wrapMessage = "cannot load plugins"
 
-	remoteContent, err := _fetchRemoteContent(uri)
+	remoteContent, err := fetchRemoteContent(uri)
 	if err != nil {
 		return nil, errors.Wrap(err, wrapMessage)
 	}

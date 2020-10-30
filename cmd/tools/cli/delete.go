@@ -10,7 +10,7 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:   "delete <plugin_name>",
 	Short: "Delete the plugin",
-	//Args:  cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		config := newConfig()
 
@@ -28,19 +28,19 @@ var deleteCmd = &cobra.Command{
 }
 
 func deleteGroup(config kctl.Config, groupName string) error {
-	var g plugins.Group
-	group, err := g.Encode(plugins.NormalizePath(pluginsGroupRepoURI,
-		groupName,
-		plugins.DefaultGroupFileName))
+	var groups plugins.Groups
+	pluginsGroupSpec, err := groups.Encode(pluginsGroupRepoURI, groupName)
 	if err != nil {
 		return err
 	}
 
-	for _, pluginItem := range group.Plugins {
-		if pluginItem.Enabled == true {
-			err := deletePlugin(config, pluginItem.Name)
-			if err != nil {
-				return err
+	for _, group := range pluginsGroupSpec.Groups {
+		for _, plugin := range group.Plugins {
+			if plugin.Enabled == true {
+				err := deletePlugin(config, plugin.Name)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
