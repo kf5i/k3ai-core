@@ -37,7 +37,7 @@ func (gs Group) Encode(groupURI string) (*Group, error) {
 	return &gs, nil
 }
 
-func (ps *Group) validate() error {
+func (gs *Group) validate() error {
 	return nil
 }
 

@@ -53,6 +53,7 @@ func includeSlash(path string) string {
 	return path + "/"
 }
 
+// NormalizePath applies the "/" in the right position
 func NormalizePath(args ...string) string {
 	result := ""
 	for _, subPath := range args {
