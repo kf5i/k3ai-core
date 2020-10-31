@@ -24,8 +24,13 @@ jobs:
       - name: Lint
         run: make lint
 
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.0.0
+        with:
+          cluster_name: k3ai-test
+
       - name: Test
-        run: make test
+        run: make integration-test
 
       - name: Test coverage
         uses: codecov/codecov-action@v1

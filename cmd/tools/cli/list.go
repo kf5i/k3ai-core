@@ -7,31 +7,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all plugins or plugin groups",
-	Args:  cobra.ExactArgs(0),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		config := newConfig()
-		group, _ := cmd.Flags().GetBool(plugins.GroupType)
-		if group {
-			groups, err := plugins.ContentList(pluginsGroupRepoURI)
+func newListCommand() *cobra.Command {
+	var listCmd = &cobra.Command{
+		Use:   "list",
+		Short: "List all plugins or plugin groups",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			config := newConfig(cmd)
+			group, _ := cmd.Flags().GetBool(plugins.GroupType)
+			if group {
+				groups, err := plugins.ContentList(pluginsGroupRepoURI)
+				if err != nil {
+					return err
+				}
+				for _, g := range groups {
+					fmt.Fprintln(config.Stdout(), g.Name)
+				}
+				return nil
+			}
+			plugins, err := plugins.ContentList(pluginRepoURI)
 			if err != nil {
 				return err
 			}
-			for _, g := range groups {
-				fmt.Fprintln(config.Stdout(), g.Name)
+			for _, p := range plugins {
+				fmt.Fprintln(config.Stdout(), p.Name)
 			}
-			return nil
-		}
-		plugins, err := plugins.ContentList(pluginRepoURI)
-		if err != nil {
-			return err
-		}
-		for _, p := range plugins {
-			fmt.Fprintln(config.Stdout(), p.Name)
-		}
 
-		return nil
-	},
+			return nil
+		},
+	}
+	listCmd.Flags().BoolP(plugins.GroupType, "g", false, "List the plugin groups")
+	return listCmd
 }

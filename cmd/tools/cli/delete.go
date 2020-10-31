@@ -8,22 +8,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var deleteCmd = &cobra.Command{
-	Use:   "delete <plugin_name>",
-	Short: "Delete a plugin or a plugin group",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		config := newConfig()
+func newDeleteCommand() *cobra.Command {
+	var deleteCmd = &cobra.Command{
+		Use:   "delete <plugin_name>",
+		Short: "Delete a plugin or a plugin group",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			config := newConfig(cmd)
 
-		group, _ := cmd.Flags().GetBool(plugins.GroupType)
-		if group {
-			return deleteGroup(config, args[0])
+			group, _ := cmd.Flags().GetBool(plugins.GroupType)
+			if group {
+				return deleteGroup(config, args[0])
 
-		}
-		return deletePlugin(config, args[0])
-	},
+			}
+			return deletePlugin(config, args[0])
+		},
+	}
+	deleteCmd.Flags().BoolP(plugins.GroupType, "g", false, "Delete a plugin group")
+	return deleteCmd
 }
-
 func deleteGroup(config kctl.Config, groupName string) error {
 	var groups plugins.Groups
 	pluginsGroupSpec, err := groups.Encode(pluginsGroupRepoURI, groupName)
@@ -41,9 +44,7 @@ func deleteGroup(config kctl.Config, groupName string) error {
 			}
 		}
 	}
-
 	return nil
-
 }
 
 func deletePlugin(config kctl.Config, pluginName string) error {

@@ -5,6 +5,8 @@ else
 GOBIN=$(shell go env GOBIN)
 endif
 
+TEST_FLAGS ?=
+
 build-cli:
 	go build -o bin/k3ai-cli
 
@@ -23,6 +25,10 @@ check-format:
 			$(foreach file,$(unformatted),$(\n)    gofmt -w $(file))$(\n)),\
 		@echo All files are well formatted.\
 	)
+
 .PHONY: test
 test:
-	go test -coverprofile=coverage.txt -covermode=atomic -race ./...
+	go test $(TEST_FLAGS) -coverprofile=coverage.txt -covermode=atomic -race ./...
+
+integration-test:
+	go test -tags integration -coverprofile=coverage.txt -covermode=atomic -race ./...
