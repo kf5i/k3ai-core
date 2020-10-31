@@ -13,15 +13,12 @@ func mockPluginsServer(t *testing.T, filePath string, contentType string) *httpt
 	if err != nil {
 		t.Fatalf("Error: %s", err)
 	}
-	fmt.Printf("Step 1: %s\n", contentType)
+	
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Printf("Step 2: %s\n", r.URL.Path)
 			if strings.HasSuffix(r.URL.Path, "/test") {
-				fmt.Printf("Step 3: %s\n", r.URL.Path)
 				_, _ = fmt.Fprintln(w, mockTestFolder(r.Host, contentType))
 			} else if strings.HasSuffix(r.URL.Path, ".yaml") {
-				fmt.Printf("Step 4: %s\n", r.URL.Path)
 				_, _ = fmt.Fprintln(w, string(file))
 			} else {
 				_, _ = fmt.Fprintln(w, remoteDir)
