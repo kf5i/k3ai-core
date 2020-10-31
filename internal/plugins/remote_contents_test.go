@@ -13,7 +13,7 @@ func mockPluginsServer(t *testing.T, filePath string, contentType string) *httpt
 	if err != nil {
 		t.Fatalf("Error: %s", err)
 	}
-	
+
 	ts := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if strings.HasSuffix(r.URL.Path, "/test") {
