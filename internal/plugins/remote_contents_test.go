@@ -28,7 +28,7 @@ func mockPluginsServer(t *testing.T, filePath string, contentType string) *httpt
 }
 
 func TestPluginsList(t *testing.T) {
-	var server = mockPluginsServer(t, "testdata/defaults/plugin.yaml", PluginType)
+	var server = mockPluginsServer(t, joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"), PluginType)
 	defer server.Close()
 	p, err := ContentList(server.URL)
 	if err != nil {
@@ -40,7 +40,7 @@ func TestPluginsList(t *testing.T) {
 }
 
 func TestPluginYamls(t *testing.T) {
-	var server = mockPluginsServer(t, "testdata/defaults/plugin.yaml", PluginType)
+	var server = mockPluginsServer(t, joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"), PluginType)
 	defer server.Close()
 	var pluginList Plugins
 
@@ -55,7 +55,7 @@ func TestPluginYamls(t *testing.T) {
 }
 
 func TestGroupsYamls(t *testing.T) {
-	var server = mockPluginsServer(t, "testdata/groups/two_plugins/group.yaml", GroupType)
+	var server = mockPluginsServer(t, joinWithRootData("groups/argo/group.yaml"), GroupType)
 	defer server.Close()
 	var groups Groups
 	r, err := groups.Encode(server.URL, "/test")
