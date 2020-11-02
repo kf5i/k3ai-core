@@ -55,7 +55,7 @@ func TestPluginYamls(t *testing.T) {
 }
 
 func TestGroupsYamls(t *testing.T) {
-	var server = mockPluginsServer(t, joinWithRootData("groups/argo/group.yaml"), GroupType)
+	var server = mockPluginsServer(t, joinWithRootData("groups/argo-workflow/group.yaml"), GroupType)
 	defer server.Close()
 	var groups Groups
 	r, err := groups.Encode(server.URL, "/test")

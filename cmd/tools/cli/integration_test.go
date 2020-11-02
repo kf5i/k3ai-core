@@ -67,7 +67,7 @@ func TestLocalDelete(t *testing.T) {
 
 func TestLocalGroupApply(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"apply", "-g", "argo", "--kubectl", "--group-repo", joinWithRootData("groups")})
+	cmd.SetArgs([]string{"apply", "-g", "argo-workflow", "--kubectl", "--group-repo", joinWithRootData("groups")})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -76,7 +76,7 @@ func TestLocalGroupApply(t *testing.T) {
 
 func TestLocalGroupDelete(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"delete", "-g", "argo", "--kubectl", "--group-repo", joinWithRootData("groups")})
+	cmd.SetArgs([]string{"delete", "-g", "argo-workflow", "--kubectl", "--group-repo", joinWithRootData("groups")})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
