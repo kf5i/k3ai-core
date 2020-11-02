@@ -14,9 +14,10 @@ type PluginGroup struct {
 
 //Group is the specification of each k3ai plugins group
 type Group struct {
-	PluginType string        `yaml:"plugin-type"`
-	GroupName  string        `yaml:"group-name"`
-	Plugins    []PluginGroup `yaml:"plugins,flow"`
+	PluginType    string        `yaml:"plugin-type"`
+	GroupName     string        `yaml:"group-name"`
+	Plugins       []PluginGroup `yaml:"plugins,flow"`
+	InlinePlugins []Plugin      `yaml:"inline-plugins,flow"`
 }
 
 //Groups is the specification of each k3ai plugins group

@@ -42,6 +42,14 @@ func applyGroup(config kctl.Config, groupName string) error {
 				}
 			}
 		}
+
+		for _, inlinePlugin := range group.InlinePlugins {
+			err = kctl.Apply(config, inlinePlugin, nil)
+			if err != nil {
+				return err
+			}
+		}
+
 	}
 
 	return nil
