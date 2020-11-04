@@ -22,6 +22,7 @@ type DefaultSettings struct {
 
 const configFileName = "config"
 
+// GetDefaultSettings get default settings
 func GetDefaultSettings() *DefaultSettings {
 	var ds DefaultSettings
 	ds.GroupsURI = plugins.DefaultPluginsGroupURI
@@ -39,7 +40,7 @@ func (ds *DefaultSettings) SaveConfigurationFile() error {
 			return errDir
 		}
 	}
-	err = CreateConfigFile(configDir)
+	err = createConfigFile(configDir)
 	if err != nil {
 		return err
 	}
@@ -57,7 +58,7 @@ func (ds *DefaultSettings) SaveConfigurationFile() error {
 	return nil
 }
 
-func CreateConfigFile(configDir string) error {
+func createConfigFile(configDir string) error {
 	if _, err := os.Stat(filepath.Join(configDir, configFileName)); os.IsNotExist(err) {
 		f, err := os.Create(filepath.Join(configDir, configFileName))
 		if err != nil {
@@ -80,6 +81,7 @@ func getHomeConfigDir() (string, error) {
 	return configDir, nil
 }
 
+// LoadConfigFile load the configuration file
 func LoadConfigFile() (*DefaultSettings, error) {
 	var ds *DefaultSettings
 	configDir, err := getHomeConfigDir()
