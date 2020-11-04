@@ -2,3 +2,7 @@
 bin/
 vendor/
 coverage.txt
+
+node_modules
+.parcel-cache
+.cache
