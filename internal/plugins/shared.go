@@ -52,19 +52,3 @@ func getDefaultIfEmpty(value string, defaultValue string) string {
 	}
 	return value
 }
-
-func includeSlash(path string) string {
-	if strings.HasSuffix(path, "/") {
-		return path
-	}
-	return path + "/"
-}
-
-// NormalizePath applies the "/" in the right position
-func NormalizePath(file string, args ...string) string {
-	result := ""
-	for _, subPath := range args {
-		result += includeSlash(subPath)
-	}
-	return result + file
-}

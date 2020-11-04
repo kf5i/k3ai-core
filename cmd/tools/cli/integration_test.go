@@ -44,7 +44,7 @@ func TestDelete(t *testing.T) {
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
-	assertMessage(t, out.String(), `service "argo-server" deleted`)
+	assertMessage(t, okubeflow-pipelines-traefikut.String(), `service "argo-server" deleted`)
 }
 
 func TestLocalApply(t *testing.T) {
