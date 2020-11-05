@@ -42,7 +42,7 @@ func setupCli(baseCmd *cobra.Command) {
 
 	baseCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", s.PluginsURI, "URI for the plugins repository. ")
 	baseCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", s.GroupsURI, "URI for the plugin groups repository")
-	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", false, "Use kubectl for deployment. Uses k3s when set to false")
+	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", s.UseKubectl, "Use kubectl for deployment. Uses k3s when set to false")
 	baseCmd.AddCommand(versionCmd)
 	baseCmd.AddCommand(newApplyCommand())
 

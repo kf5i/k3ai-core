@@ -18,7 +18,7 @@ func TestDefaultDirDoesNotExist(t *testing.T) {
 
 	shared.AssertEqual(t, settingsToRead.GroupsURI, plugins.DefaultPluginsGroupURI, "TestDefaultDirDoesNotExist GroupsURI")
 	shared.AssertEqual(t, settingsToRead.PluginsURI, plugins.DefaultPluginURI, "TestDefaultDirDoesNotExist PluginsURI")
-	shared.AssertEqual(t, settingsToRead.K8sCli, plugins.DefaultK8sCli, "TestDefaultDirDoesNotExist K8sCli")
+	shared.AssertEqual(t, settingsToRead.UseKubectl, false, "TestDefaultDirDoesNotExist K8sCli")
 }
 
 func TestCustomSettings(t *testing.T) {
@@ -30,7 +30,7 @@ func TestCustomSettings(t *testing.T) {
 	var settingsToStore Settings
 	settingsToStore.GroupsURI = "path-groups-uri"
 	settingsToStore.PluginsURI = "path-plugins-uri"
-	settingsToStore.K8sCli = "kubectl"
+	settingsToStore.UseKubectl = true
 
 	err = SaveSettingFile(dir, settingsToStore)
 	if err != nil {
@@ -44,7 +44,7 @@ func TestCustomSettings(t *testing.T) {
 
 	shared.AssertEqual(t, settingsToRead.GroupsURI, settingsToStore.GroupsURI, "TestCustomSettings GroupsURI")
 	shared.AssertEqual(t, settingsToRead.PluginsURI, settingsToStore.PluginsURI, "TestCustomSettings PluginsURI")
-	shared.AssertEqual(t, settingsToRead.K8sCli, settingsToStore.K8sCli, "TestCustomSettings K8sCli")
+	shared.AssertEqual(t, settingsToRead.UseKubectl, settingsToStore.UseKubectl, "TestCustomSettings K8sCli")
 }
 
 func TestCustomWithEmptySettings(t *testing.T) {
@@ -56,7 +56,7 @@ func TestCustomWithEmptySettings(t *testing.T) {
 	var settingsToStore Settings
 	settingsToStore.GroupsURI = ""
 	settingsToStore.PluginsURI = ""
-	settingsToStore.K8sCli = ""
+	settingsToStore.UseKubectl = false
 
 	err = SaveSettingFile(dir, settingsToStore)
 	if err != nil {
@@ -70,5 +70,5 @@ func TestCustomWithEmptySettings(t *testing.T) {
 
 	shared.AssertEqual(t, settingsToRead.GroupsURI, plugins.DefaultPluginsGroupURI, "TestCustomWithEmptySettings GroupsURI")
 	shared.AssertEqual(t, settingsToRead.PluginsURI, plugins.DefaultPluginURI, "TestCustomWithEmptySettings PluginsURI ")
-	shared.AssertEqual(t, settingsToRead.K8sCli, plugins.DefaultK8sCli, "TestCustomWithEmptySettings K8sCli")
+	shared.AssertEqual(t, settingsToRead.UseKubectl, false, "TestCustomWithEmptySettings K8sCli")
 }

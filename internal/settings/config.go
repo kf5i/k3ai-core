@@ -17,8 +17,8 @@ type Settings struct {
 	PluginsURI string `yaml:"plugins-url"`
 	// GroupsURI is --group-repo
 	GroupsURI string `yaml:"groups-url"`
-	// K8sCli is k3s or kubectl
-	K8sCli string `yaml:"k8s-cli"`
+	// UseKubectl use kubectl instead of k3s
+	UseKubectl bool `yaml:"use-kubectl"`
 }
 
 const configFileName = "config"
@@ -28,7 +28,7 @@ func GetDefaultSettings() *Settings {
 	var ds Settings
 	ds.GroupsURI = plugins.DefaultPluginsGroupURI
 	ds.PluginsURI = plugins.DefaultPluginURI
-	ds.K8sCli = "k3s"
+	ds.UseKubectl = false
 	return &ds
 }
 
@@ -112,7 +112,6 @@ func loadSettingFormFile(configDir string) (*Settings, error) {
 
 	ds.GroupsURI = shared.GetDefaultIfEmpty(ds.GroupsURI, plugins.DefaultPluginsGroupURI)
 	ds.PluginsURI = shared.GetDefaultIfEmpty(ds.PluginsURI, plugins.DefaultPluginURI)
-	ds.K8sCli = shared.GetDefaultIfEmpty(ds.K8sCli, plugins.DefaultK8sCli)
 
 	return ds, nil
 }
