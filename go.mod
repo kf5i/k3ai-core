@@ -7,7 +7,6 @@ require (
 	github.com/Azure/go-autorest/autorest v0.11.10 // indirect
 	github.com/ghodss/yaml v1.0.0
 	github.com/golang/protobuf v1.4.3 // indirect
-	github.com/golangplus/testing v0.0.0-20180327235837-af21d9c3145e
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/pkg/errors v0.9.1
