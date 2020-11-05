@@ -21,3 +21,11 @@ func NormalizePath(file string, args ...string) string {
 	}
 	return result + file
 }
+
+// GetDefaultIfEmpty get a value if empty
+func GetDefaultIfEmpty(value string, defaultValue string) string {
+	if value == "" {
+		return defaultValue
+	}
+	return value
+}

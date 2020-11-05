@@ -60,7 +60,7 @@ func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) 
 		return &groups, nil
 	}
 
-	gHubContents, err := getRepoContent(getDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
+	gHubContents, err := getRepoContent(shared.GetDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
 	if err != nil {
 		return nil, err
 	}

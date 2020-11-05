@@ -10,6 +10,8 @@ const (
 	DefaultPluginURI = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/core/plugins/"
 	// DefaultPluginsGroupURI is the location of the group repository if not other location is specified
 	DefaultPluginsGroupURI = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/core/groups/"
+	//DefaultK8sCli default command lines
+	DefaultK8sCli = "k3s"
 
 	dirType  = "dir"
 	fileType = "file"

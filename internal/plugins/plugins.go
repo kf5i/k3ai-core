@@ -69,7 +69,7 @@ func (Plugins) Encode(pluginURI string, pluginName string) (*Plugins, error) {
 		return &plugins, nil
 	}
 
-	gHubContents, err := getRepoContent(getDefaultIfEmpty(pluginURI, DefaultPluginURI) + pluginName)
+	gHubContents, err := getRepoContent(shared.GetDefaultIfEmpty(pluginURI, DefaultPluginURI) + pluginName)
 	if err != nil {
 		return nil, err
 	}
@@ -102,9 +102,9 @@ func (ps *Plugin) validate() error {
 }
 
 func mergeWithDefault(ps *Plugin) {
-	ps.Namespace = getDefaultIfEmpty(ps.Namespace, "default")
+	ps.Namespace = shared.GetDefaultIfEmpty(ps.Namespace, "default")
 	for i, yamlTypeItem := range ps.Yaml {
-		yamlType := getDefaultIfEmpty(yamlTypeItem.Type, "file")
+		yamlType := shared.GetDefaultIfEmpty(yamlTypeItem.Type, "file")
 		ps.Yaml[i] = YamlType{Type: yamlType, URL: yamlTypeItem.URL}
 	}
 }

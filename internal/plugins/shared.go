@@ -45,10 +45,3 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 	defer resp.Body.Close()
 	return ioutil.ReadAll(resp.Body)
 }
-
-func getDefaultIfEmpty(value string, defaultValue string) string {
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
