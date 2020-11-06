@@ -9,7 +9,7 @@ const App = () => {
   const [plugins, setPlugins] = useState([]);
 
   useEffect(() => {
-    axios.get("/plugins").then(({ data }) => {
+    axios.get("/api/plugins").then(({ data }) => {
       setPlugins(data);
     });
   }, []);
