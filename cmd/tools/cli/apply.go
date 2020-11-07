@@ -35,7 +35,7 @@ func applyGroup(config kctl.Config, groupName string) error {
 
 	for _, group := range pluginsGroupSpec.Groups {
 		for _, plugin := range group.Plugins {
-			if plugin.Enabled == true {
+			if plugin.Enabled {
 				err := applyPlugin(config, plugin.Name)
 				if err != nil {
 					return err
