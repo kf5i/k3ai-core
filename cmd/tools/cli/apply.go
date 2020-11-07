@@ -35,7 +35,7 @@ func applyGroup(config kctl.Config, groupName string) error {
 
 	for _, group := range pluginsGroupSpec.Groups {
 		for _, plugin := range group.Plugins {
-			if plugin.Enabled == true {
+			if plugin.Enabled {
 				err := applyPlugin(config, plugin.Name)
 				if err != nil {
 					return err
@@ -44,7 +44,7 @@ func applyGroup(config kctl.Config, groupName string) error {
 		}
 
 		for _, inlinePlugin := range group.InlinePlugins {
-			err = kctl.Apply(config, inlinePlugin, nil)
+			err = kctl.Apply(config, inlinePlugin, &kctl.CliWait{})
 			if err != nil {
 				return err
 			}
@@ -64,7 +64,7 @@ func applyPlugin(config kctl.Config, pluginName string) error {
 	}
 	for _, pluginSpec := range pluginSpecList.Plugins {
 		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
-		err = kctl.Apply(config, pluginSpec, nil)
+		err = kctl.Apply(config, pluginSpec, &kctl.CliWait{})
 		if err != nil {
 			return err
 		}

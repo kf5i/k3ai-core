@@ -16,11 +16,6 @@ const (
 	create  = "create"
 )
 
-// Wait is the abstraction to wait for commands to finish
-type Wait interface {
-	Process(labels []string)
-}
-
 func pause() {
 	time.Sleep(2 * time.Second)
 }
@@ -40,7 +35,7 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	}
 
 	if evt != nil {
-		evt.Process(plugin.Labels)
+		return evt.Process(config, plugin.Namespace, plugin.Labels)
 	}
 	return nil
 }
