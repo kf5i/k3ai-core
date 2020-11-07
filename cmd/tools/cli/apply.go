@@ -69,5 +69,6 @@ func applyPlugin(config kctl.Config, pluginName string) error {
 			return err
 		}
 	}
+
 	return nil
 }

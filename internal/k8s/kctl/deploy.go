@@ -42,6 +42,14 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	if evt != nil {
 		evt.Process(plugin.Labels)
 	}
+
+	if plugin.PostInstall.Command != "" {
+
+		err := execute(config, "sh", "-c", plugin.PostInstall.Command)
+		if err != nil {
+			log.Printf("Error during post installation: %s\n", err.Error())
+		}
+	}
 	return nil
 }
 

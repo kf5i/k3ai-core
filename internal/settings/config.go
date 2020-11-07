@@ -1,14 +1,15 @@
 package settings
 
 import (
-	"github.com/ghodss/yaml"
-	"github.com/kf5i/k3ai-core/internal/plugins"
-	"github.com/kf5i/k3ai-core/internal/shared"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
 	"path/filepath"
+
+	"github.com/kf5i/k3ai-core/internal/plugins"
+	"github.com/kf5i/k3ai-core/internal/shared"
+	"gopkg.in/yaml.v2"
 )
 
 // Settings default user setting

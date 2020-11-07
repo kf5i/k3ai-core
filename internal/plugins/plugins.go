@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"fmt"
+
 	"github.com/kf5i/k3ai-core/internal/shared"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
@@ -25,14 +26,20 @@ type YamlType struct {
 	Type string `yaml:"type,omitempty"`
 }
 
+//PostInstall to execute after the scripts
+type PostInstall struct {
+	Command string `yaml:"command,omitempty"`
+}
+
 //Plugin is the specification of each k3ai plugin
 type Plugin struct {
-	Namespace  string     `yaml:"namespace,omitempty"`
-	Labels     []string   `yaml:",flow"`
-	PluginName string     `yaml:"plugin-name"`
-	Yaml       []YamlType `yaml:"yaml,flow"`
-	Bash       []string   `yaml:"bash,flow"`
-	Helm       []string   `yaml:"helm,flow"`
+	Namespace   string      `yaml:"namespace,omitempty"`
+	Labels      []string    `yaml:",flow"`
+	PluginName  string      `yaml:"plugin-name"`
+	Yaml        []YamlType  `yaml:"yaml,flow"`
+	Bash        []string    `yaml:"bash,flow"`
+	Helm        []string    `yaml:"helm,flow"`
+	PostInstall PostInstall `yaml:"post-install"`
 }
 
 // Plugins is a Plugin collection
