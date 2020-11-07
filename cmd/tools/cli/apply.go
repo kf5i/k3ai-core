@@ -64,7 +64,7 @@ func applyPlugin(config kctl.Config, pluginName string) error {
 	}
 	for _, pluginSpec := range pluginSpecList.Plugins {
 		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginSpec.Yaml, pluginSpec.PluginName)
-		err = kctl.Apply(config, pluginSpec, nil)
+		err = kctl.Apply(config, pluginSpec, &kctl.CliWait{})
 		if err != nil {
 			return err
 		}
