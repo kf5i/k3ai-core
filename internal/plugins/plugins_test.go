@@ -13,7 +13,7 @@ func TestValidate(t *testing.T) {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []Plugin{
-		Plugin{Namespace: "default"},
+		{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
@@ -33,7 +33,7 @@ func TestValidateDefaultValues(t *testing.T) {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []Plugin{
-		Plugin{Namespace: "default"},
+		{Namespace: "default"},
 		*testPluginSpec,
 	}
 	for i, test := range tests {
