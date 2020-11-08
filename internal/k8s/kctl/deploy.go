@@ -35,7 +35,10 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	}
 
 	if evt != nil {
-		return evt.Process(config, plugin.Namespace, plugin.Labels)
+		err := evt.Process(config, plugin.Namespace, plugin.Labels)
+		if err != nil {
+			log.Printf("Error during wait: %s\n", err.Error())
+		}
 	}
 
 	if plugin.PostInstall.Command != "" {

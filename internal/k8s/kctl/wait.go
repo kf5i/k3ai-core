@@ -1,6 +1,9 @@
 package kctl
 
-import "time"
+import (
+	"log"
+	"time"
+)
 
 // Wait processes requests for resource readiness
 type Wait interface {
@@ -19,6 +22,7 @@ const waitCmd = "wait"
 func (w *CliWait) Process(config Config, namespace string, labels []string) error {
 	for _, label := range labels {
 		cmd, args := prepareCommand(config, waitCmd, "-n", namespace, "--for", "condition=ready", "po", "-l", label)
+		log.Printf("Waiting for %s", label)
 		if err := execute(config, cmd, args...); err != nil {
 			return err
 		}
