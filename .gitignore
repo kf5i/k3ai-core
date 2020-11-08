@@ -3,3 +3,4 @@ bin/
 vendor/
 coverage.txt
 .vscode/
+k3ai.code-workspace
