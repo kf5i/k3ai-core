@@ -36,11 +36,18 @@ func deleteGroup(config kctl.Config, groupName string) error {
 
 	for _, group := range pluginsGroupSpec.Groups {
 		for _, plugin := range group.Plugins {
-			if plugin.Enabled == true {
+			if plugin.Enabled {
 				err := deletePlugin(config, plugin.Name)
 				if err != nil {
 					return err
 				}
+			}
+		}
+
+		for _, inlinePlugin := range group.InlinePlugins {
+			err = kctl.Delete(config, inlinePlugin)
+			if err != nil {
+				return err
 			}
 		}
 	}

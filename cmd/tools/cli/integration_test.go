@@ -46,3 +46,47 @@ func TestDelete(t *testing.T) {
 	}
 	assertMessage(t, out.String(), `service "argo-server" deleted`)
 }
+
+func TestLocalApply(t *testing.T) {
+	cmd, out := setUp()
+	cmd.SetArgs([]string{"apply", "argo-workflow-ns", "--kubectl", "--plugin-repo", joinWithRootData("plugins")})
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	assertMessage(t, out.String(), `service/argo-server created`)
+}
+
+func TestLocalDelete(t *testing.T) {
+	cmd, out := setUp()
+	cmd.SetArgs([]string{"delete", "argo-workflow-ns", "--kubectl", "--plugin-repo", joinWithRootData("plugins")})
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	assertMessage(t, out.String(), `service "argo-server" deleted`)
+}
+
+func TestLocalGroupApply(t *testing.T) {
+	cmd, out := setUp()
+	cmd.SetArgs([]string{"apply", "-g", "argo-workflow", "--kubectl", "--group-repo", joinWithRootData("groups")})
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	assertMessage(t, out.String(), `service/argo-server created`)
+}
+
+func TestLocalGroupDelete(t *testing.T) {
+	cmd, out := setUp()
+	cmd.SetArgs([]string{"delete", "-g", "argo-workflow", "--kubectl", "--group-repo", joinWithRootData("groups")})
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	assertMessage(t, out.String(), `service "argo-server" deleted`)
+}
+
+func getRootTestData() string {
+	return "../../../local_repo/core/"
+}
+
+func joinWithRootData(fileURI string) string {
+	return getRootTestData() + fileURI
+}

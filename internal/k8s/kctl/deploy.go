@@ -16,11 +16,6 @@ const (
 	create  = "create"
 )
 
-// Wait is the abstraction to wait for commands to finish
-type Wait interface {
-	Process(labels []string)
-}
-
 func pause() {
 	time.Sleep(2 * time.Second)
 }
@@ -40,7 +35,18 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 	}
 
 	if evt != nil {
-		evt.Process(plugin.Labels)
+		err := evt.Process(config, plugin.Namespace, plugin.Labels)
+		if err != nil {
+			log.Printf("Error during wait: %s\n", err.Error())
+		}
+	}
+
+	if plugin.PostInstall.Command != "" {
+
+		err := execute(config, "sh", "-c", plugin.PostInstall.Command)
+		if err != nil {
+			log.Printf("Error during post installation: %s\n", err.Error())
+		}
 	}
 	return nil
 }

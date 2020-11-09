@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"fmt"
+	"github.com/kf5i/k3ai-core/internal/shared"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -14,9 +15,10 @@ type PluginGroup struct {
 
 //Group is the specification of each k3ai plugins group
 type Group struct {
-	PluginType string        `yaml:"plugin-type"`
-	GroupName  string        `yaml:"group-name"`
-	Plugins    []PluginGroup `yaml:"plugins,flow"`
+	PluginType    string        `yaml:"plugin-type"`
+	GroupName     string        `yaml:"group-name"`
+	Plugins       []PluginGroup `yaml:"plugins,flow"`
+	InlinePlugins []Plugin      `yaml:"inline-plugins,flow"`
 }
 
 //Groups is the specification of each k3ai plugins group
@@ -49,7 +51,7 @@ func (gs *Group) validate() error {
 func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) {
 	if !isHTTP(groupURI) {
 		var p Group
-		r, err := p.Encode(NormalizePath(DefaultGroupFileName, groupURI, groupName))
+		r, err := p.Encode(shared.NormalizePath(DefaultGroupFileName, groupURI, groupName))
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", groupURI))
 		}
@@ -58,7 +60,7 @@ func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) 
 		return &groups, nil
 	}
 
-	gHubContents, err := getRepoContent(getDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
+	gHubContents, err := getRepoContent(shared.GetDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
 	if err != nil {
 		return nil, err
 	}

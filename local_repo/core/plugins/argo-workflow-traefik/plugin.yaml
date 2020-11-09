@@ -1,7 +1,10 @@
 plugin-name: Argo
+namespace: "argo"
 yaml:
   - url: "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
-
+    type: "file"
+  - url: "https://raw.githubusercontent.com/kf5i/k3ai-plugins/main/common/traefik/argo-bind.yaml"
+    type: "file"
 bash:
   - bashfile1
   - bashfile2
