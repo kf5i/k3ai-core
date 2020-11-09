@@ -25,3 +25,7 @@ make test
 ```
 
 Please feel free to open a Github issue or send a PR. Looking forward to your contribution.
+
+# Hall of Fame of K3ai Contributors
+
+[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/0)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/0)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/1)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/1)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/2)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/2)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/3)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/3)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/4)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/4)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/5)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/5)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/6)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/6)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/7)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/7)
