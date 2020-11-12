@@ -3,10 +3,11 @@ package cli
 import (
 	"context"
 	"fmt"
-	"github.com/kf5i/k3ai-core/internal/settings"
 	"io"
 	"log"
 	"os"
+
+	"github.com/kf5i/k3ai-core/internal/settings"
 
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
 	"github.com/spf13/cobra"
@@ -40,8 +41,8 @@ func setupCli(baseCmd *cobra.Command) {
 		log.Fatalf("can't read settings")
 	}
 
-	baseCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", s.PluginsURI, "URI for the plugins repository. ")
-	baseCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", s.GroupsURI, "URI for the plugin groups repository")
+	baseCmd.PersistentFlags().StringVarP(&pluginRepoURI, "plugin-repo", "", s.PluginRepo, "URI for the plugins repository. ")
+	baseCmd.PersistentFlags().StringVarP(&pluginsGroupRepoURI, "group-repo", "", s.GroupRepo, "URI for the plugin groups repository")
 	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", s.UseKubectl, "Use kubectl for deployment. Uses k3s when set to false")
 	baseCmd.AddCommand(versionCmd)
 	baseCmd.AddCommand(newApplyCommand())
