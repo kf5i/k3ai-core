@@ -44,7 +44,7 @@ func TestPluginYamls(t *testing.T) {
 	defer server.Close()
 	var pluginList Plugins
 
-	p, err := pluginList.Encode(server.URL, "/test")
+	p, err := pluginList.Encode(server.URL, "test")
 
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)

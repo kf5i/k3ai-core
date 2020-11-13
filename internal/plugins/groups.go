@@ -51,7 +51,7 @@ func (gs *Group) validate() error {
 func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) {
 	if !isHTTP(groupURI) {
 		var p Group
-		r, err := p.Encode(shared.NormalizePath(DefaultGroupFileName, groupURI, groupName))
+		r, err := p.Encode(shared.NormalizePath(DefaultGroupFileName, groupURI, GroupsDir, groupName))
 		if err != nil {
 			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", groupURI))
 		}
@@ -60,7 +60,8 @@ func (groups Groups) Encode(groupURI string, groupName string) (*Groups, error) 
 		return &groups, nil
 	}
 
-	gHubContents, err := getRepoContent(shared.GetDefaultIfEmpty(groupURI, DefaultPluginsGroupURI) + groupName)
+	gHubContents, err := getRepoContents(
+		shared.NormalizeURL(groupURI, GroupsDir, groupName))
 	if err != nil {
 		return nil, err
 	}

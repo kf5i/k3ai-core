@@ -14,10 +14,8 @@ import (
 
 // Settings default user setting
 type Settings struct {
-	// PluginRepo is --plugin-repo
-	PluginRepo string `yaml:"plugin-repo"`
-	// GroupRepo is --group-repo
-	GroupRepo string `yaml:"group-repo"`
+	// Repo is --plugin-repo
+	Repo string `yaml:"repo"`
 	// UseKubectl use kubectl instead of k3s
 	UseKubectl bool `yaml:"use-kubectl"`
 }
@@ -27,8 +25,7 @@ const configFileName = "config"
 // GetDefaultSettings get default settings
 func GetDefaultSettings() *Settings {
 	var ds Settings
-	ds.GroupRepo = plugins.DefaultPluginsGroupURI
-	ds.PluginRepo = plugins.DefaultPluginURI
+	ds.Repo = plugins.DefaultRepo
 	ds.UseKubectl = false
 	return &ds
 }
@@ -88,7 +85,7 @@ func getHomeDir() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	configDir := shared.IncludeSlash(usr.HomeDir) + ".k3ai"
+	configDir := shared.IncludeOsSeparator(usr.HomeDir) + ".k3ai"
 	return configDir, nil
 }
 
@@ -111,8 +108,7 @@ func loadSettingFormFile(configDir string) (*Settings, error) {
 		return nil, err
 	}
 
-	ds.GroupRepo = shared.GetDefaultIfEmpty(ds.GroupRepo, plugins.DefaultPluginsGroupURI)
-	ds.PluginRepo = shared.GetDefaultIfEmpty(ds.PluginRepo, plugins.DefaultPluginURI)
+	ds.Repo = shared.GetDefaultIfEmpty(ds.Repo, plugins.DefaultRepo)
 
 	return ds, nil
 }

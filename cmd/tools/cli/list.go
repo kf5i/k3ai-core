@@ -16,7 +16,7 @@ func newListCommand() *cobra.Command {
 			config := newConfig(cmd)
 			group, _ := cmd.Flags().GetBool(plugins.GroupType)
 			if group {
-				groups, err := plugins.ContentList(pluginsGroupRepoURI)
+				groups, err := plugins.ContentList(repo + plugins.PluginDir)
 				if err != nil {
 					return err
 				}
@@ -25,7 +25,7 @@ func newListCommand() *cobra.Command {
 				}
 				return nil
 			}
-			plugins, err := plugins.ContentList(pluginRepoURI)
+			plugins, err := plugins.ContentList(repo)
 			if err != nil {
 				return err
 			}

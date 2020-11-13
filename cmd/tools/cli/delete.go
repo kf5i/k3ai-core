@@ -1,8 +1,7 @@
 package cli
 
 import (
-	"fmt"
-
+	"github.com/kf5i/k3ai-core/cmd/commands"
 	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
 	"github.com/kf5i/k3ai-core/internal/plugins"
 	"github.com/spf13/cobra"
@@ -29,7 +28,7 @@ func newDeleteCommand() *cobra.Command {
 }
 func deleteGroup(config kctl.Config, groupName string) error {
 	var groups plugins.Groups
-	pluginsGroupSpec, err := groups.Encode(pluginsGroupRepoURI, groupName)
+	pluginsGroupSpec, err := groups.Encode(repo+plugins.GroupsDir, groupName)
 	if err != nil {
 		return err
 	}
@@ -55,17 +54,5 @@ func deleteGroup(config kctl.Config, groupName string) error {
 }
 
 func deletePlugin(config kctl.Config, pluginName string) error {
-	var plugins plugins.Plugins
-	pluginSpecList, err := plugins.Encode(pluginRepoURI, pluginName)
-	if err != nil {
-		return err
-	}
-	for _, pluginItem := range pluginSpecList.Plugins {
-		fmt.Printf("Plugin YAML content: %s, name: %s \n", pluginItem.Yaml, pluginItem.PluginName)
-		err = kctl.Delete(config, pluginItem)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	return commands.HandlePlugin(config, repo, pluginName, commands.DeleteOperation)
 }
