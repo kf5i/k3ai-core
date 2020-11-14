@@ -7,14 +7,14 @@ import (
 
 func TestValidate(t *testing.T) {
 	var p Plugin
-	testPluginSpec, err := p.Encode(joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"))
+	err := p.Encode(joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"))
 
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []Plugin{
 		{Namespace: "default"},
-		*testPluginSpec,
+		p,
 	}
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {
@@ -28,13 +28,13 @@ func TestValidate(t *testing.T) {
 
 func TestValidateDefaultValues(t *testing.T) {
 	var p Plugin
-	testPluginSpec, err := p.Encode(joinWithRootData("plugins/argo-workflow-no-defaults/plugin.yaml"))
+	err := p.Encode(joinWithRootData("plugins/argo-workflow-no-defaults/plugin.yaml"))
 	if err != nil {
 		t.Fatal("failed to unmarshal test file")
 	}
 	var tests = []Plugin{
 		{Namespace: "default"},
-		*testPluginSpec,
+		p,
 	}
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {

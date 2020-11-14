@@ -43,6 +43,16 @@ type Plugin struct {
 // Encode fetches the Plugin
 func (ps *Plugin) Encode(pluginURI string) error {
 
+	if !isHTTP(pluginURI) {
+		remoteContent, err := FetchFromSourceURI(pluginURI)
+		err = yaml.Unmarshal(remoteContent, &ps)
+		mergeWithDefault(ps)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
 	gHubContent, err := getRepoContent(pluginURI)
 	if err != nil {
 		return errors.Wrap(err, "error fetching plugins content")
@@ -58,7 +68,6 @@ func (ps *Plugin) Encode(pluginURI string) error {
 	}
 	return nil
 }
-
 
 // validate checks for any errors in the Plugin
 func (ps *Plugin) validate() error {

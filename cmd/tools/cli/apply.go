@@ -26,32 +26,7 @@ func newApplyCommand() *cobra.Command {
 }
 
 func applyGroup(config kctl.Config, groupName string) error {
-	var groups plugins.Groups
-	pluginsGroupSpec, err := groups.Encode(repo+plugins.GroupsDir, groupName)
-	if err != nil {
-		return err
-	}
-
-	for _, group := range pluginsGroupSpec.Groups {
-		for _, plugin := range group.Plugins {
-			if plugin.Enabled {
-				err := applyPlugin(config, plugin.Name)
-				if err != nil {
-					return err
-				}
-			}
-		}
-
-		for _, inlinePlugin := range group.InlinePlugins {
-			err = kctl.Apply(config, inlinePlugin, &kctl.CliWait{})
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-
+	return commands.HandleGroup(config, repo, groupName, commands.ApplyOperation)
 }
 
 func applyPlugin(config kctl.Config, pluginName string) error {
