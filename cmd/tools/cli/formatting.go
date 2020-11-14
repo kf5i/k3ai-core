@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+//PrintFormat standard formatting
 func PrintFormat(args ...string) {
 
 	for _, a := range args {
