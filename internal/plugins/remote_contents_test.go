@@ -42,30 +42,29 @@ func TestPluginsList(t *testing.T) {
 func TestPluginYamls(t *testing.T) {
 	var server = mockPluginsServer(t, joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"), PluginType)
 	defer server.Close()
-	var pluginList Plugins
+	var plugin Plugin
 
-	p, err := pluginList.Encode(server.URL, "/test")
-
+	err := plugin.Encode(server.URL + "/test")
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
-	if 1 != len(p.Plugins) {
-		t.Fatalf("expected %d but got %v", 1, len(p.Plugins))
+	if 1 != len(plugin.Yaml) {
+		t.Fatalf("expected %d but got %v", 1, len(plugin.Yaml))
 	}
 }
 
 func TestGroupsYamls(t *testing.T) {
 	var server = mockPluginsServer(t, joinWithRootData("groups/argo-workflow/group.yaml"), GroupType)
 	defer server.Close()
-	var groups Groups
-	r, err := groups.Encode(server.URL, "/test")
+	var group Group
+	err := group.Encode(server.URL + "/test")
 
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}
 
-	if 1 != len(r.Groups) {
-		t.Fatalf("expected %d but got %v", 1, len(r.Groups))
+	if 2 != len(group.Plugins) {
+		t.Fatalf("expected %d but got %v", 2, len(group.Plugins))
 	}
 }
 
@@ -88,17 +87,12 @@ const remoteDir = `[
 		]`
 
 func mockTestFolder(serverURL string, contentType string) string {
-	s := fmt.Sprintf(`[
+	s := fmt.Sprintf(`
   {
 		"name": "%s.yaml",
 		"type": "file",
 	    "download_url": "http://%s/test/%s.yaml"
-	},
-	{
-	     "name": "README.md",
-         "download_url": "http://%s/core/%s/test/README.md",
-         "type": "file"
 	}
-]`, contentType, serverURL, contentType, serverURL, contentType)
+`, contentType, serverURL, contentType)
 	return s
 }

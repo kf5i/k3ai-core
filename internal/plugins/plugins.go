@@ -1,8 +1,6 @@
 package plugins
 
 import (
-	"fmt"
-
 	"github.com/kf5i/k3ai-core/internal/shared"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
@@ -42,57 +40,33 @@ type Plugin struct {
 	PostInstall PostInstall `yaml:"post-install"`
 }
 
-// Plugins is a Plugin collection
-type Plugins struct {
-	Plugins []Plugin
-}
-
 // Encode fetches the Plugin
-func (Plugin) Encode(pluginURI string) (*Plugin, error) {
-	remoteContent, err := FetchFromSourceURI(pluginURI)
-	if err != nil {
-		return nil, errors.Wrap(err, "error fetching plugins")
-	}
-	var ps Plugin
-	err = yaml.Unmarshal(remoteContent, &ps)
-	mergeWithDefault(&ps)
-	if err != nil {
-		return nil, err
-	}
-	return &ps, nil
-}
+func (ps *Plugin) Encode(pluginURI string) error {
 
-// Encode fetches the Plugins
-func (Plugins) Encode(pluginURI string, pluginName string) (*Plugins, error) {
-	var plugins Plugins
 	if !isHTTP(pluginURI) {
-		var p Plugin
-		r, err := p.Encode(shared.NormalizePath(DefaultPluginFileName, pluginURI, pluginName))
+		remoteContent, err := FetchFromSourceURI(pluginURI)
+		err = yaml.Unmarshal(remoteContent, &ps)
+		mergeWithDefault(ps)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", pluginURI))
+			return err
 		}
-
-		plugins.Plugins = append(plugins.Plugins, *r)
-		return &plugins, nil
+		return nil
 	}
 
-	gHubContents, err := getRepoContent(shared.GetDefaultIfEmpty(pluginURI, DefaultPluginURI) + pluginName)
+	gHubContent, err := getRepoContent(pluginURI)
 	if err != nil {
-		return nil, err
+		return errors.Wrap(err, "error fetching plugins content")
 	}
-	gHubContents = gHubContents.filter(fileType)
-	for _, githubContent := range gHubContents {
-		if githubContent.Name == DefaultPluginFileName {
-			var p Plugin
-			r, err := p.Encode(githubContent.DownloadURL)
-			if err != nil {
-				return nil, errors.Wrap(err, fmt.Sprintf("error encoding %q", githubContent.Name))
-			}
-			plugins.Plugins = append(plugins.Plugins, *r)
-		}
+	remoteContent, err := FetchFromSourceURI(gHubContent.DownloadURL)
+	if err != nil {
+		return errors.Wrap(err, "error fetching plugins")
 	}
-
-	return &plugins, nil
+	err = yaml.Unmarshal(remoteContent, &ps)
+	mergeWithDefault(ps)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // validate checks for any errors in the Plugin

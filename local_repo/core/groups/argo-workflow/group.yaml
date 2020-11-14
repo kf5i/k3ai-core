@@ -3,9 +3,9 @@ group-name: argo-workflow
 plugins:
   - name: test
     enabled: false
-  - name: argo-workflow
+  - name: argo-workflow-ns
     enabled: true
 inline-plugins:
   - plugin-name: Argo-bind-traefik
     yaml:
-      - url: "https://raw.githubusercontent.com/kf5i/k3ai-plugins/main/common/traefik/argo-bind.yaml"
+      - url: "https://raw.githubusercontent.com/kf5i/k3ai-plugins/main/common/traefik/argo-workflow-bind.yaml"

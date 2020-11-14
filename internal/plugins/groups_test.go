@@ -7,13 +7,13 @@ import (
 
 func TestValidatePluginsGroupSpec(t *testing.T) {
 	var group Group
-	testPluginsGroupsSpec, err := group.Encode(joinWithRootData("groups/argo-workflow/group.yaml"))
+	err := group.Encode(joinWithRootData("groups/argo-workflow/group.yaml"))
 
 	if err != nil {
 		t.Fatalf("failed to unmarshal test file: %s", err)
 	}
 	var tests = []Group{
-		*testPluginsGroupsSpec,
+		group,
 	}
 	for i, test := range tests {
 		t.Run(fmt.Sprintf("test%d", i), func(t *testing.T) {
