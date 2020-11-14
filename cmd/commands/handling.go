@@ -8,10 +8,13 @@ import (
 )
 
 const (
-	ApplyOperation  = "apply"
+	//ApplyOperation operation apply
+	ApplyOperation = "apply"
+	//DeleteOperation operation delete
 	DeleteOperation = "delete"
 )
 
+//HandlePlugin generic function to handle the plugins
 func HandlePlugin(config kctl.Config, repo string, pluginName string, operation string) error {
 	var plugin plugins.Plugin
 	err := plugin.Encode(
@@ -34,6 +37,7 @@ func HandlePlugin(config kctl.Config, repo string, pluginName string, operation 
 	return nil
 }
 
+//HandleGroup generic function to handle the groups
 func HandleGroup(config kctl.Config, repo string, groupName string, operation string) error {
 	var group plugins.Group
 	err := group.Encode(

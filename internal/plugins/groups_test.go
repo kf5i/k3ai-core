@@ -7,7 +7,7 @@ import (
 
 func TestValidatePluginsGroupSpec(t *testing.T) {
 	var group Group
-	 err := group.Encode(joinWithRootData("groups/argo-workflow/group.yaml"))
+	err := group.Encode(joinWithRootData("groups/argo-workflow/group.yaml"))
 
 	if err != nil {
 		t.Fatalf("failed to unmarshal test file: %s", err)

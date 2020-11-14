@@ -24,8 +24,8 @@ var rootCmd = &cobra.Command{
 }
 
 var (
-	repo                string
-	useKubectl          bool
+	repo       string
+	useKubectl bool
 )
 
 func init() {

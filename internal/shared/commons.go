@@ -13,6 +13,7 @@ func IncludeSlash(path string, typeSeparator string) string {
 	return path + typeSeparator
 }
 
+//IncludeOsSeparator include os path separator
 func IncludeOsSeparator(path string) string {
 	return IncludeSlash(path, string(os.PathSeparator))
 }
@@ -26,7 +27,7 @@ func NormalizePath(file string, args ...string) string {
 	return result + file
 }
 
-// NormalizePath applies the "/" in the right position
+// NormalizeURL applies the "/" in the right position
 func NormalizeURL(args ...string) string {
 	result := ""
 	for _, subPath := range args {

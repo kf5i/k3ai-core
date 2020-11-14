@@ -9,16 +9,15 @@ const (
 	// DefaultRepo is the location of the plugins repository if not other location is specified
 	DefaultRepo = "https://api.github.com/repos/kf5i/k3ai-plugins/contents/core/"
 
+	//PluginDir directory
 	PluginDir = "plugins"
+	//GroupsDir directory
 	GroupsDir = "groups"
 
-	DefaultPluginsGroupURI = DefaultRepo + GroupsDir
-	DefaultPluginsURI      = DefaultRepo + PluginDir
-
-	dirType  = "dir"
-	fileType = "file"
+	dirType = "dir"
 )
 
+// GithubContent github structs
 type GithubContent struct {
 	Name        string `json:"name"`
 	DownloadURL string `json:"download_url"`
