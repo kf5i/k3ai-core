@@ -25,12 +25,16 @@ func newListCommand() *cobra.Command {
 				}
 				return nil
 			}
-			gHubContent, err := plugins.ContentList(repo + plugins.PluginDir)
+			var pls plugins.Plugins
+			err := pls.List(repo + plugins.PluginDir)
 			if err != nil {
 				return err
 			}
-			for _, p := range gHubContent {
-				fmt.Fprintln(config.Stdout(), p.Name)
+
+			PrintFormat("Name", "Description")
+			for _, p := range pls.Items {
+				PrintFormat(p.PluginName, p.PluginDescription)
+
 			}
 
 			return nil

@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 )
 
 //PluginGroup is the specification of a single plugin-group Item
@@ -20,29 +19,8 @@ type Group struct {
 }
 
 // Encode fetches the Group
-func (gs *Group) Encode(groupURI string) error {
-	if !isHTTP(groupURI) {
-		remoteContent, err := FetchFromSourceURI(groupURI)
-		err = yaml.Unmarshal(remoteContent, &gs)
-		if err != nil {
-			return err
-		}
-		return nil
-	}
-
-	gHubContent, err := getRepoContent(groupURI)
-	if err != nil {
-		return errors.Wrap(err, "error fetching plugins content")
-	}
-	remoteContent, err := FetchFromSourceURI(gHubContent.DownloadURL)
-	if err != nil {
-		return errors.Wrap(err, "error fetching plugins group spec")
-	}
-	err = yaml.Unmarshal(remoteContent, &gs)
-	if err != nil {
-		return err
-	}
-	return nil
+func (gs *Group) Encode(URL string) error {
+	return encode(URL, gs)
 }
 
 func (gs *Group) validate() error {
