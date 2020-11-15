@@ -63,8 +63,8 @@ func TestGroupsYamls(t *testing.T) {
 		t.Fatalf("expected nil but got %v", err)
 	}
 
-	if 2 != len(group.Plugins) {
-		t.Fatalf("expected %d but got %v", 2, len(group.Plugins))
+	if 1 != len(group.Plugins) {
+		t.Fatalf("expected %d but got %v", 1, len(group.Plugins))
 	}
 }
 
