@@ -16,6 +16,11 @@ const (
 	PluginType = "plugin"
 )
 
+type ItemsInterface interface {
+	Encode(URL string) error
+	List(URL string) error
+}
+
 // FetchFromSourceURI downloads the content from http or file
 func FetchFromSourceURI(uri string) ([]byte, error) {
 	if isHTTP(uri) {
@@ -50,7 +55,6 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 }
 
 func encode(URL string, value interface{}) error {
-
 	downloadURL := URL
 	if isHTTP(URL) {
 		gHubContent, err := getRepoContent(URL)
@@ -69,5 +73,4 @@ func encode(URL string, value interface{}) error {
 		return err
 	}
 	return nil
-
 }

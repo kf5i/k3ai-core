@@ -63,7 +63,6 @@ func (pls *Plugins) List(URL string) error {
 	}
 	for _, gHubContent := range gHubContents {
 		var ps Plugin
-
 		err := ps.Encode(shared.NormalizeURL(URL, gHubContent.Name) + DefaultPluginFileName)
 		if err != nil {
 			return err
