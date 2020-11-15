@@ -30,7 +30,7 @@ func mockPluginsServer(t *testing.T, filePath string, contentType string) *httpt
 func TestPluginsList(t *testing.T) {
 	var server = mockPluginsServer(t, joinWithRootData("plugins/argo-workflow-ns/plugin.yaml"), PluginType)
 	defer server.Close()
-	p, err := ContentList(server.URL)
+	p, err := GithubContentList(server.URL)
 	if err != nil {
 		t.Fatalf("expected nil but got %v", err)
 	}

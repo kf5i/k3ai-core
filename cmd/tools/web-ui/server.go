@@ -49,7 +49,7 @@ func (svc *httpService) Run(stop <-chan struct{}) {
 }
 
 func pluginListHandler(w http.ResponseWriter, r *http.Request) {
-	plugins, err := plugins.ContentList(plugins.DefaultRepo)
+	plugins, err := plugins.GithubContentList(plugins.DefaultRepo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 

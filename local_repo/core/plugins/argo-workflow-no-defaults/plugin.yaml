@@ -1,4 +1,5 @@
-plugin-name: Argo
+plugin-name: argo-workflow-no-defaults
+plugin-description: Argo Workflow Default
 yaml:
   - url: "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"
 bash:

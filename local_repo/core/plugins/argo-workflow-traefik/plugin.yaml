@@ -1,4 +1,5 @@
-plugin-name: Argo
+plugin-name: argo-workflow-traefik
+plugin-description: Argo Workflow with Namespace Traefik  Bind
 namespace: "argo"
 yaml:
   - url: "https://raw.githubusercontent.com/argoproj/argo/stable/manifests/namespace-install.yaml"

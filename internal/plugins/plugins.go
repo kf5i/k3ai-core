@@ -57,7 +57,7 @@ func (ps *Plugin) Encode(URL string) error {
 
 // List fetch the plugin list
 func (pls *Plugins) List(URL string) error {
-	gHubContents, err := ContentList(URL)
+	gHubContents, err := GithubContentList(URL)
 	if err != nil {
 		return err
 	}

@@ -32,7 +32,7 @@ func (gs *Group) Encode(URL string) error {
 
 // List fetch the plugin list
 func (gls *Groups) List(URL string) error {
-	gHubContents, err := ContentList(URL)
+	gHubContents, err := GithubContentList(URL)
 	if err != nil {
 		return err
 	}
