@@ -2,8 +2,6 @@ plugin-type: group
 group-name: argo-workflow
 group-description: Expose Argo Workflow with Traefik
 plugins:
-  - name: test
-    enabled: false
   - name: argo-workflow-ns
     enabled: true
 inline-plugins:
