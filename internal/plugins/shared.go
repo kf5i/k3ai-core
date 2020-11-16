@@ -1,6 +1,9 @@
 package plugins
 
 import (
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
+
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -44,4 +47,25 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 	// TODO: Check http status code for better error messages
 	defer resp.Body.Close()
 	return ioutil.ReadAll(resp.Body)
+}
+
+func encode(URL string, value interface{}) error {
+	downloadURL := URL
+	if isHTTP(URL) {
+		gHubContent, err := githubContent(URL)
+		if err != nil {
+			return errors.Wrap(err, "error fetching plugins content")
+		}
+		downloadURL = gHubContent.DownloadURL
+	}
+
+	remoteContent, err := FetchFromSourceURI(downloadURL)
+	if err != nil {
+		return errors.Wrap(err, "error fetching plugins group spec")
+	}
+	err = yaml.Unmarshal(remoteContent, value)
+	if err != nil {
+		return err
+	}
+	return nil
 }

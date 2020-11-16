@@ -3,6 +3,7 @@ package plugins
 import (
 	"encoding/json"
 	"github.com/pkg/errors"
+	"io/ioutil"
 )
 
 const (
@@ -52,7 +53,7 @@ func getRepoContents(uri string) (GithubContents, error) {
 	return cgs, nil
 }
 
-func getRepoContent(uri string) (*GithubContent, error) {
+func githubContent(uri string) (*GithubContent, error) {
 	const wrapMessage = "cannot load plugins"
 
 	remoteContent, err := fetchRemoteContent(uri)
@@ -67,9 +68,22 @@ func getRepoContent(uri string) (*GithubContent, error) {
 	return &cgs, nil
 }
 
-// ContentList returns the collection of plugins in the repository
-func ContentList(uri string) (GithubContents, error) {
-	gHubContents, err := getRepoContents(uri)
+// GithubContentList returns the collection of plugins in the repository
+func GithubContentList(URL string) (GithubContents, error) {
+	if !isHTTP(URL) {
+		files, err := ioutil.ReadDir(URL)
+		if err != nil {
+			return nil, err
+		}
+
+		var githubContents GithubContents
+		for _, f := range files {
+			githubContents = append(githubContents, GithubContent{Name: f.Name(), Type: dirType})
+		}
+		return githubContents, nil
+	}
+
+	gHubContents, err := getRepoContents(URL)
 	if err != nil {
 		return nil, err
 	}
