@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"github.com/kf5i/k3ai-core/internal/k8s/infra"
+	"github.com/kf5i/k3ai-core/internal/infra"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"log"
