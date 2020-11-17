@@ -45,6 +45,7 @@ func setupCli(baseCmd *cobra.Command) {
 
 	baseCmd.AddCommand(newDeleteCommand())
 	baseCmd.AddCommand(newListCommand())
+	baseCmd.AddCommand(newInitCommand())
 }
 
 //Execute is the entrypoint of the commands
