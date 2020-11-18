@@ -1,9 +1,3 @@
-/*Author: Alessandro Festa
-Infra package allow a user to install a local cluster based on:
-K3s
-K0s
-Kind
-*/
 package infra
 
 import (
