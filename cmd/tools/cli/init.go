@@ -72,7 +72,7 @@ func installK8sForMe(osFlavor string) {
 	case "kind":
 		infra.InfraKind(osFlavor, result)
 	case "k0s":
-		fmt.Println("k0s")
+		infra.InfraK0s(osFlavor, result)
 	case "exit":
 		fmt.Println("okay let's exit")
 	default:
