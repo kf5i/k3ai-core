@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func InfraK3s(osFlavor string, infraSelection string) {
+func K3s(osFlavor string, infraSelection string) {
 	// where are we? If windows we have to call wsl function if not proceed
 	switch osFlavor {
 	case "windows":

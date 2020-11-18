@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func InfraKind(osFlavor string, infraSelection string) {
+func Kind(osFlavor string, infraSelection string) {
 	// where are we? If windows we have to call wsl function if not proceed
 	switch osFlavor {
 	case "windows":
