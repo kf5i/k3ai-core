@@ -1,11 +1,11 @@
-package infra
-
 /*Author: Alessandro Festa
 Infra package allow a user to install a local cluster based on:
 K3s
 K0s
 Kind
 */
+package infra
+
 import (
 	"fmt"
 	"io/ioutil"
@@ -13,6 +13,7 @@ import (
 	"os/exec"
 )
 
+// K0s check the OS flavor and provide an input to the subsequent functions
 func K0s(osFlavor string, infraSelection string) {
 	// where are we? If windows we have to call wsl function if not proceed
 	switch osFlavor {

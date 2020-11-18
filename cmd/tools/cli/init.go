@@ -34,11 +34,11 @@ func newInitCommand() *cobra.Command {
 			if runtime.GOOS == "windows" {
 				fmt.Println("You are running on Windows")
 				osFlavor := runtime.GOOS
-				CheckClusterReadiness(osFlavor)
+				checkClusterReadiness(osFlavor)
 			} else if runtime.GOOS == "linux" {
 				fmt.Println("You are running on Linux")
 				osFlavor := runtime.GOOS
-				CheckClusterReadiness(osFlavor)
+				checkClusterReadiness(osFlavor)
 			} else {
 				fmt.Println("You are running on an OS other than Windows or Linux")
 			}
@@ -46,8 +46,8 @@ func newInitCommand() *cobra.Command {
 	}
 	return initCmd
 }
-
-func CheckClusterReadiness(osFlavor string) {
+// checkCluserReadiness check the KUBECONFIG existance
+func checkClusterReadiness(osFlavor string) {
 	kubeconfig, err := os.LookupEnv("KUBECONFIG")
 	if err != true {
 		installK8sForMe(osFlavor)

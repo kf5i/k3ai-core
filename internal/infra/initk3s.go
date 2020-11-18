@@ -12,6 +12,7 @@ import (
 	"os/exec"
 )
 
+// K3s check the OS flavor and provide an input to the subsequent functions
 func K3s(osFlavor string, infraSelection string) {
 	// where are we? If windows we have to call wsl function if not proceed
 	switch osFlavor {

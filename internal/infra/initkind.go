@@ -14,6 +14,7 @@ import (
 	"os/exec"
 )
 
+// Kind check the OS flavor and provide an input to the subsequent functions
 func Kind(osFlavor string, infraSelection string) {
 	// where are we? If windows we have to call wsl function if not proceed
 	switch osFlavor {
