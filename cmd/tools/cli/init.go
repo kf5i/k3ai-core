@@ -46,6 +46,7 @@ func newInitCommand() *cobra.Command {
 	}
 	return initCmd
 }
+
 // checkCluserReadiness check the KUBECONFIG existance
 func checkClusterReadiness(osFlavor string) {
 	kubeconfig, err := os.LookupEnv("KUBECONFIG")
