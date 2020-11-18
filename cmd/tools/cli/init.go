@@ -1,5 +1,11 @@
 package cli
 
+/*Author: Alessandro Festa
+Infra package allow a user to install a local cluster based on:
+K3s
+K0s
+Kind
+*/
 import (
 	"fmt"
 	"github.com/kf5i/k3ai-core/internal/infra"

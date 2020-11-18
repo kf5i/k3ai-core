@@ -1,5 +1,13 @@
 package infra
 
+/*Author: Alessandro Festa
+Infra package allow a user to install a local cluster based on:
+K3s
+K0s
+Kind
+This is the Kind installation
+*/
+
 import (
 	"fmt"
 	"os"
