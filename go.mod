@@ -11,6 +11,7 @@ require (
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
+	github.com/stretchr/testify v1.4.0
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20201016165138-7b1cca2348c0 // indirect
 	golang.org/x/sys v0.0.0-20201018121011-98379d014ca7 // indirect

@@ -1,6 +1,8 @@
 package plugins
 
 import (
+	"fmt"
+
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 
@@ -40,13 +42,27 @@ func fetchFromFile(uri string) ([]byte, error) {
 }
 
 func fetchRemoteContent(uri string) ([]byte, error) {
+
+	data, err := readCache(uri)
+	// Ignore cache read error
+	if err == nil {
+		fmt.Println("cache hit")
+		return data, nil
+	}
+
 	resp, err := http.Get(uri)
 	if err != nil {
 		return nil, err
 	}
 	// TODO: Check http status code for better error messages
 	defer resp.Body.Close()
-	return ioutil.ReadAll(resp.Body)
+	data, err = ioutil.ReadAll(resp.Body)
+	if err == nil {
+		// Ignore cache write issue
+		e := writeCache(data, uri)
+		fmt.Println(e)
+	}
+	return data, err
 }
 
 func encode(URL string, value interface{}) error {
