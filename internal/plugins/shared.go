@@ -53,13 +53,14 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TODO: Check http status code for better error messages
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to fetch content from upstream with status code %d", resp.StatusCode)
+	}
 	defer resp.Body.Close()
 	data, err = ioutil.ReadAll(resp.Body)
 	if err == nil {
 		// Ignore cache write issue
-		e := writeCache(data, uri)
-		fmt.Println(e)
+		_ = writeCache(data, uri)
 	}
 	return data, err
 }
