@@ -46,7 +46,6 @@ func fetchRemoteContent(uri string) ([]byte, error) {
 	data, err := readCache(uri)
 	// Ignore cache read error
 	if err == nil {
-		fmt.Println("cache hit")
 		return data, nil
 	}
 

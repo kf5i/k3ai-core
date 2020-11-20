@@ -1,14 +1,18 @@
 package plugins
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/pkg/errors"
 )
 
-const cacheDirName = ".k3ai/cache"
+var cacheDirName = ".k3ai/cache"
+
+var errDirTraversalNotAllowed = errors.New("attempted dir traversal when not allowed")
 
 func createCacheDir() error {
 	dir, err := cacheDir()
@@ -21,7 +25,6 @@ func createCacheDir() error {
 	return err
 }
 func cacheDir() (string, error) {
-	// Has not been tested on windows
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
@@ -35,7 +38,6 @@ func writeCache(data []byte, uri string) error {
 		return err
 	}
 	dir := filepath.Dir(fullPath)
-	fmt.Println(dir)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		err = os.MkdirAll(dir, os.ModePerm)
 	}
@@ -74,6 +76,11 @@ func uriToFullPath(uri string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	fullPath := filepath.Join(dir, relPath)
+	// Guard against directory traversal
+	if !strings.HasPrefix(fullPath, dir) {
+		return "", errDirTraversalNotAllowed
+	}
 	return filepath.Join(dir, relPath), nil
 }
 
@@ -82,5 +89,5 @@ func uriToFilePath(uri string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return u.Path, nil
+	return filepath.Join(u.Host, u.Path), nil
 }
