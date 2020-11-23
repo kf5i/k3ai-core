@@ -8,13 +8,14 @@ Kind
 */
 import (
 	"fmt"
-	"github.com/kf5i/k3ai-core/internal/infra"
-	"github.com/manifoldco/promptui"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/kf5i/k3ai-core/internal/infra"
+	"github.com/manifoldco/promptui"
+	"github.com/spf13/cobra"
 )
 
 type pepper struct {
@@ -24,6 +25,7 @@ type pepper struct {
 }
 
 func newInitCommand() *cobra.Command {
+	var p string
 	var initCmd = &cobra.Command{
 		Use:   "init",
 		Short: "Initialize K3ai Client",
@@ -31,19 +33,54 @@ func newInitCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			/* First we check the OS to setup the env variable and than we check if everything is ready,
 			if not we do suggest the user the next steps */
+
+			p = strings.ReplaceAll(p, " ", "")
 			if runtime.GOOS == "windows" {
 				fmt.Println("You are running on Windows")
 				osFlavor := runtime.GOOS
-				checkClusterReadiness(osFlavor)
+				if p == "" {
+					checkClusterReadiness(osFlavor)
+				} else {
+					switch p {
+					case "k3s":
+						infra.K3s(osFlavor, p)
+					case "k0s":
+						infra.K0s(osFlavor, p)
+					case "kind":
+						infra.Kind(osFlavor, p)
+					default:
+						checkClusterReadiness(osFlavor)
+					}
+
+				}
 			} else if runtime.GOOS == "linux" {
 				fmt.Println("You are running on Linux")
 				osFlavor := runtime.GOOS
-				checkClusterReadiness(osFlavor)
+				if p == "" {
+					checkClusterReadiness(osFlavor)
+				} else {
+					switch p {
+					case "k3s":
+						infra.K3s(osFlavor, p)
+					case "k0s":
+						infra.K0s(osFlavor, p)
+					case "kind":
+						infra.Kind(osFlavor, p)
+					default:
+						infra.K3s(osFlavor, p)
+					}
+				}
+			} else if runtime.GOOS == "darwin" {
+				fmt.Println("You are running on MacOs")
+				osFlavor := runtime.GOOS
+				infra.Kind(osFlavor, p)
 			} else {
 				fmt.Println("You are running on an OS other than Windows or Linux")
 			}
 		},
 	}
+
+	initCmd.Flags().StringVarP(&p, "cluster", "c", "", "Options availabe k3s,k0s,kind")
 	return initCmd
 }
 
@@ -81,7 +118,7 @@ func installK8sForMe(osFlavor string) {
 	case "k0s":
 		infra.K0s(osFlavor, result)
 	case "exit":
-		fmt.Println("okay let's exit")
+		os.Exit(0)
 	default:
 		fmt.Println("okay dude let's go with k3s")
 

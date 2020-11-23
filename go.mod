@@ -21,4 +21,5 @@ require (
 	k8s.io/client-go v0.19.3
 	k8s.io/kubectl v0.19.3
 	k8s.io/utils v0.0.0-20201015054608-420da100c033 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.0.1
 )
