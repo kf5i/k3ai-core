@@ -2,10 +2,10 @@ package shared
 
 import (
 	"fmt"
+	"github.com/enescakir/emoji"
 	"os"
 	"os/exec"
 	"strings"
-	"github.com/enescakir/emoji"
 )
 
 // IncludeSlash append the / where needed
@@ -48,29 +48,29 @@ func GetDefaultIfEmpty(value string, defaultValue string) string {
 }
 
 // CommandExists check if file exist
-func CommandExists(cmd string, osFlavor string, test bool)  bool {
+func CommandExists(cmd string, osFlavor string, test bool) bool {
 
 	if osFlavor == "windows" {
-	// Create an *exec.Cmd
-	cmd := exec.Command("bash", "which", cmd)
+		// Create an *exec.Cmd
+		cmd := exec.Command("bash", "which", cmd)
 
-	// Combine stdout and stderr
-	printCommand(cmd)
-	output, err := cmd.CombinedOutput()
-	printError(err)
-	printOutput(output) 
-	if len(output) > 0 {
-		test = true
+		// Combine stdout and stderr
+		printCommand(cmd)
+		output, err := cmd.CombinedOutput()
+		printError(err)
+		printOutput(output)
+		if len(output) > 0 {
+			test = true
 		} else {
-		test = false	
+			test = false
 		}
 	} else {
 		var err error
-		_,err = exec.LookPath(cmd)
+		_, err = exec.LookPath(cmd)
 		if err != nil {
 			printError(err)
 			test = false
-		}else {
+		} else {
 			test = true
 		}
 	}
@@ -79,17 +79,17 @@ func CommandExists(cmd string, osFlavor string, test bool)  bool {
 
 func printCommand(cmd *exec.Cmd) {
 	strings.Join(cmd.Args, " ")
-  }
-  
-  func printError(err error) {
+}
+
+func printError(err error) {
 	if err != nil {
-	  //os.Stderr.WriteString(err.Error())
-	  fmt.Printf("Whoops seems we are missing something here..let me fix it for you... %v\n", emoji.Collision)
+		//os.Stderr.WriteString(err.Error())
+		fmt.Printf("Whoops seems we are missing something here..let me fix it for you... %v\n", emoji.Collision)
 	}
-  }
-  
-  func printOutput(outs []byte) {
+}
+
+func printOutput(outs []byte) {
 	if len(outs) > 0 {
-	  fmt.Printf(string(outs))
+		fmt.Printf(string(outs))
 	}
-  }
+}

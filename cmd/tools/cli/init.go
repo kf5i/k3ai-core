@@ -13,10 +13,10 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/enescakir/emoji"
 	"github.com/kf5i/k3ai-core/internal/infra"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/enescakir/emoji"
 )
 
 type pepper struct {
@@ -34,11 +34,11 @@ func newInitCommand() *cobra.Command {
 		Short: "Initialize K3ai Client",
 		Long:  `Initialize K3ai Client, allowing user to deploy a new K8's cluster, list plugins and groups`,
 		Run: func(cmd *cobra.Command, args []string) {
-			if cmd.Name() == "init" && len(args) <= 0 && localCluster == false && remoteCluster == false{
-			 	osFlavor := runtime.GOOS
-			 	checkClusterReadiness(osFlavor)
+			if cmd.Name() == "init" && len(args) <= 0 && localCluster == false && remoteCluster == false {
+				osFlavor := runtime.GOOS
+				checkClusterReadiness(osFlavor)
 			}
-			
+
 			if localCluster && remoteCluster {
 				// print localCluster and build date
 				fmt.Println("Not yet supported")
@@ -48,19 +48,19 @@ func newInitCommand() *cobra.Command {
 				if len(args) == 0 {
 					osFlavor := runtime.GOOS
 					checkClusterReadiness(osFlavor)
-				}else{
-					for i:=0; i < len(a); i++ {
+				} else {
+					for i := 0; i < len(a); i++ {
 						osFlavor := runtime.GOOS
 						switch a[i] {
-							case "k3s":
-								infra.K3s(osFlavor, a[i])
-							case "k0s":
-								infra.K0s(osFlavor, a[i])
-							case "kind":
-								infra.Kind(osFlavor, a[i])
-							default:
-								checkClusterReadiness(osFlavor)
-							}
+						case "k3s":
+							infra.K3s(osFlavor, a[i])
+						case "k0s":
+							infra.K0s(osFlavor, a[i])
+						case "kind":
+							infra.Kind(osFlavor, a[i])
+						default:
+							checkClusterReadiness(osFlavor)
+						}
 					}
 				}
 			} else if remoteCluster {
@@ -70,30 +70,29 @@ func newInitCommand() *cobra.Command {
 					osFlavor := runtime.GOOS
 					installRemoteK8sForMe(osFlavor)
 				} else {
-					for i:=0; i < len(a); i++ {
-						a[i] =strings.ToLower(a[i])
+					for i := 0; i < len(a); i++ {
+						a[i] = strings.ToLower(a[i])
 						osFlavor := runtime.GOOS
 						switch a[i] {
-							case "civo":
-								infra.CloudProviders(osFlavor, a[i])
-							case "azure":
-								infra.K0s(osFlavor, a[i])
-							case "google":
-								infra.Kind(osFlavor, a[i])
-							case "aws":
-								infra.Kind(osFlavor, a[i])
-							default:
-								checkClusterReadiness(osFlavor)
-							}
+						case "civo":
+							infra.CloudProviders(osFlavor, a[i])
+						case "azure":
+							infra.K0s(osFlavor, a[i])
+						case "google":
+							infra.Kind(osFlavor, a[i])
+						case "aws":
+							infra.Kind(osFlavor, a[i])
+						default:
+							checkClusterReadiness(osFlavor)
+						}
 					}
 				}
 			}
-		}, 
+		},
 	}
-	
 
 	initCmd.Flags().BoolVar(&localCluster, "local", false, "Options availabe k3s,k0s,kind")
-	initCmd.Flags().BoolVar(&remoteCluster, "cloud",false, "Options availabe for cloud providers")
+	initCmd.Flags().BoolVar(&remoteCluster, "cloud", false, "Options availabe for cloud providers")
 	return initCmd
 }
 
@@ -171,4 +170,3 @@ func installRemoteK8sForMe(osFlavor string) {
 
 	}
 }
-

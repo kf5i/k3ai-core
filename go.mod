@@ -5,9 +5,12 @@ go 1.15
 require (
 	cloud.google.com/go v0.69.1 // indirect
 	github.com/Azure/go-autorest/autorest v0.11.10 // indirect
+	github.com/civo/civogo v0.2.22
+	github.com/enescakir/emoji v1.0.0
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.0
+	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/manifoldco/promptui v0.8.0
 	github.com/pkg/errors v0.9.1

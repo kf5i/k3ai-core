@@ -2,12 +2,12 @@ package infra
 
 import (
 	"fmt"
+	"github.com/enescakir/emoji"
+	"github.com/kf5i/k3ai-core/internal/shared"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
-	"github.com/enescakir/emoji"
-	"github.com/kf5i/k3ai-core/internal/shared"
 )
 
 // K0s check the OS flavor and provide an input to the subsequent functions
@@ -33,56 +33,56 @@ func K0s(osFlavor string, infraSelection string) {
 
 func infraK0sWSL(osFlavor string) {
 	// we are in WSL so we cannot use the default installer
-	fmt.Printf("Hold on %v, we are going to install K0s %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	fmt.Printf("Hold on %v, we are going to install K0s %v\n", emoji.VulcanSalute, emoji.BuildingConstruction)
 	time.Sleep(3 * time.Second)
 	checkK3stest := true
 	checkK3s := shared.CommandExists("k0s", osFlavor, checkK3stest)
 
 	if checkK3s != true {
-	cmd := exec.Command("bash", "-c", "curl -Lo ./k0s https://github.com/k0sproject/k0s/releases/download/v0.7.0/k0s-v0.7.0-amd64; chmod +x ./k0s; sudo mv ./k0s /usr/local/bin;mkdir -p ${HOME}/.k0s")
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
+		cmd := exec.Command("bash", "-c", "curl -Lo ./k0s https://github.com/k0sproject/k0s/releases/download/v0.7.0/k0s-v0.7.0-amd64; chmod +x ./k0s; sudo mv ./k0s /usr/local/bin;mkdir -p ${HOME}/.k0s")
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
 
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
-	}
-	shared.CallClear()
-	fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
-	launchK0sFile(osFlavor)
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
+		shared.CallClear()
+		fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK0sFile(osFlavor)
 
 	} else {
 		fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
 		launchK0sFile(osFlavor)
-	}	
+	}
 }
 
 func infraK0sDefault(osFlavor string) {
 	// Let's download and install K3s the usual way
-	fmt.Printf("Hold on %v, we are going to install K3s %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	fmt.Printf("Hold on %v, we are going to install K3s %v\n", emoji.VulcanSalute, emoji.BuildingConstruction)
 	time.Sleep(3 * time.Second)
 	checkK3stest := true
 	checkK3s := shared.CommandExists("k0s", osFlavor, checkK3stest)
 
 	if checkK3s != true {
-	cmd := exec.Command("/bin/sh", "-c", "curl -Lo ./k0s https://github.com/k0sproject/k0s/releases/download/v0.7.0/k0s-v0.7.0-amd64; chmod +x ./k0s; sudo mv ./k0s /usr/local/bin;mkdir -p ${HOME}/.k0s")
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
+		cmd := exec.Command("/bin/sh", "-c", "curl -Lo ./k0s https://github.com/k0sproject/k0s/releases/download/v0.7.0/k0s-v0.7.0-amd64; chmod +x ./k0s; sudo mv ./k0s /usr/local/bin;mkdir -p ${HOME}/.k0s")
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
 
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
-	}
-	shared.CallClear()
-	fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
-	launchK0sFile(osFlavor)
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
+		shared.CallClear()
+		fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK0sFile(osFlavor)
 
 	} else {
 		fmt.Printf("K0s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
 		launchK0sFile(osFlavor)
-	}	
+	}
 }
 
 func infraK0sARM() {
@@ -101,9 +101,9 @@ func runK0sDefault(osFlavor string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper, emoji.PartyPopper, emoji.PartyPopper)
 		fmt.Printf("To use K3ai copy the following line. Once done type in your terminal: wsl press ctrl+c followed by Enter on your keyboard %v\n", emoji.MechanicalArm)
-		fmt.Printf("%v  $HOME/.k0s/start.sh && export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n",emoji.RightArrow)
+		fmt.Printf("%v  $HOME/.k0s/start.sh && export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n", emoji.RightArrow)
 		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
 	} else {
 		cmd := exec.Command("/bin/bash", "-c", "sudo mv ./start.sh ${HOME}/.k0s/; chmod +x ${HOME}/.k0s/start.sh ;. /${HOME}/.k0s/start.sh")
@@ -115,9 +115,9 @@ func runK0sDefault(osFlavor string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper, emoji.PartyPopper, emoji.PartyPopper)
 		fmt.Printf("To use K3ai copy the following line: %v\n", emoji.MechanicalArm)
-		fmt.Printf("%v  export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n",emoji.RightArrow)
+		fmt.Printf("%v  export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n", emoji.RightArrow)
 		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
 
 	}
@@ -133,7 +133,7 @@ func launchK0sFile(osFlavor string) {
 		return
 	}
 
-	d := []string{"#!/bin/bash","sudo whoami","sudo k0s server -c ${HOME}/.k0s/k0s.yaml --enable-worker > /dev/null 2>&1 &"}
+	d := []string{"#!/bin/bash", "sudo whoami", "sudo k0s server -c ${HOME}/.k0s/k0s.yaml --enable-worker > /dev/null 2>&1 &"}
 
 	for _, v := range d {
 		fmt.Fprintln(f, v)
