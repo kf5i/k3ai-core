@@ -11,6 +11,9 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"time"
+	"github.com/enescakir/emoji"
+	"github.com/kf5i/k3ai-core/internal/shared"
 )
 
 // K3s check the OS flavor and provide an input to the subsequent functions
@@ -36,35 +39,60 @@ func K3s(osFlavor string, infraSelection string) {
 
 func infraK3sWSL(osFlavor string) {
 	// we are in WSL so we cannot use the default installer
-	cmd := exec.Command("bash", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s")
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
+	fmt.Printf("Hold on %v, we are going to install K3s %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	time.Sleep(3 * time.Second)
+	checkK3stest := true
+	checkK3s := shared.CommandExists("k3s", osFlavor, checkK3stest)
 
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
+	if checkK3s != true {
+		cmd := exec.Command("bash", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s")
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+	
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
+		shared.CallClear()
+		fmt.Printf("K3s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK3sFile(osFlavor)
+
+	} else {
+		fmt.Printf("K3s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK3sFile(osFlavor)
 	}
-	launchK3sFile(osFlavor)
 }
 
 func infraK3sDefault(osFlavor string) {
 	// Let's download and install K3s  but first check if we are inside WSL session
 	var cmd *exec.Cmd
-	if os.Getenv("WSL_DISTRO_NAME") != "" {
-		cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s ; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s")
+	fmt.Printf("Hold on %v, we are going to install K3s %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	time.Sleep(3 * time.Second)
+	checkK3stest := true
+	checkK3s := shared.CommandExists("k3s", osFlavor, checkK3stest)
+	if checkK3s != true {
+		if os.Getenv("WSL_DISTRO_NAME") != "" {
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s ; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s")
+		} else {
+			cmd = exec.Command("/bin/sh", "-c", "curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -")
+		}
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+	
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
+		shared.CallClear()
+		fmt.Printf("K3s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK3sFile(osFlavor)
 	} else {
-		cmd = exec.Command("/bin/sh", "-c", "curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -; export KUBECONFIG=/etc/rancher/k3s/k3s.yaml")
+		fmt.Printf("K3s %v! Now we are going to complete the setup %v, but first we need some help from you...\n", emoji.OkButton, emoji.Rocket)
+		launchK3sFile(osFlavor)
 	}
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
 
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
-	}
-	launchK3sFile(osFlavor)
 }
 
 func infraK3sARM() {
@@ -72,7 +100,7 @@ func infraK3sARM() {
 }
 
 func runK3sDefault(osFlavor string) {
-	fmt.Println("file written successfully")
+
 	if osFlavor == "windows" {
 		cmd := exec.Command("bash", "-c", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh ;. /${HOME}/.k3s/start.sh")
 		cmd.Stderr = os.Stderr
@@ -83,6 +111,10 @@ func runK3sDefault(osFlavor string) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+		fmt.Printf("To use K3ai copy the following line. Once done type in your terminal: wsl press ctrl+c followed by Enter on your keyboard %v\n", emoji.MechanicalArm)
+		fmt.Printf("%v  export KUBECONFIG=/etc/rancher/k3s/k3s.yaml\n",emoji.RightArrow)
+		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
 	} else {
 		cmd := exec.Command("/bin/bash", "-c", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh ;. /${HOME}/.k3s/start.sh")
 		cmd.Stderr = os.Stderr
@@ -93,6 +125,10 @@ func runK3sDefault(osFlavor string) {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+		fmt.Printf("To use K3ai copy the following line: %v\n", emoji.MechanicalArm)
+		fmt.Printf("%v  export KUBECONFIG=/etc/rancher/k3s/k3s.yaml\n",emoji.RightArrow)
+		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
 
 	}
 
@@ -107,7 +143,7 @@ func launchK3sFile(osFlavor string) {
 		return
 	}
 
-	d := []string{"#!/bin/bash", "echo 'Installing k3s...'", "sleep 5", "sudo nohup k3s server --write-kubeconfig-mode 644 > /dev/null 2>&1 &", "echo 'Configuring last steps...'", "sleep 5", "echo 'Copy the following lines and paste it to your session to use K3s'", "echo 'If you are still inside Windows first open a wsl session simply typing the word wsl in your terminal and press enter...'", "echo 'export KUBECONFIG=/var/lib/K3s/pki/admin.conf'", "echo '${HOME}/.k3s/start.sh'"}
+	d := []string{"#!/bin/bash", "sudo nohup k3s server --write-kubeconfig-mode 644 > /dev/null 2>&1 &"}
 
 	for _, v := range d {
 		fmt.Fprintln(f, v)
@@ -123,3 +159,4 @@ func launchK3sFile(osFlavor string) {
 	}
 	runK3sDefault(osFlavor)
 }
+

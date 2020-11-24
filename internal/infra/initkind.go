@@ -14,6 +14,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
+	"github.com/enescakir/emoji"
+	"github.com/kf5i/k3ai-core/internal/shared"
 )
 
 // Kind check the OS flavor and provide an input to the subsequent functions
@@ -39,7 +42,13 @@ func Kind(osFlavor string, infraSelection string) {
 
 func infraKindWSL(osFlavor string) {
 	// we are in WSL so we cannot use the default installer
-	cmd := exec.Command("powershell", "curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64; New-Item -ItemType directory -Path ${HOME}/.kind ; Move-Item ./kind-windows-amd64.exe ${HOME}/.kind/ -force ; ./${HOME}/.kind/kind-windows-amd64.exe create cluster")
+	fmt.Printf("Hold on %v, we are going to install Kind %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	time.Sleep(3 * time.Second)
+	checkK3stest := true
+	checkK3s := shared.CommandExists("kind", osFlavor, checkK3stest)
+
+	if checkK3s != true {
+	cmd := exec.Command("powershell", "curl.exe -Lo kind.exe https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64; Move-Item ./kind.exe -Destination C:/Windows/System32/ -force ; kind create cluster")
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -48,17 +57,41 @@ func infraKindWSL(osFlavor string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	
+	fmt.Printf("Kind installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+	fmt.Printf("To use K3ai follow these steps:\n")
+	fmt.Printf("If you are on Windows/WSL type in your terminal: wsl and get start use K3ai %v\n", emoji.MechanicalArm)
+	fmt.Printf("If you are on macOS copy and paste the line below %v\n", emoji.MechanicalArm)
+	fmt.Printf("%v  export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n",emoji.RightArrow)
+	fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
+
+	} else {
+		fmt.Printf("Kind installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+		fmt.Printf("To use K3ai follow these steps:\n")
+		fmt.Printf("If you are on Windows/WSL type in your terminal: wsl and get start use K3ai %v\n", emoji.MechanicalArm)
+		fmt.Printf("If you are on macOS copy and paste the line below %v\n", emoji.MechanicalArm)
+		fmt.Printf("%v  export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n",emoji.RightArrow)
+		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
+	}	
 }
 
 func infraKindDefault(osFlavor string) {
 	// Let's check if we are in MacOs or in Linux and for Linux if we are within WSL)
+	fmt.Printf("Hold on %v, we are going to install Kind %v\n",emoji.VulcanSalute,emoji.BuildingConstruction)
+	time.Sleep(3 * time.Second)
+	checkK3stest := true
+	checkK3s := shared.CommandExists("kind", osFlavor, checkK3stest)
+
+	if checkK3s != true {
 	var cmd *exec.Cmd
 	if osFlavor == "darwin" {
-		cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64; chmod +x ./kind; sudo mv ./kind /usr/local/bin; echo 'Copy and Paste the following lines to run kind'; echo 'export PATH=/usr/local/bin:$PATH'; echo 'kind create cluster'")
+		cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64; chmod +x ./kind; sudo mv ./kind /usr/local/bin")
+
 	} else if os.Getenv("WSL_DISTRO_NAME") != "" {
 		cmd = exec.Command("/bin/sh", "-c", "curl -Lo kind  https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64; chmod +x ./kind; sudo mv ./kind /usr/local/bin; kind create cluster")
 	} else {
 		cmd = exec.Command("/bin/sh", "-c", "curl -Lo kind  https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64; chmod +x ./kind; sudo mv ./kind /usr/local/bin; kind create cluster")
+
 	}
 
 	cmd.Stderr = os.Stderr
@@ -69,7 +102,13 @@ func infraKindDefault(osFlavor string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	fmt.Printf("Kind installation complete %v%v%v!\n", emoji.PartyPopper,emoji.PartyPopper,emoji.PartyPopper)
+	fmt.Printf("To use K3ai follow these steps:\n")
+	fmt.Printf("If you are on Windows/WSL type in your terminal: wsl and get start use K3ai %v\n", emoji.MechanicalArm)
+	fmt.Printf("If you are on macOS copy and paste the line below %v\n", emoji.MechanicalArm)
+	fmt.Printf("%v  export KUBECONFIG=/var/lib/k0s/pki/admin.conf\n",emoji.RightArrow)
+	fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
+	}
 }
 
 func infraKindARM() {

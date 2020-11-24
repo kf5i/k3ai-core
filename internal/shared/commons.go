@@ -1,8 +1,11 @@
 package shared
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 	"strings"
+	"github.com/enescakir/emoji"
 )
 
 // IncludeSlash append the / where needed
@@ -43,3 +46,50 @@ func GetDefaultIfEmpty(value string, defaultValue string) string {
 	}
 	return value
 }
+
+// CommandExists check if file exist
+func CommandExists(cmd string, osFlavor string, test bool)  bool {
+
+	if osFlavor == "windows" {
+	// Create an *exec.Cmd
+	cmd := exec.Command("bash", "which", cmd)
+
+	// Combine stdout and stderr
+	printCommand(cmd)
+	output, err := cmd.CombinedOutput()
+	printError(err)
+	printOutput(output) 
+	if len(output) > 0 {
+		test = true
+		} else {
+		test = false	
+		}
+	} else {
+		var err error
+		_,err = exec.LookPath(cmd)
+		if err != nil {
+			printError(err)
+			test = false
+		}else {
+			test = true
+		}
+	}
+	return test
+}
+
+func printCommand(cmd *exec.Cmd) {
+	strings.Join(cmd.Args, " ")
+  }
+  
+  func printError(err error) {
+	if err != nil {
+	  //os.Stderr.WriteString(err.Error())
+	  fmt.Printf("Whoops seems we are missing something here..let me fix it for you... %v\n", emoji.Collision)
+	}
+  }
+  
+  func printOutput(outs []byte) {
+	if len(outs) > 0 {
+	  fmt.Printf(string(outs))
+	}
+  }
