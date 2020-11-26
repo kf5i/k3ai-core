@@ -92,7 +92,7 @@ func infraK0sARM() {
 func runK0sDefault(osFlavor string) {
 	fmt.Println("file written successfully")
 	if osFlavor == "windows" {
-		cmd := exec.Command("bash", "-c", "sudo mv ./start.sh ${HOME}/.k0s/; chmod +x ${HOME}/.k0s/start.sh ;. ${HOME}/.k0s/start.sh")
+		cmd := exec.Command("wsl", "/bin/bash", "-ic", "sudo mv ./start.sh ${HOME}/.k0s/; chmod +x ${HOME}/.k0s/start.sh ;. ${HOME}/.k0s/start.sh")
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout

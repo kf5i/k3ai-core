@@ -73,7 +73,7 @@ func infraK3sDefault(osFlavor string) {
 	checkK3s := shared.CommandExists("k3s", osFlavor, checkK3stest)
 	if checkK3s != true {
 		if os.Getenv("WSL_DISTRO_NAME") != "" {
-			cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s ; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s")
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo ./k3s https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s ; chmod +x ./k3s; sudo mv ./k3s /usr/local/bin;mkdir -p ${HOME}/.k3s;")
 		} else {
 			cmd = exec.Command("/bin/sh", "-c", "curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -")
 		}
@@ -102,7 +102,7 @@ func infraK3sARM() {
 func runK3sDefault(osFlavor string) {
 
 	if osFlavor == "windows" {
-		cmd := exec.Command("bash", "-c", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh ;. /${HOME}/.k3s/start.sh")
+		cmd := exec.Command("wsl", "/bin/bash", "-ic", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh;")
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
@@ -111,17 +111,28 @@ func runK3sDefault(osFlavor string) {
 		if err != nil {
 			fmt.Println(err)
 		}
+
 		fmt.Printf("K3ai installation complete %v%v%v!\n", emoji.PartyPopper, emoji.PartyPopper, emoji.PartyPopper)
 		fmt.Printf("To use K3ai copy the following line. Once done type in your terminal: wsl press ctrl+c followed by Enter on your keyboard %v\n", emoji.MechanicalArm)
-		fmt.Printf("%v  export KUBECONFIG=/etc/rancher/k3s/k3s.yaml\n", emoji.RightArrow)
+		fmt.Printf("%v ${HOME}/.k3s/start.sh && export KUBECONFIG=/etc/rancher/k3s/k3s.yaml\n", emoji.RightArrow)
 		fmt.Printf("Thank you again for using K3ai, don't forget to check our docs at %v https://docs.k3ai.in\n", emoji.WorldMap)
 	} else {
-		cmd := exec.Command("/bin/bash", "-c", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh ;. /${HOME}/.k3s/start.sh")
+		cmd := exec.Command("/bin/bash", "-c", "sudo mv ./start.sh ${HOME}/.k3s/; chmod +x ${HOME}/.k3s/start.sh ;. ~/.k3s/start.sh;")
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 
 		err := cmd.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		cmd = exec.Command("/bin/bash", "-c", ". ${HOME}/.k3s/start.sh")
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+
+		err = cmd.Run()
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -143,7 +154,7 @@ func launchK3sFile(osFlavor string) {
 		return
 	}
 
-	d := []string{"#!/bin/bash", "sudo nohup k3s server --write-kubeconfig-mode 644 > /dev/null 2>&1 &"}
+	d := []string{"#!/bin/bash", "sudo bash -ic 'k3s server --write-kubeconfig-mode 644 > /dev/null 2>&1 &'"}
 
 	for _, v := range d {
 		fmt.Fprintln(f, v)
