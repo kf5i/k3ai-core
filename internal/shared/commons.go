@@ -94,6 +94,7 @@ func printOutput(outs []byte) {
 	}
 }
 
+//CheckKubectl check the presence of kubectl binary and in case return true if exist
 func CheckKubectl(osFlavor string, filename string) bool {
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
