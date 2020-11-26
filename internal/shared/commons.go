@@ -93,3 +93,11 @@ func printOutput(outs []byte) {
 		fmt.Printf(string(outs))
 	}
 }
+
+func CheckKubectl(osFlavor string, filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}

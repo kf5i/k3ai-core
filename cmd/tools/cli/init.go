@@ -12,9 +12,11 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/enescakir/emoji"
 	"github.com/kf5i/k3ai-core/internal/infra"
+	"github.com/kf5i/k3ai-core/internal/shared"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
@@ -98,6 +100,21 @@ func newInitCommand() *cobra.Command {
 
 // checkCluserReadiness check the KUBECONFIG existance
 func checkClusterReadiness(osFlavor string) {
+	kubepath := "/usr/local/bin/kubectl"
+	// let's first check if kubectl exist on the current flavor
+
+	if osFlavor == "windows" {
+		kubepath = "C:/Windows/System32/kubectl.exe"
+	}
+	kubeExist := shared.CheckKubectl(osFlavor, kubepath)
+	if kubeExist == false {
+		fmt.Printf("%v It seem you don't have kubectl installed", emoji.PensiveFace)
+		fmt.Printf("%v Please head to: https://kubernetes.io/docs/tasks/tools/install-kubectl/ for more informations", emoji.Information)
+		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
+		time.Sleep(3 * time.Second)
+		os.Exit(0)
+	}
+	// if kubectl is there let see if there's a KUBECONFIG configured
 	kubeconfig, err := os.LookupEnv("KUBECONFIG")
 	if err != true {
 		installK8sForMe(osFlavor)
@@ -105,6 +122,7 @@ func checkClusterReadiness(osFlavor string) {
 	} else {
 		fmt.Println(kubeconfig)
 	}
+
 }
 
 func installK8sForMe(osFlavor string) {
