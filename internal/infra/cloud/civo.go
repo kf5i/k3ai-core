@@ -1,4 +1,4 @@
-package infra
+package cloud
 
 import (
 	"bufio"
@@ -20,7 +20,7 @@ import (
 // )
 
 //CloudProviders run specific client configurations based on cloud providers selection
-func CloudProviders(osFlavor string, cloudProvider string) {
+func CivoCloudInit(osFlavor string, cloudProvider string) {
 	var clusterNumNodesInt int
 	fmt.Printf("Hold on %v, we are going to install K3s on Civo %v\n", emoji.VulcanSalute, emoji.BuildingConstruction)
 	time.Sleep(3 * time.Second)

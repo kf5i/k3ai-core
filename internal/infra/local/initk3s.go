@@ -1,4 +1,4 @@
-package infra
+package local
 
 /*Author: Alessandro Festa
 Infra package allow a user to install a local cluster based on:

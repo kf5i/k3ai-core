@@ -9,7 +9,8 @@ import (
 	"time"
 
 	"github.com/enescakir/emoji"
-	"github.com/kf5i/k3ai-core/internal/infra"
+	"github.com/kf5i/k3ai-core/internal/infra/cloud"
+	"github.com/kf5i/k3ai-core/internal/infra/local"
 	"github.com/kf5i/k3ai-core/internal/shared"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -30,7 +31,11 @@ func newInitCommand() *cobra.Command {
 		Short: "Initialize K3ai Client",
 		Long:  `Initialize K3ai Client, allowing user to deploy a new K8's cluster, list plugins and groups`,
 		Run: func(cmd *cobra.Command, args []string) {
-			if cmd.Name() == "init" && len(args) <= 0 && localCluster == false && remoteCluster == false {
+
+			localCheck, _ := cmd.Flags().GetBool("local")
+			cloudCheck, _ := cmd.Flags().GetBool("cloud")
+
+			if localCheck != true && cloudCheck != true {
 				osFlavor := runtime.GOOS
 				checkClusterReadiness(osFlavor)
 			}
@@ -49,11 +54,11 @@ func newInitCommand() *cobra.Command {
 						osFlavor := runtime.GOOS
 						switch a[i] {
 						case "k3s":
-							infra.K3s(osFlavor, a[i])
+							local.K3s(osFlavor, a[i])
 						case "k0s":
-							infra.K0s(osFlavor, a[i])
+							local.K0s(osFlavor, a[i])
 						case "kind":
-							infra.Kind(osFlavor, a[i])
+							local.Kind(osFlavor, a[i])
 						default:
 							checkClusterReadiness(osFlavor)
 						}
@@ -71,13 +76,13 @@ func newInitCommand() *cobra.Command {
 						osFlavor := runtime.GOOS
 						switch a[i] {
 						case "civo":
-							infra.CloudProviders(osFlavor, a[i])
+							cloud.CivoCloudInit(osFlavor, a[i])
 						case "azure":
-							infra.K0s(osFlavor, a[i])
+							cloud.AzureCloudInit(osFlavor, a[i])
 						case "google":
-							infra.Kind(osFlavor, a[i])
+							cloud.GoogleCloudInit(osFlavor, a[i])
 						case "aws":
-							infra.Kind(osFlavor, a[i])
+							cloud.AwsCloudInit(osFlavor, a[i])
 						default:
 							checkClusterReadiness(osFlavor)
 						}
@@ -135,11 +140,11 @@ func installK8sForMe(osFlavor string) {
 
 	switch result {
 	case "k3s":
-		infra.K3s(osFlavor, result)
+		local.K3s(osFlavor, result)
 	case "kind":
-		infra.Kind(osFlavor, result)
+		local.Kind(osFlavor, result)
 	case "k0s":
-		infra.K0s(osFlavor, result)
+		local.K0s(osFlavor, result)
 	case "exit":
 		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
 		os.Exit(0)
@@ -164,15 +169,15 @@ func installRemoteK8sForMe(osFlavor string) {
 
 	switch result {
 	case "civo":
-		infra.CloudProviders(osFlavor, result)
+		cloud.CivoCloudInit(osFlavor, result)
 	case "azure":
-		fmt.Println("Azure is not supported yet...")
+		cloud.AzureCloudInit(osFlavor, result)
 		os.Exit(0)
 	case "google":
-		fmt.Println("Google is not supported yet...")
+		cloud.GoogleCloudInit(osFlavor, result)
 		os.Exit(0)
 	case "aws":
-		fmt.Println("AWS is not supported yet...")
+		cloud.AwsCloudInit(osFlavor, result)
 		os.Exit(0)
 	case "exit":
 		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
