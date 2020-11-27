@@ -1,11 +1,5 @@
 package cli
 
-/*Author: Alessandro Festa
-Infra package allow a user to install a local cluster based on:
-K3s
-K0s
-Kind
-*/
 import (
 	"fmt"
 	"log"
@@ -98,7 +92,7 @@ func newInitCommand() *cobra.Command {
 	return initCmd
 }
 
-// checkCluserReadiness check the KUBECONFIG existance
+// checkClusterReadiness check KUBECONFIG  is set
 func checkClusterReadiness(osFlavor string) {
 	kubepath := "/usr/local/bin/kubectl"
 	// let's first check if kubectl exist on the current flavor
@@ -109,7 +103,7 @@ func checkClusterReadiness(osFlavor string) {
 	kubeExist := shared.CheckKubectl(osFlavor, kubepath)
 	if kubeExist == false {
 		fmt.Printf("%v It seem you don't have kubectl installed", emoji.PensiveFace)
-		fmt.Printf("%v Please head to: https://kubernetes.io/docs/tasks/tools/install-kubectl/ for more informations", emoji.Information)
+		fmt.Printf("%v Please head to: https://kubernetes.io/docs/tasks/tools/install-kubectl/ for more information's", emoji.Information)
 		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
 		time.Sleep(3 * time.Second)
 		os.Exit(0)
@@ -169,15 +163,15 @@ func installRemoteK8sForMe(osFlavor string) {
 	}
 
 	switch result {
-	case "Civo":
+	case "civo":
 		infra.CloudProviders(osFlavor, result)
-	case "Azure":
+	case "azure":
 		fmt.Println("Azure is not supported yet...")
 		os.Exit(0)
-	case "Google":
+	case "google":
 		fmt.Println("Google is not supported yet...")
 		os.Exit(0)
-	case "AWS":
+	case "aws":
 		fmt.Println("AWS is not supported yet...")
 		os.Exit(0)
 	case "exit":
