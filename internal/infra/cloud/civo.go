@@ -19,7 +19,7 @@ import (
 // 	apiKey = "7TEH9KPSunoBRxYwyUAMGrf1vpCaVtmF03IQ2068cDXk4sbOgi"
 // )
 
-//CloudProviders run specific client configurations based on cloud providers selection
+//CivoCloudInit run specific client configurations based on cloud providers selection
 func CivoCloudInit(osFlavor string, cloudProvider string) {
 	var clusterNumNodesInt int
 	fmt.Printf("Hold on %v, we are going to install K3s on Civo %v\n", emoji.VulcanSalute, emoji.BuildingConstruction)
