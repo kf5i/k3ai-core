@@ -13,7 +13,7 @@ import (
 // )
 
 //AwsCloudInit run specific client configurations based on cloud providers selection
-func (osFlavor string, cloudProvider string) {
+func AwsCloudInit(osFlavor string, cloudProvider string){
 	fmt.Printf("%v  Ouch sorry we still working on this but hey if it is important for you why not open an issue?\n", emoji.ConstructionWorker)
 	fmt.Printf("%v  https://github.com/kf5i/k3ai-core/issues/new/choose", emoji.RightArrow)
 }
