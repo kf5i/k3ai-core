@@ -60,7 +60,7 @@ k3ai-cli init --cloud civo			#Use config target marked as cloud and of type civo
 			if cfg.TargetCustomization[i].Enabled {
 				//check type call relative  function: prepare the data we need and push to the relative function
 				if cfg.TargetCustomization[i].ClusterDeployment == "cloud" {
-					cloud.CloudInit(cfg.TargetCustomization[i])
+					cloud.Init(cfg.TargetCustomization[i])
 				} else {
 					local.Init(cfg.TargetCustomization[i])
 				}
