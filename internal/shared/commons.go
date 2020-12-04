@@ -1,10 +1,9 @@
 package shared
 
 import (
-	"fmt"
-	"github.com/enescakir/emoji"
+	"io/ioutil"
+	"log"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -47,58 +46,26 @@ func GetDefaultIfEmpty(value string, defaultValue string) string {
 	return value
 }
 
-// CommandExists check if file exist
-func CommandExists(cmd string, osFlavor string, test bool) bool {
+//LaunchWSLFile should be used only to create launcher for WSL sessions
+func LaunchWSLFile(data string, clustertype string) error {
 
-	if osFlavor == "windows" {
-		// Create an *exec.Cmd
-		cmd := exec.Command("bash", "which", cmd)
-
-		// Combine stdout and stderr
-		printCommand(cmd)
-		output, err := cmd.CombinedOutput()
-		printError(err)
-		printOutput(output)
-		if len(output) > 0 {
-			test = true
-		} else {
-			test = false
-		}
-	} else {
-		var err error
-		_, err = exec.LookPath(cmd)
-		if err != nil {
-			printError(err)
-			test = false
-		} else {
-			test = true
-		}
-	}
-	return test
-}
-
-func printCommand(cmd *exec.Cmd) {
-	strings.Join(cmd.Args, " ")
-}
-
-func printError(err error) {
+	message := []byte(`#!/bin/bash  
+	if [[ $(pgrep -cxu $USER ${0##*/}) -gt 1 ]];
+	then
+		exit
+	 fi 
+	 ` + data)
+	file, err := os.Create(os.ExpandEnv("$HOME/.k3ai/" + clustertype + "-start.sh"))
 	if err != nil {
-		//os.Stderr.WriteString(err.Error())
-		fmt.Printf("Whoops seems we are missing something here..let me fix it for you... %v\n", emoji.Collision)
+		log.Fatal(err)
+		return err
 	}
-}
+	defer file.Close()
+	err = ioutil.WriteFile(os.ExpandEnv("$HOME/.k3ai/"+clustertype+"-start.sh"), message, 0777)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
 
-func printOutput(outs []byte) {
-	if len(outs) > 0 {
-		fmt.Printf(string(outs))
-	}
-}
-
-//CheckKubectl check the presence of kubectl binary and in case return true if exist
-func CheckKubectl(osFlavor string, filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
+	return nil
 }

@@ -1,189 +1,73 @@
 package cli
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"runtime"
-	"strings"
-	"time"
 
-	"github.com/enescakir/emoji"
+	//"os"
+	// "runtime"
+	// "strings"
+	// "time"
+
+	// "github.com/enescakir/emoji"
 	"github.com/kf5i/k3ai-core/internal/infra/cloud"
 	"github.com/kf5i/k3ai-core/internal/infra/local"
+
+	//"fmt"
+
 	"github.com/kf5i/k3ai-core/internal/shared"
-	"github.com/manifoldco/promptui"
+	// "github.com/manifoldco/promptui"
+	//"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-type pepper struct {
-	Name     string
-	HeatUnit int
-	Peppers  int
-}
+const absPath = "$HOME/.k3ai/config.yaml"
+
+var kubeconfig []byte
+
+/* First step is to check if inside .k3ai folder exist a copy of config.yaml if not pull one from github
+// the default one disabled locally with no plugins and will ask user what want to do.
+// based on user choices will enable the right configuration on the config
+// finally will instruct the user on how to change the config */
 
 func newInitCommand() *cobra.Command {
-	//var p string
-	//var c string
-	var localCluster, remoteCluster bool // used for flags
+
 	var initCmd = &cobra.Command{
 		Use:   "init",
 		Short: "Initialize K3ai Client",
 		Long:  `Initialize K3ai Client, allowing user to deploy a new K8's cluster, list plugins and groups`,
-		Run: func(cmd *cobra.Command, args []string) {
-
-			localCheck, _ := cmd.Flags().GetBool("local")
-			cloudCheck, _ := cmd.Flags().GetBool("cloud")
-
-			if localCheck != true && cloudCheck != true {
-				osFlavor := runtime.GOOS
-				checkClusterReadiness(osFlavor)
-			}
-
-			if localCluster && remoteCluster {
-				// print localCluster and build date
-				fmt.Println("Not yet supported")
-			} else if localCluster {
-				// print only localCluster
-				var a = args
-				if len(args) == 0 {
-					osFlavor := runtime.GOOS
-					checkClusterReadiness(osFlavor)
-				} else {
-					for i := 0; i < len(a); i++ {
-						osFlavor := runtime.GOOS
-						switch a[i] {
-						case "k3s":
-							local.K3s(osFlavor, a[i])
-						case "k0s":
-							local.K0s(osFlavor, a[i])
-						case "kind":
-							local.Kind(osFlavor, a[i])
-						default:
-							checkClusterReadiness(osFlavor)
-						}
-					}
-				}
-			} else if remoteCluster {
-				// print only remoteCluster
-				var a = args
-				if len(args) <= 0 {
-					osFlavor := runtime.GOOS
-					installRemoteK8sForMe(osFlavor)
-				} else {
-					for i := 0; i < len(a); i++ {
-						a[i] = strings.ToLower(a[i])
-						osFlavor := runtime.GOOS
-						switch a[i] {
-						case "civo":
-							cloud.CivoCloudInit(osFlavor, a[i])
-						case "azure":
-							cloud.AzureCloudInit(osFlavor, a[i])
-						case "google":
-							cloud.GoogleCloudInit(osFlavor, a[i])
-						case "aws":
-							cloud.AwsCloudInit(osFlavor, a[i])
-						default:
-							checkClusterReadiness(osFlavor)
-						}
-					}
-				}
-			}
-		},
+		Example: `k3ai-cli init					#Will use config from $HOME/.k3ai/config.yaml and use interactive menus
+k3ai-cli init --config /myfolder/myconfig.yaml	#Use a custom config.yaml in another location(local or remote)
+k3ai-cli init --local k3s		 	#Use config target marked local and of type k3s
+k3ai-cli init --cloud civo			#Use config target marked as cloud and of type civo`,
+		SilenceUsage: true,
 	}
 
-	initCmd.Flags().BoolVar(&localCluster, "local", false, "Options availabe k3s,k0s,kind")
-	initCmd.Flags().BoolVar(&remoteCluster, "cloud", false, "Options availabe for cloud providers")
+	initCmd.Flags().String("local", "", "Options availabe k3s,k0s,kind")
+	initCmd.Flags().String("cloud", "", "Options availabe for cloud providers")
+	initCmd.Flags().String("config", "/.k3ai/config.yaml", "Custom config file [default is $HOME/.k3ai/config.yaml]")
+
+	initCmd.RunE = func(cmd *cobra.Command, args []string) error {
+		localConfig, _ := initCmd.Flags().GetString("config")
+		//localClusterConfig, _ := initCmd.Flags().GetString("local")
+		remoteClusterConfig, _ := initCmd.Flags().GetString("cloud")
+		if remoteClusterConfig != "" {
+			cloud.CivoCloudInit("windows", "civo")
+		}
+
+		//check if config.yaml exist otherwise grab a copy
+		cfg, _ := shared.Init(localConfig)
+		for i := range cfg.TargetCustomization {
+			if cfg.TargetCustomization[i].Enabled {
+				//check type call relative  function: prepare the data we need and push to the relative function
+				if cfg.TargetCustomization[i].ClusterDeployment == "cloud" {
+					cloud.CloudInit(cfg.TargetCustomization[i])
+				} else {
+					local.Init(cfg.TargetCustomization[i])
+				}
+			}
+			// we assume everything is false (first time?) so we need a simple interactive menu
+		}
+		return nil
+	}
 	return initCmd
-}
-
-// checkClusterReadiness check KUBECONFIG  is set
-func checkClusterReadiness(osFlavor string) {
-	kubepath := "/usr/local/bin/kubectl"
-	// let's first check if kubectl exist on the current flavor
-
-	if osFlavor == "windows" {
-		kubepath = "C:/Windows/System32/kubectl.exe"
-	}
-	kubeExist := shared.CheckKubectl(osFlavor, kubepath)
-	if kubeExist == false {
-		fmt.Printf("%v It seem you don't have kubectl installed", emoji.PensiveFace)
-		fmt.Printf("%v Please head to: https://kubernetes.io/docs/tasks/tools/install-kubectl/ for more information's", emoji.Information)
-		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
-		time.Sleep(3 * time.Second)
-		os.Exit(0)
-	}
-	// if kubectl is there let see if there's a KUBECONFIG configured
-	kubeconfig, err := os.LookupEnv("KUBECONFIG")
-	if err != true {
-		installK8sForMe(osFlavor)
-		log.Fatal(err)
-	} else {
-		fmt.Println(kubeconfig)
-	}
-
-}
-
-func installK8sForMe(osFlavor string) {
-	prompt := promptui.Select{
-		Label: "Select you local cluster flavor [default k3s]:",
-		Items: []string{"K3s", "Kind", "K0s", "exit"},
-	}
-
-	_, result, err := prompt.Run()
-	result = strings.ToLower(result)
-
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		return
-	}
-
-	switch result {
-	case "k3s":
-		local.K3s(osFlavor, result)
-	case "kind":
-		local.Kind(osFlavor, result)
-	case "k0s":
-		local.K0s(osFlavor, result)
-	case "exit":
-		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
-		os.Exit(0)
-	default:
-		os.Exit(0)
-	}
-}
-
-func installRemoteK8sForMe(osFlavor string) {
-	prompt := promptui.Select{
-		Label: "Select Remote Cluster to install [default Civo]:",
-		Items: []string{"Civo", "Azure", "Google", "AWS", "exit"},
-	}
-
-	_, result, err := prompt.Run()
-	result = strings.ToLower(result)
-
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		return
-	}
-
-	switch result {
-	case "civo":
-		cloud.CivoCloudInit(osFlavor, result)
-	case "azure":
-		cloud.AzureCloudInit(osFlavor, result)
-		os.Exit(0)
-	case "google":
-		cloud.GoogleCloudInit(osFlavor, result)
-		os.Exit(0)
-	case "aws":
-		cloud.AwsCloudInit(osFlavor, result)
-		os.Exit(0)
-	case "exit":
-		fmt.Printf("Thank you for using K3ai %v\n", emoji.WavingHand)
-		os.Exit(0)
-	default:
-		os.Exit(0)
-
-	}
 }

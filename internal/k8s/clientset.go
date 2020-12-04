@@ -46,9 +46,16 @@ func NewClientSet(clientConfig clientcmd.ClientConfig) (*kubernetes.Clientset, e
 	return clientset, nil
 }
 
-// GetClientSet returns the kubernetes Clientset
-func GetClientSet() (*kubernetes.Clientset, error) {
-	clientConfig := NewClientConfig(GetKubeConfig(), "default")
+// GetK3sClientSet returns the kubernetes Clientset
+func GetK3sClientSet() (*kubernetes.Clientset, error) {
+	clientConfig := NewClientConfig(GetK3sKubeConfig(), "default")
+	return NewClientSet(clientConfig)
+
+}
+
+// GetK0sClientSet returns the kubernetes Clientset
+func GetK0sClientSet() (*kubernetes.Clientset, error) {
+	clientConfig := NewClientConfig(GetK0sKubeConfig(), "default")
 	return NewClientSet(clientConfig)
 
 }

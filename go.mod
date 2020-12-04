@@ -12,7 +12,6 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c
 	github.com/imdario/mergo v0.3.11 // indirect
-	github.com/manifoldco/promptui v0.8.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
@@ -21,8 +20,9 @@ require (
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 	k8s.io/client-go v0.19.3
 	k8s.io/kubectl v0.19.3
 	k8s.io/utils v0.0.0-20201015054608-420da100c033 // indirect
-	
+
 )
