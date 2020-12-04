@@ -6,7 +6,8 @@ import (
 	"github.com/kf5i/k3ai-core/internal/shared"
 )
 
-func CloudInit(data shared.TargetCustoms) error {
+//Init call the specific function for cloud.
+func Init(data shared.TargetCustoms) error {
 	fmt.Print(data)
 	return nil
 }
