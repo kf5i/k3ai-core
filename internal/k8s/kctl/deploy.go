@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	k3sExec = "k3s"
 	kubectl = "kubectl"
 	apply   = "apply"
 	delete  = "delete"
@@ -84,9 +83,5 @@ func execute(config Config, command string, args ...string) error {
 
 func prepareCommand(config Config, args ...string) (string, []string) {
 	command := kubectl
-	if !config.UseKubectl() {
-		command = k3sExec
-		args = append([]string{kubectl}, args...)
-	}
 	return command, args
 }

@@ -24,7 +24,7 @@ func setUp() (*cobra.Command, *bytes.Buffer) {
 }
 func TestApply(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"apply", "--kubectl", "ci-tests"})
+	cmd.SetArgs([]string{"apply", "ci-tests"})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -40,7 +40,7 @@ func TestDelete(t *testing.T) {
 	cmd, out := setUp()
 	cmd.SetOut(out)
 	cmd.SetErr(out)
-	cmd.SetArgs([]string{"delete", "--kubectl", "ci-tests"})
+	cmd.SetArgs([]string{"delete", "ci-tests"})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -49,7 +49,7 @@ func TestDelete(t *testing.T) {
 
 func TestLocalApply(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"apply", "argo-workflow-ns", "--kubectl", "--repo", joinWithRootData()})
+	cmd.SetArgs([]string{"apply", "argo-workflow-ns", "--repo", joinWithRootData()})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -58,7 +58,7 @@ func TestLocalApply(t *testing.T) {
 
 func TestLocalDelete(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"delete", "argo-workflow-ns", "--kubectl", "--repo", joinWithRootData()})
+	cmd.SetArgs([]string{"delete", "argo-workflow-ns", "--repo", joinWithRootData()})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -67,7 +67,7 @@ func TestLocalDelete(t *testing.T) {
 
 func TestLocalGroupApply(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"apply", "-g", "argo-workflow", "--kubectl", "--repo", joinWithRootData()})
+	cmd.SetArgs([]string{"apply", "-g", "argo-workflow", "--repo", joinWithRootData()})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
@@ -76,7 +76,7 @@ func TestLocalGroupApply(t *testing.T) {
 
 func TestLocalGroupDelete(t *testing.T) {
 	cmd, out := setUp()
-	cmd.SetArgs([]string{"delete", "-g", "argo-workflow", "--kubectl", "--repo", joinWithRootData()})
+	cmd.SetArgs([]string{"delete", "-g", "argo-workflow", "--repo", joinWithRootData()})
 	if err := cmd.Execute(); err != nil {
 		t.Fatalf("unexpected error %v", err)
 	}
