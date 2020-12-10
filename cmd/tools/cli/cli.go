@@ -25,7 +25,6 @@ var rootCmd = &cobra.Command{
 
 var (
 	repo       string
-	useKubectl bool
 )
 
 func init() {
@@ -39,7 +38,6 @@ func setupCli(baseCmd *cobra.Command) {
 	}
 
 	baseCmd.PersistentFlags().StringVarP(&repo, "repo", "", s.Repo, "URI for the plugins repository. ")
-	baseCmd.PersistentFlags().BoolVarP(&useKubectl, "kubectl", "", s.UseKubectl, "Use kubectl for deployment. Uses k3s when set to false")
 	baseCmd.AddCommand(versionCmd)
 	baseCmd.AddCommand(newApplyCommand())
 
@@ -60,14 +58,12 @@ type config struct {
 	stdin      io.Reader // standard input
 	stdout     io.Writer // standard output
 	stderr     io.Writer // standard error
-	useKubectl bool
 }
 
 func newConfig(cmd *cobra.Command) kctl.Config {
 	return &config{
 		context.Background(),
 		cmd.InOrStdin(), cmd.OutOrStdout(), cmd.ErrOrStderr(),
-		useKubectl,
 	}
 }
 
@@ -79,8 +75,4 @@ func (c *config) Stdout() io.Writer {
 }
 func (c *config) Stderr() io.Writer {
 	return c.stderr
-}
-
-func (c *config) UseKubectl() bool {
-	return c.useKubectl
 }
