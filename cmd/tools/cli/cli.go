@@ -24,7 +24,7 @@ var rootCmd = &cobra.Command{
 }
 
 var (
-	repo       string
+	repo string
 )
 
 func init() {
@@ -55,9 +55,9 @@ func Execute() {
 
 type config struct {
 	context.Context
-	stdin      io.Reader // standard input
-	stdout     io.Writer // standard output
-	stderr     io.Writer // standard error
+	stdin  io.Reader // standard input
+	stdout io.Writer // standard output
+	stderr io.Writer // standard error
 }
 
 func newConfig(cmd *cobra.Command) kctl.Config {
