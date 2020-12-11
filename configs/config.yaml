@@ -13,6 +13,7 @@ targetCustomizations:
     mac: 
     linux: "https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -"
     windows: 
+    arm: "https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -33,6 +34,7 @@ targetCustomizations:
     mac: 
     linux: "https://github.com/k0sproject/k0s/releases/download/v0.8.1/k0s-v0.8.1-amd64"
     windows:
+    arm: "https://github.com/k0sproject/k0s/releases/download/v0.8.1/k0s-v0.8.1-arm64"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -53,6 +55,7 @@ targetCustomizations:
     mac: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64"
     linux: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
     windows: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64"
+    arm: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-arm64"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -69,10 +72,11 @@ targetCustomizations:
   clusterStart: "k3d cluster create"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    mac: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64"
-    linux: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    windows: "https://github.com/rancher/k3d/releases/download/v3.4.0-test.0/k3d-windows-amd64.exe"
+    wsl: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
+    mac: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-darwin-amd64"
+    linux: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
+    windows: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-windows-amd64.exe"
+    arm: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-arm64"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -93,6 +97,7 @@ targetCustomizations:
     mac: 
     linux:
     windows:
+    arm:
     cloudType: civo
     cloudNodes: 1
     cloudSecretPath: $HOME/.k3ai/secret.txt
