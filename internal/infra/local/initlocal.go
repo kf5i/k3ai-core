@@ -67,7 +67,7 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x .$HOME/k3s; sudo mv .$HOME/k3s /usr/local/bin;"+data.ClusterStart)
-		} else if (osFlavor == "arm64") && {
+		} else if (osFlavor == "arm64") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x .$HOME/k3s; sudo mv .$HOME/k3s /usr/local/bin;"+data.ClusterStart)
 		} else {
 			//since k3s cannot run natively on Windows we stop here and inform the user
