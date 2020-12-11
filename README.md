@@ -9,8 +9,12 @@ The Go installer will replace the current bash installer.
 
 ## Install k3ai-cli(Latest Version)
 
-Version=$(curl -s "https://api.github.com/repos/kf5i/k3ai-core/releases/latest" | awk -F '"' '/tag_name/{print $4}' | cut -c 2-6)
+```bash
+#Set a variable to grab latest version
+Version=$(curl -s "https://api.github.com/repos/kf5i/k3ai-core/releases/latest" | awk -F '"' '/tag_name/{print $4}' | cut -c 2-6) 
+# get the binaries
 wget https://github.com/kf5i/k3ai-core/releases/download/v$Version/k3ai-core_${Version}_linux_amd64.tar.gz
+```
 
 
 ## Building from source
