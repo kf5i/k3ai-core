@@ -49,6 +49,8 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Wsl+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+"--name"+data.ClusterName)
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind  "+data.Spec.Linux+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+"--name"+data.ClusterName)
+		} else if (osFlavor == "arm64")  {
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind  "+data.Spec.Linux+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+"--name"+data.ClusterName)
 		} else {
 			elevateCmd := "Start-Process powershell -ArgumentList 'Move-Item -Path ${HOME}/kind.exe -Destination C:/Windows/System32/ -force' -verb runAs"
 			cmd = exec.Command("powershell", "curl.exe -Lo $HOME/kind.exe "+data.Spec.Windows+";"+elevateCmd+";powershell "+data.ClusterStart+" --name "+data.ClusterName)
@@ -64,6 +66,8 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 			shared.LaunchWSLFile(data.ClusterStart, data.Type)
 
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x .$HOME/k3s; sudo mv .$HOME/k3s /usr/local/bin;"+data.ClusterStart)
+		} else if (osFlavor == "arm64") && {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x .$HOME/k3s; sudo mv .$HOME/k3s /usr/local/bin;"+data.ClusterStart)
 		} else {
 			//since k3s cannot run natively on Windows we stop here and inform the user
@@ -85,7 +89,9 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k0s  "+data.Spec.Linux+"; chmod +x $HOME/k0s; sudo mv $HOME/k0s /usr/local/bin;"+data.ClusterStart)
-		} else {
+		} else if (osFlavor == "arm64") {
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k0s  "+data.Spec.Linux+"; chmod +x $HOME/k0s; sudo mv $HOME/k0s /usr/local/bin;"+data.ClusterStart)
+		}else {
 			//since k3s cannot run natively on Windows we stop here and inform the user
 			fmt.Printf("%v	Ops sorry %s is not yet supported on this OS...\n", emoji.StopSign, data.Type)
 			time.Sleep(time.Second)
@@ -101,6 +107,8 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") != "") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3d "+data.Spec.Wsl+"; chmod +x $HOME/k3d; sudo mv $HOME/k3d /usr/local/bin;"+data.ClusterStart+" "+data.ClusterName+" --update-default-kubeconfig --switch-context")
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3d  "+data.Spec.Linux+"; chmod +x $HOME/k3d; sudo mv $HOME/k3d /usr/local/bin;"+data.ClusterStart+" "+data.ClusterName+" --update-default-kubeconfig --switch-context")
+		}else if (osFlavor == "arm64") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3d  "+data.Spec.Linux+"; chmod +x $HOME/k3d; sudo mv $HOME/k3d /usr/local/bin;"+data.ClusterStart+" "+data.ClusterName+" --update-default-kubeconfig --switch-context")
 		} else {
 			elevateCmd := "Start-Process powershell -ArgumentList 'Move-Item -Path ${HOME}/k3d.exe -Destination C:/Windows/System32/ -force' -verb runAs"
@@ -128,7 +136,7 @@ func localAppDeployment(data shared.TargetCustoms, osFlavor string) {
 	var cmd *exec.Cmd
 	if osFlavor == "windows" {
 		for item := range data.Plugins {
-			cmd = exec.Command("powershell", "k3ai-cli.exe apply ", data.Plugins[item].Name, " --kubectl")
+			cmd = exec.Command("powershell", "k3ai-cli.exe apply ", data.Plugins[item].Name)
 			cmd.Stderr = nil
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = nil
@@ -140,7 +148,7 @@ func localAppDeployment(data shared.TargetCustoms, osFlavor string) {
 		}
 	} else {
 		for item := range data.Plugins {
-			cmd = exec.Command("bin/sh", "-c", "k3ai-cli.exe apply ", data.Plugins[item].Name, " --kubectl")
+			cmd = exec.Command("bin/sh", "-c", "k3ai-cli.exe apply ", data.Plugins[item].Name)
 			cmd.Stderr = nil
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = nil

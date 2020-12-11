@@ -39,6 +39,7 @@ type TargetCustoms struct {
 		Mac             string `yaml:"mac,omitempty"`
 		Linux           string `yaml:"linux,omitempty"`
 		Windows         string `yaml:"windows,omitempty"`
+		Arm         	string `yaml:"arm,omitempty"`
 		cloudType       string `yaml:"cloudType,omitempty"`
 		cloudNodes      string `yaml:"cloudNodes,omitempty"`
 		cloudSecretPath string `yaml:"cloudSecretPath,omitempty"`
@@ -97,7 +98,7 @@ func createConfig(data string) error {
 	var homeDirStr = usr.HomeDir + "/" + string(result[1])
 	if _, err := os.Stat(homeDirStr); os.IsNotExist(err) {
 		os.Mkdir(homeDirStr, 600)
-		fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/infra.yaml"
+		fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/config.yaml"
 		err := downloadFile(data, fileURL)
 		if err != nil {
 			panic(err)
