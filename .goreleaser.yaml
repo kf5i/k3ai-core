@@ -12,6 +12,8 @@ builds:
       - windows
     goarch:
       - amd64
+      - arm
+      - arm64
 archives:
   - format: tar.gz
     format_overrides:
