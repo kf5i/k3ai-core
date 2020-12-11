@@ -8,7 +8,7 @@ endif
 TEST_FLAGS ?=
 
 build-cli:
-	go build -o bin/k3ai-cli
+	go build -o bin/k3ai
 
 .PHONY: lint
 lint: check-format

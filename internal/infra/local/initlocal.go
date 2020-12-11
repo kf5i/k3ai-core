@@ -128,7 +128,7 @@ func localAppDeployment(data shared.TargetCustoms, osFlavor string) {
 	var cmd *exec.Cmd
 	if osFlavor == "windows" {
 		for item := range data.Plugins {
-			cmd = exec.Command("powershell", "k3ai-cli.exe apply ", data.Plugins[item].Name, " --kubectl")
+			cmd = exec.Command("powershell", "k3ai.exe apply ", data.Plugins[item].Name, " --kubectl")
 			cmd.Stderr = nil
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = nil
@@ -140,7 +140,7 @@ func localAppDeployment(data shared.TargetCustoms, osFlavor string) {
 		}
 	} else {
 		for item := range data.Plugins {
-			cmd = exec.Command("bin/sh", "-c", "k3ai-cli.exe apply ", data.Plugins[item].Name, " --kubectl")
+			cmd = exec.Command("bin/sh", "-c", "k3ai.exe apply ", data.Plugins[item].Name, " --kubectl")
 			cmd.Stderr = nil
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = nil
