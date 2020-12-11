@@ -7,6 +7,12 @@ The Go installer will replace the current bash installer.
 [![Go Report Card](https://goreportcard.com/badge/github.com/kf5i/k3ai-core)](https://goreportcard.com/report/github.com/kf5i/k3ai-core)
 [![codecov](https://codecov.io/gh/kf5i/k3ai-core/branch/main/graph/badge.svg)](https://codecov.io/gh/kf5i/k3ai-core)
 
+## Install k3ai-cli(Latest Version)
+
+Version=$(curl -s "https://api.github.com/repos/kf5i/k3ai-core/releases/latest" | awk -F '"' '/tag_name/{print $4}' | cut -c 2-6)
+wget https://github.com/kf5i/k3ai-core/releases/download/v$Version/k3ai-core_${Version}_linux_amd64.tar.gz
+
+
 ## Building from source
 
 Setup the environment using Golang v1.15.3+. A Linux, Mac OS or a WSL2 environment is recommended.
