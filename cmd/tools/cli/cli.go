@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-const k3aiBinaryName = "k3ai-cli"
+const k3aiBinaryName = "k3ai"
 
 var rootCmd = &cobra.Command{
 	Use:   k3aiBinaryName,

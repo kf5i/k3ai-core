@@ -35,10 +35,10 @@ func newInitCommand() *cobra.Command {
 		Use:   "init",
 		Short: "Initialize K3ai Client",
 		Long:  `Initialize K3ai Client, allowing user to deploy a new K8's cluster, list plugins and groups`,
-		Example: `k3ai-cli init					#Will use config from $HOME/.k3ai/config.yaml and use interactive menus
-k3ai-cli init --config /myfolder/myconfig.yaml	#Use a custom config.yaml in another location(local or remote)
-k3ai-cli init --local k3s		 	#Use config target marked local and of type k3s
-k3ai-cli init --cloud civo			#Use config target marked as cloud and of type civo`,
+		Example: `k3ai init					#Will use config from $HOME/.k3ai/config.yaml and use interactive menus
+k3ai init --config /myfolder/myconfig.yaml	#Use a custom config.yaml in another location(local or remote)
+k3ai init --local k3s		 	#Use config target marked local and of type k3s
+k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 		SilenceUsage: true,
 	}
 

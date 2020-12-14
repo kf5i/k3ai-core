@@ -1,6 +1,6 @@
 builds:
-  - id: k3ai-cli
-    binary: k3ai-cli
+  - id: k3ai
+    binary: k3ai
     main: ./
     ldflags:
       - -X github.com/kf5i/k3ai-core/cmd/tools/cli.version={{.Version}} -X github.com/kf5i/k3ai-core/cmd/tools/cli.commit={{.Commit}} -X github.com/kf5i/k3ai-core/cmd/tools/cli.goVersion={{.Env.GO_VERSION}}
