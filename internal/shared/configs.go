@@ -63,20 +63,14 @@ func Init(data string) (cfg Config, err error) {
 		var homeDirStr = usr.HomeDir + "/" + ".k3ai/"
 		if _, err := os.Stat(homeDirStr); os.IsNotExist(err) {
 			os.Mkdir(homeDirStr, 0777)
-			fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/config.yaml"
-			err := downloadFile(data, fileURL)
-			if err != nil {
-				panic(err)
-			}
-			//fmt.Println("Downloaded: " + fileURL)
-		} else {
-			fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/config.yaml"
-			err := downloadFile(data, fileURL)
-			if err != nil {
-				panic(err)
-			}
 		}
-
+		fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/config.yaml"
+		err := downloadFile(data, fileURL)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Default config created at " + data)
+		fmt.Println("Adapt the config file to your needs and run the 'init' again.")
 	}
 	yamlFile = []byte(yamlFile)
 	yamlDecode := yaml.NewDecoder(bytes.NewReader(yamlFile))
@@ -97,7 +91,7 @@ func createConfig(data string) error {
 	var homeDirStr = usr.HomeDir + "/" + string(result[1])
 	if _, err := os.Stat(homeDirStr); os.IsNotExist(err) {
 		os.Mkdir(homeDirStr, 600)
-		fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/infra.yaml"
+		fileURL := "https://raw.githubusercontent.com/kf5i/k3ai-core/main/configs/config.yaml"
 		err := downloadFile(data, fileURL)
 		if err != nil {
 			panic(err)
