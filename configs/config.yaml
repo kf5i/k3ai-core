@@ -69,10 +69,10 @@ targetCustomizations:
   clusterStart: "k3d cluster create"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    mac: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64"
-    linux: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    windows: "https://github.com/rancher/k3d/releases/download/v3.4.0-test.0/k3d-windows-amd64.exe"
+    wsl: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
+    mac: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-darwin-amd64"
+    linux: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
+    windows: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-windows-amd64.exe"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
