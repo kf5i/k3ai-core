@@ -11,7 +11,7 @@ import (
 	"github.com/kf5i/k3ai-core/internal/infra/cloud"
 	"github.com/kf5i/k3ai-core/internal/infra/local"
 
-	//"fmt"
+	"fmt"
 
 	"github.com/kf5i/k3ai-core/internal/shared"
 	// "github.com/manifoldco/promptui"
@@ -56,6 +56,7 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 
 		//check if config.yaml exist otherwise grab a copy
 		cfg, _ := shared.Init(localConfig)
+		enabled := false
 		for i := range cfg.TargetCustomization {
 			if cfg.TargetCustomization[i].Enabled {
 				//check type call relative  function: prepare the data we need and push to the relative function
@@ -64,8 +65,13 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 				} else {
 					local.Init(cfg.TargetCustomization[i])
 				}
+				enabled = true
 			}
-			// we assume everything is false (first time?) so we need a simple interactive menu
+		}
+		// we assume everything is false (first time?) so we need a simple interactive menu
+		// meanwhile, let's warn user about the situation
+		if !enabled {
+			fmt.Println("No infrastructure type is marked as enabled; check your config file and try again.")
 		}
 		return nil
 	}
