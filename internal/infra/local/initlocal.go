@@ -9,16 +9,18 @@ import (
 	"time"
 
 	"github.com/enescakir/emoji"
+	"github.com/kf5i/k3ai-core/cmd/commands"
+	"github.com/kf5i/k3ai-core/internal/k8s/kctl"
 	"github.com/kf5i/k3ai-core/internal/shared"
 )
 
 var cfg shared.Config
 
 // Init start the Deployment for local configurations
-func Init(data shared.TargetCustoms) {
+func Init(kctlConfig kctl.Config, defaultRepo string, data shared.TargetCustoms) {
 	finished := make(chan bool)
 	fmt.Printf("%v	Checking requirements for local deployment...\n", emoji.CheckBoxWithCheck)
-	go localDeployment(data, finished)
+	go localDeployment(kctlConfig, defaultRepo, data, finished)
 	<-finished
 	fmt.Printf("%v	Local deployment completed, have fun with k3ai!\n", emoji.PartyPopper)
 	if data.Type == "k3s" && data.ClusterDeployment == "local" {
@@ -36,7 +38,7 @@ func Init(data shared.TargetCustoms) {
 	}
 }
 
-func localDeployment(data shared.TargetCustoms, finished chan bool) {
+func localDeployment(kctlConfig kctl.Config, defaultRepo string, data shared.TargetCustoms, finished chan bool) {
 	fmt.Printf("%v	Installing infrastructure for local deployment...\n", emoji.CheckBoxWithCheck)
 	fmt.Printf("	Selected deployment type: %s\n", data.Type)
 	var cmd *exec.Cmd
@@ -120,33 +122,33 @@ func localDeployment(data shared.TargetCustoms, finished chan bool) {
 	time.Sleep(time.Second)
 	fmt.Printf("%v	Infrastructure ready, proceeding to plugins installation (if any)...\n", emoji.CheckBoxWithCheck)
 	time.Sleep(time.Second)
-	localAppDeployment(data, osFlavor)
+	localAppDeployment(kctlConfig, defaultRepo, data)
 	finished <- true
 }
 
-func localAppDeployment(data shared.TargetCustoms, osFlavor string) {
+func localAppDeployment(kctlConfig kctl.Config, defaultRepo string, data shared.TargetCustoms) {
 	fmt.Printf("%v	Add Plugins to local deployment...\n", emoji.CheckBoxWithCheck)
-	var cmd *exec.Cmd
 
-	for item := range data.Plugins {
-		if data.Plugins[item].Name == "" {
+	errors := false
+	for _, item := range data.Plugins {
+		pluginName := item.Name
+		if pluginName == "" {
 			continue
 		}
-		// TODO call the HandlePlugin function directly
-		if osFlavor == "windows" {
-			cmd = exec.Command("powershell", "k3ai.exe apply ", data.Plugins[item].Name, " --kubectl")
-		} else {
-			cmd = exec.Command("bin/sh", "-c", "k3ai apply ", data.Plugins[item].Name, " --kubectl")
+		repo := item.Repo
+		if repo == "" {
+			repo = defaultRepo
 		}
-		cmd.Stderr = nil
-		cmd.Stdin = os.Stdin
-		cmd.Stdout = nil
-
-		err := cmd.Run()
+		err := commands.HandlePlugin(kctlConfig, repo, pluginName, commands.ApplyOperation)
 		if err != nil {
 			fmt.Println(err)
+			errors = true
 		}
 	}
-	fmt.Printf("%v	Plugins added to local deployment...\n", emoji.CheckBoxWithCheck)
+	if errors {
+		fmt.Printf("	Errors detected when installing plugins!\n")
+	} else {
+		fmt.Printf("%v	Plugins added to local deployment...\n", emoji.CheckBoxWithCheck)
+	}
 	time.Sleep(time.Second)
 }

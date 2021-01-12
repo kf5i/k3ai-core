@@ -54,6 +54,9 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 			cloud.CivoCloudInit("windows", "civo")
 		}
 
+		// initialize the CLI config for executing kubectl
+		kctlConfig := newConfig(cmd)
+
 		//check if config.yaml exist otherwise grab a copy
 		cfg, _ := shared.Init(localConfig)
 		enabled := false
@@ -63,7 +66,7 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 				if cfg.TargetCustomization[i].ClusterDeployment == "cloud" {
 					cloud.Init(cfg.TargetCustomization[i])
 				} else {
-					local.Init(cfg.TargetCustomization[i])
+					local.Init(kctlConfig, repo, cfg.TargetCustomization[i])
 				}
 				enabled = true
 			}
