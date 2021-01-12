@@ -49,9 +49,9 @@ func localDeployment(kctlConfig kctl.Config, defaultRepo string, data shared.Tar
 		if osFlavor == "darwin" {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Mac+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin; ./usr/local/bin/"+data.ClusterStart+"--name"+data.ClusterName)
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") != "") {
-			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Wsl+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+"--name"+data.ClusterName)
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Wsl+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+" --name "+data.ClusterName)
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
-			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind  "+data.Spec.Linux+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+"--name"+data.ClusterName)
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind  "+data.Spec.Linux+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+" --name "+data.ClusterName)
 		} else {
 			elevateCmd := "Start-Process powershell -ArgumentList 'Move-Item -Path ${HOME}/kind.exe -Destination C:/Windows/System32/ -force' -verb runAs"
 			cmd = exec.Command("powershell", "curl.exe -Lo $HOME/kind.exe "+data.Spec.Windows+";"+elevateCmd+";powershell "+data.ClusterStart+" --name "+data.ClusterName)
