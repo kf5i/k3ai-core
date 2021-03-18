@@ -3,9 +3,10 @@
 K3ai-core is the core library for the k3ai installer.
 The Go installer will replace the current bash installer.
 
-[![Github build status](https://github.com/kf5i/k3ai-core/workflows/build/badge.svg)](https://github.com/kf5i/k3ai-core/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kf5i/k3ai-core)](https://goreportcard.com/report/github.com/kf5i/k3ai-core)
-[![codecov](https://codecov.io/gh/kf5i/k3ai-core/branch/main/graph/badge.svg)](https://codecov.io/gh/kf5i/k3ai-core)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kf5i/k3ai-core/build?style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/kf5i/k3ai-core?style=for-the-badge)
+![GitHub all releases](https://img.shields.io/github/downloads/kf5i/k3ai-core/total?style=for-the-badge)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kf5i/k3ai-core?style=for-the-badge)
 
 ## Install k3ai-cli(Latest Version)
 
