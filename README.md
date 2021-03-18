@@ -7,6 +7,8 @@ The Go installer will replace the current bash installer.
 ![Codecov](https://img.shields.io/codecov/c/github/kf5i/k3ai-core?style=for-the-badge)
 ![GitHub all releases](https://img.shields.io/github/downloads/kf5i/k3ai-core/total?style=for-the-badge)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/kf5i/k3ai-core?style=for-the-badge)
+![GitHub contributors](https://img.shields.io/github/contributors/kf5i/k3ai-core?style=for-the-badge)
+
 
 ## Install k3ai-cli(Latest Version)
 
@@ -36,7 +38,3 @@ make test
 ```
 
 Please feel free to open a Github issue or send a PR. Looking forward to your contribution.
-
-# Hall of Fame of K3ai Contributors
-
-[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/0)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/0)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/1)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/1)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/2)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/2)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/3)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/3)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/4)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/4)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/5)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/5)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/6)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/6)[![](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/images/7)](https://sourcerer.io/fame/alfsuse/kf5i/k3ai-core/links/7)
