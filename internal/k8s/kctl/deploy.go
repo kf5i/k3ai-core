@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	kubectl = "kubectl"
-	helm = "helm"
-	apply   = "apply"
-	delete  = "delete"
-	create  = "create"
-	helmApply   = "install"
-	helmDelete  = "delete"
+	kubectl    = "kubectl"
+	helm       = "helm"
+	apply      = "apply"
+	delete     = "delete"
+	create     = "create"
+	helmApply  = "install"
+	helmDelete = "delete"
 )
 
 func pause() {
@@ -32,12 +32,12 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 		if decodeType(yamlSpec.Type) == "helm" {
 			command, args := prepareCommand(config, helm, helmApply,
 				yamlSpec.URL)
-			err = execute(config,command, args...)
+			err = execute(config, command, args...)
 		} else if decodeType(yamlSpec.Type) == "container" {
 			command, args := prepareCommand(config, apply,
 				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 			err = execute(config, command, args...)
-		}else {
+		} else {
 			command, args := prepareCommand(config, apply,
 				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 			err = execute(config, command, args...)
@@ -71,13 +71,13 @@ func Delete(config Config, plugin plugins.Plugin) error {
 	var err error
 	for i := len(plugin.Yaml) - 1; i >= 0; i-- {
 		yamlSpec := plugin.Yaml[i]
-		if decodeType(yamlSpec.Type) == "helm"{
+		if decodeType(yamlSpec.Type) == "helm" {
 			command, args := prepareCommand(config, helm, helmDelete,
 				yamlSpec.URL, "--namespace", plugin.Namespace)
-			err = execute(config,command, args...)
-		}else if decodeType(yamlSpec.Type) == "container"{
+			err = execute(config, command, args...)
+		} else if decodeType(yamlSpec.Type) == "container" {
 
-		}else {
+		} else {
 			command, args := prepareCommand(config, delete,
 				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
 			err = execute(config, command, args...)
@@ -106,19 +106,19 @@ func execute(config Config, command string, args ...string) error {
 	if command == helm {
 		var installCmd []string
 		copy(args[0:], args[0+1:]) // Shift a[i+1:] left one index.
-		args[len(args)-1] = "" 
+		args[len(args)-1] = ""
 		args = args[:len(args)-1]
-		installCmd = append(installCmd,args[0])
+		installCmd = append(installCmd, args[0])
 		if args[0] == "delete" {
-			installCmd = append(installCmd,strings.Split(args[1]," ")...)
-			cmd := exec.Command(command,installCmd[0],installCmd[1], args[2], args[3])
+			installCmd = append(installCmd, strings.Split(args[1], " ")...)
+			cmd := exec.Command(command, installCmd[0], installCmd[1], args[2], args[3])
 			log.Print(cmd)
 			cmd.Stdout = config.Stdout()
 			cmd.Stderr = config.Stderr()
 			return cmd.Run()
-		}else {
-			installCmd = append(installCmd,strings.Split(args[1]," ")...)
-			cmd := exec.Command(command,installCmd...)
+		} else {
+			installCmd = append(installCmd, strings.Split(args[1], " ")...)
+			cmd := exec.Command(command, installCmd...)
 			log.Print(cmd)
 			cmd.Stdout = config.Stdout()
 			cmd.Stderr = config.Stderr()
