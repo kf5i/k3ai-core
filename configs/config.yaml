@@ -61,7 +61,7 @@ targetCustomizations:
     name: 
 
 - name: localK3d #name of the cluster instance not the name of the cluster
-  enabled: true
+  enabled: false
   type: k3d
   config:  #default location of config file or your existing config file to copy
   clusterName: demo-win-k3d #name of the cluster (this need to be the same as in a config file)
