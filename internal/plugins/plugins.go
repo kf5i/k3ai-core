@@ -9,9 +9,9 @@ const (
 	commandFile = "file"
 	// CommandKustomize is the kustomize command
 	CommandKustomize = "kustomize"
-	// commandHelm is the helm command
+	// CommandHelm is the helm command
 	CommandHelm = "helm"
-	// commandDocker is the container command
+	// CommandDocker is the container command
 	CommandDocker = "container"
 	// DefaultPluginFileName is the default plugin name
 	// each plugin must contain this file else it will be ignored
@@ -86,7 +86,7 @@ func (ps *Plugin) validate() error {
 		// First let's check if we are in the need of using Kustomize or File
 		if yamlType.Type != CommandKustomize && yamlType.Type != commandFile {
 			if yamlType.Type != CommandHelm && yamlType.Type != CommandDocker {
-				return errors.New("type must be one of the supported ones. Please check the documentation.")
+				return errors.New("type must be one of the supported ones. Please check the documentation")
 			}
 		}
 	}
