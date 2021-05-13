@@ -116,14 +116,13 @@ func execute(config Config, command string, args ...string) error {
 			cmd.Stdout = config.Stdout()
 			cmd.Stderr = config.Stderr()
 			return cmd.Run()
-		} else {
-			installCmd = append(installCmd, strings.Split(args[1], " ")...)
-			cmd := exec.Command(command, installCmd...)
-			log.Print(cmd)
-			cmd.Stdout = config.Stdout()
-			cmd.Stderr = config.Stderr()
-			return cmd.Run()
 		}
+		installCmd = append(installCmd, strings.Split(args[1], " ")...)
+		cmd := exec.Command(command, installCmd...)
+		log.Print(cmd)
+		cmd.Stdout = config.Stdout()
+		cmd.Stderr = config.Stderr()
+		return cmd.Run()
 	}
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = config.Stdout()

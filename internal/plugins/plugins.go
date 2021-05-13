@@ -7,10 +7,12 @@ import (
 
 const (
 	commandFile = "file"
-	// CommandKustomize is the kustomize command
-	CommandKustomize = "kustomize"
-	CommandHelm      = "helm"
-	CommandDocker    = "container"
+	// commandKustomize is the kustomize command
+	commandKustomize = "kustomize"
+	// commandHelm is the helm command
+	commandHelm = "helm"
+	// commandDocker is the container command
+	commandDocker = "container"
 	// DefaultPluginFileName is the default plugin name
 	// each plugin must contain this file else it will be ignored
 	DefaultPluginFileName = "plugin.yaml"
@@ -82,8 +84,8 @@ func (ps *Plugin) validate() error {
 	}
 	for _, yamlType := range ps.Yaml {
 		// First let's check if we are in the need of using Kustomize or File
-		if yamlType.Type != CommandKustomize && yamlType.Type != commandFile {
-			if yamlType.Type != CommandHelm && yamlType.Type != CommandDocker {
+		if yamlType.Type != commandKustomize && yamlType.Type != commandFile {
+			if yamlType.Type != commandHelm && yamlType.Type != commandDocker {
 				return errors.New("type must be one of the supported ones. Please check the documentation.")
 			}
 		}
