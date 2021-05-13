@@ -9,6 +9,8 @@ const (
 	commandFile = "file"
 	// CommandKustomize is the kustomize command
 	CommandKustomize = "kustomize"
+	CommandHelm = "helm"
+	CommandDocker = "container"
 	// DefaultPluginFileName is the default plugin name
 	// each plugin must contain this file else it will be ignored
 	DefaultPluginFileName = "plugin.yaml"
@@ -30,13 +32,14 @@ type PostInstall struct {
 
 //Plugin is the specification of each k3ai plugin
 type Plugin struct {
-	Namespace         string      `yaml:"namespace,omitempty"`
-	Labels            []string    `yaml:",flow"`
 	PluginName        string      `yaml:"plugin-name"`
+	Labels            []string    `yaml:",flow"`
+	Namespace         string      `yaml:"namespace,omitempty"`
 	PluginDescription string      `yaml:"plugin-description"`
 	Yaml              []YamlType  `yaml:"yaml,flow"`
 	Bash              []string    `yaml:"bash,flow"`
 	Helm              []string    `yaml:"helm,flow"`
+	Container         []string    `yaml:"container,flow"`
 	PostInstall       PostInstall `yaml:"post-install"`
 }
 
@@ -78,8 +81,11 @@ func (ps *Plugin) validate() error {
 		return errors.New("namespace value must be 'default' or another value")
 	}
 	for _, yamlType := range ps.Yaml {
+		// First let's check if we are in the need of using Kustomize or File
 		if yamlType.Type != CommandKustomize && yamlType.Type != commandFile {
-			return errors.New("type must be file or kustomize")
+			if yamlType.Type != CommandHelm && yamlType.Type != CommandDocker {
+				return errors.New("type must be one of the supported ones. Please check the documentation.")
+			}
 		}
 	}
 	return nil
