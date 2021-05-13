@@ -5,9 +5,9 @@
 # the repo. Unless a later match takes precedence,
 # @global-owner1 and @global-owner2 will be requested for
 # review when someone opens a pull request.
-*  @gsantomaggio
-cmd/tools/cli/*  @harsimranmaan @gsantomaggio
+*  @gsantomaggio @alefesta
+cmd/tools/cli/*  @harsimranmaan @gsantomaggio @alefesta
 cmd/tools/web-ui/* @dottorblaster
-cmd/tools/cli/init.go @alfsuse
-internal/infra/* @alfsuse
+cmd/tools/cli/init.go @alfsuse @alefesta
+internal/infra/* @alfsuse @alefesta
 cmd/tools/cli/cli.go @saiyam1814 @gsantomaggio
