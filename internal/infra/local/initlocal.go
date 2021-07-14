@@ -67,7 +67,7 @@ func localDeployment(kctlConfig kctl.Config, defaultRepo string, data shared.Tar
 			shared.LaunchWSLFile(data.ClusterStart, data.Type)
 
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
-			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x .$HOME/k3s; sudo mv .$HOME/k3s /usr/local/bin;"+data.ClusterStart)
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/k3s  "+data.Spec.Linux+"; chmod +x $HOME/k3s; sudo mv $HOME/k3s /usr/local/bin;"+data.ClusterStart)
 		} else {
 			//since k3s cannot run natively on Windows we stop here and inform the user
 			fmt.Printf("%v	Ops sorry %s is not yet supported on this OS...\n", emoji.StopSign, data.Type)
