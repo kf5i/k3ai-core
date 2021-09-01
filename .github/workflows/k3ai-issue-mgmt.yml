@@ -7,7 +7,7 @@ on:
  # pull_request:
 # types: [opened,reopened]
 env:
-  MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+  MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
 jobs:
   first_time_contribution:
@@ -22,7 +22,7 @@ jobs:
       run: echo "Well first things first, is this your first time on here?"
     - uses: actions/first-interaction@v1
       with:
-        repo-token: ${{ secrets.MY_GITHUB_TOKEN }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: '# :+1: Seems like this is the first time issue for you.
             
             Thank You for taking the time to contribute to K3ai project!'
@@ -35,7 +35,7 @@ jobs:
     steps:
     - uses: bubkoo/auto-comment@v1
       with:
-        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         issuesOpenedReactions: 'hooray, +1'
         issuesOpened: >
              ## I've opened an Issue What will happen now?
@@ -69,6 +69,6 @@ jobs:
       - uses: srggrs/assign-one-project-github-action@1.2.0
         if:  contains(github.event.issue.title, '[feat:]')
         with:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           project: 'https://github.com/orgs/kf5i/projects/3'
           column_name: 'General Funnel'
