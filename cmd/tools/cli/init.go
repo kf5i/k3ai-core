@@ -37,8 +37,7 @@ func newInitCommand() *cobra.Command {
 		Long:  `Initialize K3ai Client, allowing user to deploy a new K8's cluster, list plugins and groups`,
 		Example: `k3ai init					#Will use config from $HOME/.k3ai/config.yaml and use interactive menus
 k3ai init --config /myfolder/myconfig.yaml	#Use a custom config.yaml in another location(local or remote)
-k3ai init --local k3s		 	#Use config target marked local and of type k3s
-k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
+k3ai init --local k3s		 	#Use config target marked local and of type k3s`,
 		SilenceUsage: true,
 	}
 
@@ -48,10 +47,11 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 
 	initCmd.RunE = func(cmd *cobra.Command, args []string) error {
 		localConfig, _ := initCmd.Flags().GetString("config")
-		//localClusterConfig, _ := initCmd.Flags().GetString("local")
+		localClusterConfig, _ := initCmd.Flags().GetString("local")
 		remoteClusterConfig, _ := initCmd.Flags().GetString("cloud")
 		if remoteClusterConfig != "" {
-			cloud.CivoCloudInit("windows", "civo")
+			// cloud.CivoCloudInit("windows", "civo")
+			fmt.Println("Hold on we are working on supporting cloud providers...")
 		}
 
 		// initialize the CLI config for executing kubectl
@@ -60,6 +60,7 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 		//check if config.yaml exist otherwise grab a copy
 		cfg, _ := shared.Init(localConfig)
 		enabled := false
+
 		for i := range cfg.TargetCustomization {
 			if cfg.TargetCustomization[i].Enabled {
 				//check type call relative  function: prepare the data we need and push to the relative function
@@ -69,11 +70,17 @@ k3ai init --cloud civo			#Use config target marked as cloud and of type civo`,
 					local.Init(kctlConfig, repo, cfg.TargetCustomization[i])
 				}
 				enabled = true
+			} else {
+				if cfg.TargetCustomization[i].Type == localClusterConfig {
+					cfg.TargetCustomization[i].Enabled = true
+					local.Init(kctlConfig, repo, cfg.TargetCustomization[i])
+				}
 			}
 		}
-		// we assume everything is false (first time?) so we need a simple interactive menu
-		// meanwhile, let's warn user about the situation
-		if !enabled {
+		// we assume everything is false (first time?) still we have to check if user is overiding behaviour using direct sub-commands
+		// we do a quick check and if the result is negative we warn user to manipulate the config file and re-run init.
+
+		if !enabled && localClusterConfig == "" {
 			fmt.Println("No infrastructure type is marked as enabled; check your config file and try again.")
 		}
 		return nil

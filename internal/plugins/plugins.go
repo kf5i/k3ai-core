@@ -21,6 +21,13 @@ const (
 	DefaultGroupFileName = "group.yaml"
 )
 
+// PluginPreType is the specification for YamlType segment of the Plugin
+type PluginPreType struct {
+	URL  string `yaml:"url"`
+	Type string `yaml:"type,omitempty"`
+}
+
+
 // YamlType is the specification for YamlType segment of the Plugin
 type YamlType struct {
 	URL  string `yaml:"url"`
@@ -34,15 +41,16 @@ type PostInstall struct {
 
 //Plugin is the specification of each k3ai plugin
 type Plugin struct {
-	PluginName        string      `yaml:"plugin-name"`
-	Labels            []string    `yaml:",flow"`
-	Namespace         string      `yaml:"namespace,omitempty"`
-	PluginDescription string      `yaml:"plugin-description"`
-	Yaml              []YamlType  `yaml:"yaml,flow"`
-	Bash              []string    `yaml:"bash,flow"`
-	Helm              []string    `yaml:"helm,flow"`
-	Container         []string    `yaml:"container,flow"`
-	PostInstall       PostInstall `yaml:"post-install"`
+	PluginName        string      		`yaml:"plugin-name"`
+	Labels            []string    		`yaml:",flow"`
+	Namespace         string      		`yaml:"namespace,omitempty"`
+	PluginDescription string      		`yaml:"plugin-description"`
+	PluginPreReq	  []PluginPreType   `yaml:"plugin-prerequisites,flow"`
+	Yaml              []YamlType  		`yaml:"plugin-details,flow"`
+	Bash              []string    		`yaml:"bash,flow"`
+	Helm              []string    		`yaml:"helm,flow"`
+	Container         []string    		`yaml:"container,flow"`
+	PostInstall       PostInstall 		`yaml:"post-install"`
 }
 
 // Plugins list of plugins
