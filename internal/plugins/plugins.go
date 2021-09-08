@@ -24,6 +24,7 @@ const (
 // PluginPreType is the specification for YamlType segment of the Plugin
 type PluginPreType struct {
 	URL  string `yaml:"url"`
+	RepoUrl string `yaml:"repourl,omitempty"`
 	Type string `yaml:"type,omitempty"`
 }
 
@@ -31,7 +32,9 @@ type PluginPreType struct {
 // YamlType is the specification for YamlType segment of the Plugin
 type YamlType struct {
 	URL  string `yaml:"url"`
+	RepoUrl string `yaml:"repourl,omitempty"`
 	Type string `yaml:"type,omitempty"`
+
 }
 
 //PostInstall to execute after the scripts
@@ -105,6 +108,6 @@ func mergeWithDefault(ps *Plugin) {
 	ps.Namespace = shared.GetDefaultIfEmpty(ps.Namespace, "default")
 	for i, yamlTypeItem := range ps.Yaml {
 		yamlType := shared.GetDefaultIfEmpty(yamlTypeItem.Type, "file")
-		ps.Yaml[i] = YamlType{Type: yamlType, URL: yamlTypeItem.URL}
+		ps.Yaml[i] = YamlType{Type: yamlType, URL: yamlTypeItem.URL, RepoUrl: yamlTypeItem.RepoUrl}
 	}
 }

@@ -17,6 +17,8 @@ const (
 	create     = "create"
 	helmApply  = "install"
 	helmDelete = "delete"
+	helmAdd	   = "add"
+	helmRepo = "repo"
 )
 
 func pause() {
@@ -25,6 +27,37 @@ func pause() {
 
 // Apply adds/updates the plugin in a k3s/k8s cluster
 func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
+	//first let's take care of any pre-requisites
+	for _,yamlSpec := range plugin.PluginPreReq {
+		var err error
+		if decodeType(yamlSpec.Type) == "helm" {
+			command, args := prepareCommand(config, helm, helmApply,
+				yamlSpec.URL)
+			err = execute(config, command, args...)
+			if err != nil {
+				command, args = prepareCommand(config, helm, helmRepo,helmAdd,
+					yamlSpec.RepoUrl)
+				execute(config, command, args...)
+				command, args = prepareCommand(config, helm, helmApply,
+					yamlSpec.URL)
+				err = execute(config, command, args...)
+			}
+
+		} else if decodeType(yamlSpec.Type) == "container" {
+			command, args := prepareCommand(config, apply,
+				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
+			err = execute(config, command, args...)
+		} else {
+			command, args := prepareCommand(config, apply,
+				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
+			err = execute(config, command, args...)
+		}
+
+		if err != nil {
+			log.Printf("Error during create: %s\n", err.Error())
+		}
+		pause()
+	}
 	_ = createNameSpace(config, plugin.Namespace)
 	pause()
 	for _, yamlSpec := range plugin.Yaml {
@@ -33,6 +66,15 @@ func Apply(config Config, plugin plugins.Plugin, evt Wait) error {
 			command, args := prepareCommand(config, helm, helmApply,
 				yamlSpec.URL)
 			err = execute(config, command, args...)
+			if err != nil {
+				command, args = prepareCommand(config, helm, helmRepo,helmAdd,
+					yamlSpec.RepoUrl)
+				execute(config, command, args...)
+				command, args = prepareCommand(config, helm, helmApply,
+					yamlSpec.URL)
+				err = execute(config, command, args...)
+			}
+
 		} else if decodeType(yamlSpec.Type) == "container" {
 			command, args := prepareCommand(config, apply,
 				decodeType(yamlSpec.Type), yamlSpec.URL, "-n", plugin.Namespace)
@@ -105,10 +147,19 @@ func decodeType(commandType string) string {
 func execute(config Config, command string, args ...string) error {
 	if command == helm {
 		var installCmd []string
-		copy(args[0:], args[0+1:]) // Shift a[i+1:] left one index.
-		args[len(args)-1] = ""
-		args = args[:len(args)-1]
-		installCmd = append(installCmd, args[0])
+		if args[1] == "repo" && args[2] == "add" {
+			// copy(args[0:], args[0+1:]) // Shift a[i+1:] left one index.
+			// args[len(args)-1] = ""
+			installCmd = append(installCmd, args[1],args[2])
+			installCmd = append(installCmd, strings.Split(args[3], " ")...)
+		
+		}else {
+			copy(args[0:], args[0+1:]) // Shift a[i+1:] left one index.
+			args[len(args)-1] = ""
+			args = args[:len(args)-1]
+			installCmd = append(installCmd, args[0])
+			installCmd = append(installCmd, strings.Split(args[1], " ")...)
+		}
 		if args[0] == "delete" {
 			installCmd = append(installCmd, strings.Split(args[1], " ")...)
 			cmd := exec.Command(command, installCmd[0], installCmd[1], args[2], args[3])
@@ -117,7 +168,7 @@ func execute(config Config, command string, args ...string) error {
 			cmd.Stderr = config.Stderr()
 			return cmd.Run()
 		}
-		installCmd = append(installCmd, strings.Split(args[1], " ")...)
+		
 		cmd := exec.Command(command, installCmd...)
 		log.Print(cmd)
 		cmd.Stdout = config.Stdout()
