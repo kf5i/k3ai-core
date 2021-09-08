@@ -9,7 +9,7 @@ targetCustomizations:
   clusterStart: "sudo bash -ic 'k3s server --write-kubeconfig-mode 644 > /dev/null 2>&1 &'"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://github.com/rancher/k3s/releases/download/v1.19.4%2Bk3s1/k3s"
+    wsl: "https://github.com/k3s-io/k3s/releases/download/v1.20.9%2Bk3s1/k3s"
     mac: 
     linux: "https://get.k3s.io | K3S_KUBECONFIG_MODE=644 sh -s -"
     windows: 
@@ -29,10 +29,10 @@ targetCustomizations:
   clusterStart: "k0s default-config | tee ${HOME}/.k3ai/k0s.yaml && sudo bash -ic 'k0s server -c ${HOME}/.k3ai/k0s.yaml --enable-worker > /dev/null 2>&1 &' && sudo cat /var/lib/k0s/pki/admin.conf > $HOME/.k3ai/k0s-config"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://github.com/k0sproject/k0s/releases/download/v0.8.1/k0s-v0.8.1-amd64"
+    wsl: "https://github.com/k0sproject/k0s/releases/download/v1.20.6%2Bk0s.0/k0s-v1.20.6+k0s.0-amd64"
     mac: 
-    linux: "https://github.com/k0sproject/k0s/releases/download/v0.8.1/k0s-v0.8.1-amd64"
-    windows:
+    linux: "https://github.com/k0sproject/k0s/releases/download/v1.20.6%2Bk0s.0/k0s-v1.20.6+k0s.0-amd64"
+    windows: "https://github.com/k0sproject/k0s/releases/download/v1.20.6%2Bk0s.0/k0s-v1.20.6+k0s.0-amd64.exe"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -49,10 +49,10 @@ targetCustomizations:
   clusterStart: "kind create cluster"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    mac: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-darwin-amd64"
-    linux: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64"
-    windows: "https://kind.sigs.k8s.io/dl/v0.9.0/kind-windows-amd64"
+    wsl: "https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64"
+    mac: "https://kind.sigs.k8s.io/dl/v0.11.1/kind-darwin-amd64"
+    linux: "https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64"
+    windows: "https://kind.sigs.k8s.io/dl/v0.11.1/kind-windows-amd64"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -69,10 +69,10 @@ targetCustomizations:
   clusterStart: "k3d cluster create"
   spec:
   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
-    mac: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-darwin-amd64"
-    linux: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-linux-amd64"
-    windows: "https://github.com/rancher/k3d/releases/download/v3.4.0/k3d-windows-amd64.exe"
+    wsl: "https://github.com/rancher/k3d/releases/download/v4.4.8/k3d-linux-amd64"
+    mac: "https://github.com/rancher/k3d/releases/download/v4.4.8/k3d-darwin-amd64"
+    linux: "https://github.com/rancher/k3d/releases/download/v4.4.8/k3d-linux-amd64"
+    windows: "https://github.com/rancher/k3d/releases/download/v4.4.8/k3d-windows-amd64.exe"
     # Everything from this repo will be ran in this cluster. You trust me right?
   plugins: 
   - repo: 
@@ -80,25 +80,25 @@ targetCustomizations:
   - repo: 
     name: 
 
-- name: remoteK3s #name of the cluster instance not the name of the cluster
-  enabled: false
-  type: k3s
-  config: remote #default location of config file or your existing config file to copy  if Remote will be copy from remote location
-  clusterName: demo-cluster-remote #name of the cluster (this need to be the same as in a config file)
-  clusterDeployment: cloud
-  clusterStart: 
-  spec:
-  # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
-    wsl: 
-    mac: 
-    linux:
-    windows:
-    cloudType: civo
-    cloudNodes: 1
-    cloudSecretPath: $HOME/.k3ai/secret.txt
-    # Everything from this repo will be ran in this cluster. You trust me right?
-  plugins: 
-  - repo: "https://github.com/alfsuse/demo-plugins"
-    name: "demo"
-  - repo: "https://github.com/alfsuse/demo-plugins-2"
-    name: "demo2"
+# - name: remoteK3s #name of the cluster instance not the name of the cluster
+#   enabled: false
+#   type: k3s
+#   config: remote #default location of config file or your existing config file to copy  if Remote will be copy from remote location
+#   clusterName: demo-cluster-remote #name of the cluster (this need to be the same as in a config file)
+#   clusterDeployment: cloud
+#   clusterStart: 
+#   spec:
+#   # If the OS is not needed may be removed so the three below are mutually exclusive, if not needed set them to null or remove it
+#     wsl: 
+#     mac: 
+#     linux:
+#     windows:
+#     cloudType: civo
+#     cloudNodes: 1
+#     cloudSecretPath: $HOME/.k3ai/secret.txt
+#     # Everything from this repo will be ran in this cluster. You trust me right?
+#   plugins: 
+#   - repo: "https://github.com/alfsuse/demo-plugins"
+#     name: "demo"
+#   - repo: "https://github.com/alfsuse/demo-plugins-2"
+#     name: "demo2"
