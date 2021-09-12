@@ -47,7 +47,7 @@ func localDeployment(kctlConfig kctl.Config, defaultRepo string, data shared.Tar
 	//kind deployment
 	if data.Type == "kind" {
 		if osFlavor == "darwin" {
-			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Mac+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin; ./usr/local/bin/"+data.ClusterStart+"--name"+data.ClusterName)
+			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Mac+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin; ./usr/local/bin/"+data.ClusterStart+" --name "+data.ClusterName)
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") != "") {
 			cmd = exec.Command("/bin/sh", "-c", "curl -Lo $HOME/kind "+data.Spec.Wsl+"; chmod +x $HOME/kind; sudo mv $HOME/kind /usr/local/bin;"+data.ClusterStart+" --name "+data.ClusterName)
 		} else if (osFlavor == "linux") && (os.Getenv("WSL_DISTRO_NAME") == "") {
