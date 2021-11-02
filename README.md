@@ -1,3 +1,5 @@
+# WE RELEASED THE NEW VERSION CHECK THE NEW ORG AT: [https://github.com/k3ai](https://github.com/k3ai) AND OUR NEW WEBSITE/DOCS AT: [https://k3ai.in](https://k3ai.in)
+
 # k3ai-core
 
 K3ai-core is the core library for the k3ai installer.
